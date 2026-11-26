@@ -159,7 +159,8 @@ describe('data/raw/fred', () => {
     expect(config.map(c => c.id).sort()).toEqual(['AAA10Y', 'BAA10Y', 'BAMLC0A0CM', 'BAMLH0A0HYM2', 'DEXKOUS',
       'DEXTAUS', 'DEXUSEU', 'DFF', 'DGS10', 'RAMPAIALL', 'SOFR', 'SP500', 'VIXCLS']);
     for (const c of config) {
-      expect(c.lagDays).toBe(c.id === 'RAMPAIALL' ? 45 : 1);
+      // FX rates come from the weekly H.10 release (a week's daily rates published the following Monday)
+      expect(c.lagDays, c.id).toBe(c.id === 'RAMPAIALL' ? 45 : c.id.startsWith('DEX') ? 7 : 1);
       const s = load(c.id);
       expect(s.points.length).toBeGreaterThan(0);
       expect(s.points.every(p => p.asKnownAt !== undefined && p.asKnownAt > p.date)).toBe(true);
