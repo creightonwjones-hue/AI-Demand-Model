@@ -50,6 +50,8 @@ export const FinancialFactSchema = z.object({
   metric: MetricSchema,
   // XBRL tag the value came from (e.g. "LongTermDebtNoncurrent"); undefined for manual rows.
   tag: z.string().optional(),
+  // Segments can overlap: "Data Center - Hyperscale" is part of "Data Center" (source title notes parentSegment).
+  // Never sum a "<Parent> - <Sub>" row with its parent.
   segment: z.string().optional(),
   quarter: QuarterKeySchema,
   periodStart: isoDate,
@@ -110,6 +112,9 @@ export const DealSchema = z.object({
   guarantors: z.array(z.string()),
   vehicle: z.string().optional(),
   types: z.array(DealTypeSchema),
+  // `announced` = first public disclosure of THIS record's values (a later expansion is its own record or a
+  // statusHistory entry). Month-only dates use the last day of the month; a range uses its latest date. A backtest
+  // may use the record only from this date. See docs/data/adding-a-deal.md.
   announced: isoDate,
   signed: isoDate.optional(),
   start: isoDate.optional(),
