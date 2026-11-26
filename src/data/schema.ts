@@ -69,6 +69,9 @@ export const SeriesPointSchema = z.object({
   date: z.string(),
   value: z.number(),
   asKnownAt: z.string().optional(),
+  // Per-point source for manually transcribed series (each point can come from a different article).
+  // FRED points omit it and inherit the series-level source.
+  source: SourceRefSchema.optional(),
 });
 export type SeriesPoint = z.infer<typeof SeriesPointSchema>;
 

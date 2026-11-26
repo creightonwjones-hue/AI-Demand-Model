@@ -1,0 +1,13 @@
+[
+  { "id": "DGS10", "name": "10-year Treasury constant maturity yield", "unit": "%", "kind": "condition" },
+  { "id": "SOFR", "name": "Secured Overnight Financing Rate", "unit": "%", "kind": "condition" },
+  { "id": "DFF", "name": "Effective federal funds rate", "unit": "%", "kind": "condition" },
+  { "id": "BAMLH0A0HYM2", "name": "ICE BofA US High Yield Index option-adjusted spread", "unit": "%", "kind": "condition" },
+  { "id": "BAMLC0A0CM", "name": "ICE BofA US Corporate (investment grade) Index option-adjusted spread", "unit": "%", "kind": "condition" },
+  { "id": "VIXCLS", "name": "CBOE Volatility Index (VIX) close", "unit": "index", "kind": "indicator" },
+  { "id": "SP500", "name": "S&P 500 index close", "unit": "index", "kind": "indicator" },
+  { "id": "RAMPAIALL", "name": "Ramp AI Index: share of US businesses paying for AI tools", "unit": "%", "kind": "indicator" },
+  { "id": "DEXTAUS", "name": "Taiwan dollars per US dollar", "unit": "TWD per USD", "kind": "indicator" },
+  { "id": "DEXKOUS", "name": "South Korean won per US dollar", "unit": "KRW per USD", "kind": "indicator" },
+  { "id": "DEXUSEU", "name": "US dollars per euro", "unit": "USD per EUR", "kind": "indicator" }
+]
