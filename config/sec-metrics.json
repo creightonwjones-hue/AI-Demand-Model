@@ -1,0 +1,12 @@
+{
+  "revenue": { "us-gaap": ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax"] },
+  "capex": { "us-gaap": ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"] },
+  "operatingCashFlow": { "us-gaap": ["NetCashProvidedByUsedInOperatingActivities"] },
+  "cash": { "us-gaap": ["CashAndCashEquivalentsAtCarryingValue"] },
+  "longTermDebt": { "us-gaap": ["LongTermDebt", "LongTermDebtNoncurrent"] },
+  "netIncome": { "us-gaap": ["NetIncomeLoss"] },
+  "epsDiluted": { "us-gaap": ["EarningsPerShareDiluted"] },
+  "accountsReceivable": { "us-gaap": ["AccountsReceivableNetCurrent"] },
+  "grossProfit": { "us-gaap": ["GrossProfit"] },
+  "segmentRevenue": {}
+}

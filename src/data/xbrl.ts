@@ -1,0 +1,202 @@
+import { readFileSync } from 'node:fs';
+import { z } from 'zod';
+import { MetricSchema, type Entity, type FinancialFact, type Metric, type QuarterKey } from './schema';
+import { calendarQuarterFor, weeksBetween } from './quarters';
+
+/** metric -> taxonomy -> tags in priority order (config/sec-metrics.json). */
+export type MetricMap = Partial<Record<Metric, Record<string, string[]>>>;
+
+const MetricMapSchema = z.record(MetricSchema, z.record(z.string(), z.array(z.string())));
+
+export function loadMetricMap(path = 'config/sec-metrics.json'): MetricMap {
+  return MetricMapSchema.parse(JSON.parse(readFileSync(path, 'utf8'))) as MetricMap;
+}
+
+const ALLOWED_FORMS = new Set(['10-Q', '10-K', '10-Q/A', '10-K/A']);
+const ALLOWED_UNITS = ['USD', 'USD/shares'];
+const STOCK_METRICS = new Set<Metric>(['cash', 'longTermDebt', 'accountsReceivable']);
+const NO_DECUMULATION = new Set<Metric>(['epsDiluted']);
+
+const RawFactSchema = z.object({
+  start: z.string().optional(),
+  end: z.string(),
+  val: z.number(),
+  accn: z.string(),
+  form: z.string(),
+  filed: z.string(),
+});
+type RawFact = z.infer<typeof RawFactSchema>;
+
+const CompanyFactsSchema = z.object({
+  facts: z.record(z.string(), z.record(z.string(), z.object({
+    units: z.record(z.string(), z.array(z.unknown())),
+  }).passthrough())),
+}).passthrough();
+
+// Duration buckets in weeks (end inclusive).
+const isQuarter = (w: number) => w >= 12 && w <= 14;
+const isHalf = (w: number) => w >= 25 && w <= 27;
+const isNineMonth = (w: number) => w >= 38 && w <= 40;
+const isAnnual = (w: number) => w >= 51 && w <= 53;
+
+function nextDay(d: string): string {
+  const [y, m, day] = d.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, day + 1)).toISOString().slice(0, 10);
+}
+
+/** Raw facts for one tag: allowed forms and units only, exact repeats (period, value, filed) removed. */
+function rawFactsFor(companyFacts: z.infer<typeof CompanyFactsSchema>, taxonomy: string, tag: string): RawFact[] {
+  const units = companyFacts.facts[taxonomy]?.[tag]?.units;
+  if (!units) return [];
+  const seen = new Set<string>();
+  const out: RawFact[] = [];
+  for (const unit of ALLOWED_UNITS) {
+    for (const item of units[unit] ?? []) {
+      const parsed = RawFactSchema.safeParse(item);
+      if (!parsed.success || !ALLOWED_FORMS.has(parsed.data.form)) continue;
+      const f = parsed.data;
+      const key = `${f.start ?? ''}|${f.end}|${f.val}|${f.filed}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(f);
+    }
+  }
+  return out;
+}
+
+function makeFact(
+  entity: Entity, metric: Metric, periodStart: string, periodEnd: string, weeks: number,
+  value: number, derived: boolean, filing: RawFact,
+): FinancialFact {
+  const cik = String(Number(entity.cik));
+  return {
+    entityId: entity.id,
+    metric,
+    quarter: calendarQuarterFor(periodStart, periodEnd),
+    periodStart,
+    periodEnd,
+    weeks,
+    value,
+    derived,
+    asKnownAt: filing.filed,
+    form: filing.form,
+    source: {
+      url: `https://www.sec.gov/Archives/edgar/data/${cik}/${filing.accn.replace(/-/g, '')}/`,
+      title: `${entity.name} ${filing.form} filed ${filing.filed} (accn ${filing.accn})`,
+      retrieved: filing.filed,
+      status: 'primary-filing',
+    },
+  };
+}
+
+function groupBy<T>(items: T[], key: (t: T) => string): Map<string, T[]> {
+  const m = new Map<string, T[]>();
+  for (const it of items) {
+    const k = key(it);
+    const arr = m.get(k);
+    if (arr) arr.push(it); else m.set(k, [it]);
+  }
+  return m;
+}
+
+/** Instant facts -> quarterly facts keyed by the instant's calendar quarter (latest instant in the quarter wins). */
+function stockFacts(raw: RawFact[], entity: Entity, metric: Metric): Map<QuarterKey, FinancialFact[]> {
+  const instants = raw.filter(f => f.start === undefined);
+  const byQuarter = groupBy(instants, f => calendarQuarterFor(f.end, f.end));
+  const out = new Map<QuarterKey, FinancialFact[]>();
+  for (const [q, fs] of byQuarter) {
+    const lastDate = fs.reduce((d, f) => (f.end > d ? f.end : d), fs[0].end);
+    out.set(q, fs.filter(f => f.end === lastDate)
+      .map(f => makeFact(entity, metric, f.end, f.end, 0, f.val, false, f)));
+  }
+  return out;
+}
+
+/** Duration facts -> quarterly facts: 3-month facts where present, else de-cumulated year-to-date facts. */
+function flowFacts(raw: RawFact[], entity: Entity, metric: Metric): Map<QuarterKey, FinancialFact[]> {
+  const durations = raw.filter((f): f is RawFact & { start: string } => f.start !== undefined)
+    .map(f => ({ ...f, weeks: weeksBetween(f.start, f.end) }));
+
+  const direct = new Map<QuarterKey, FinancialFact[]>();
+  for (const f of durations.filter(d => isQuarter(d.weeks))) {
+    const fact = makeFact(entity, metric, f.start, f.end, f.weeks, f.val, false, f);
+    const arr = direct.get(fact.quarter);
+    if (arr) arr.push(fact); else direct.set(fact.quarter, [fact]);
+  }
+  if (NO_DECUMULATION.has(metric)) return direct;
+
+  // Period (start|end) -> versions of that period, sorted by filing date.
+  const byPeriod = groupBy(durations, f => `${f.start}|${f.end}`);
+  for (const vs of byPeriod.values()) vs.sort((a, b) => a.filed.localeCompare(b.filed));
+
+  const derived = new Map<QuarterKey, FinancialFact[]>();
+  const pairs: Array<[(w: number) => boolean, (w: number) => boolean]> = [
+    [isHalf, isQuarter], [isNineMonth, isHalf], [isAnnual, isNineMonth],
+  ];
+  for (const [isLarger, isSmaller] of pairs) {
+    for (const versions of byPeriod.values()) {
+      const larger0 = versions[0];
+      if (!isLarger(larger0.weeks)) continue;
+      // Component: same fiscal year (same start), next-shorter YTD bucket.
+      const component = [...byPeriod.values()].find(v =>
+        v[0].start === larger0.start && v[0].end < larger0.end && isSmaller(v[0].weeks));
+      if (!component) continue;
+      const periodStart = nextDay(component[0].end);
+      const periodEnd = larger0.end;
+      const weeks = weeksBetween(periodStart, periodEnd);
+      if (!isQuarter(weeks)) continue;
+      const quarter = calendarQuarterFor(periodStart, periodEnd);
+      if (direct.has(quarter)) continue; // a reported 3-month fact wins
+      for (const larger of versions) {
+        // Component value as known at the larger fact's filing (earliest version if none yet).
+        const known = component.filter(c => c.filed <= larger.filed);
+        const comp = known.length ? known[known.length - 1] : component[0];
+        const later = comp.filed > larger.filed ? comp : larger;
+        const fact = makeFact(entity, metric, periodStart, periodEnd, weeks, larger.val - comp.val, true, later);
+        const arr = derived.get(quarter);
+        if (arr) arr.push(fact); else derived.set(quarter, [fact]);
+      }
+    }
+  }
+  for (const [q, fs] of derived) direct.set(q, fs);
+  return direct;
+}
+
+/**
+ * Quarterly financial facts from an SEC company-facts document. Every filing version of a period is kept
+ * (restatements appear as extra facts with a later `asKnownAt`). For each metric and quarter, the
+ * highest-priority tag with a value for that quarter is used.
+ */
+export function extractQuarterly(companyFacts: unknown, entity: Entity, metricMap: MetricMap): FinancialFact[] {
+  if (!entity.cik) throw new Error(`entity ${entity.id} has no CIK`);
+  const doc = CompanyFactsSchema.parse(companyFacts);
+  const out: FinancialFact[] = [];
+  for (const metric of MetricSchema.options) {
+    const taxonomies = metricMap[metric];
+    if (!taxonomies) continue;
+    const chosen = new Map<QuarterKey, FinancialFact[]>();
+    for (const [taxonomy, tags] of Object.entries(taxonomies)) {
+      for (const tag of tags) {
+        const raw = rawFactsFor(doc, taxonomy, tag);
+        if (!raw.length) continue;
+        const perQuarter = STOCK_METRICS.has(metric) ? stockFacts(raw, entity, metric) : flowFacts(raw, entity, metric);
+        for (const [q, fs] of perQuarter) if (!chosen.has(q)) chosen.set(q, fs);
+      }
+    }
+    for (const fs of chosen.values()) out.push(...fs);
+  }
+  return out.sort((a, b) =>
+    a.metric.localeCompare(b.metric) || a.quarter.localeCompare(b.quarter) || a.asKnownAt.localeCompare(b.asKnownAt));
+}
+
+/** The latest-filed version of a quarter's value with `asKnownAt <= asOf`. */
+export function valueAsOf(
+  facts: FinancialFact[], entityId: string, metric: Metric, quarter: QuarterKey, asOf: string,
+): FinancialFact | undefined {
+  let best: FinancialFact | undefined;
+  for (const f of facts) {
+    if (f.entityId !== entityId || f.metric !== metric || f.quarter !== quarter || f.asKnownAt > asOf) continue;
+    if (!best || f.asKnownAt >= best.asKnownAt) best = f;
+  }
+  return best;
+}
