@@ -102,10 +102,25 @@ describe('data/manual/series.csv', () => {
     for (const s of series) expect(SeriesSchema.parse(s)).toBeTruthy();
     const ids = new Set(series.map(s => s.id));
     for (const id of ['cds5y-oracle-spgmi', 'cds5y-oracle-ice', 'cds5y-coreweave-spgmi',
-      'gpu-rent-h100-reserved-semianalysis', 'gpu-rent-h100-spot-silicondata', 'gpu-rent-h100-ornn',
+      'gpu-rent-h100-reserved-semianalysis', 'gpu-rent-h100-spot-silicondata', 'gpu-rent-h100-ornn-ocpi',
       'guidance-capex-microsoft-cy2026']) expect(ids.has(id)).toBe(true);
     const ora = series.find(s => s.id === 'cds5y-oracle-spgmi')!;
     expect(ora.points.at(-1)).toMatchObject({ date: '2026-11-25', value: 356 });
+  });
+
+  it('keeps Ornn OCPI index points apart from Ornn prices whose index is not stated', () => {
+    const series = buildSeries(parseCsv(readFileSync('data/manual/series.csv', 'utf8')));
+    const ornn = series.filter(s => s.provider === 'Ornn');
+    expect(ornn.map(s => s.id).sort()).toEqual([
+      'gpu-rent-a100-ornn-ocpi', 'gpu-rent-b200-ornn-ocpi', 'gpu-rent-b200-ornn-tunguz', 'gpu-rent-h100-ornn-cloudzero',
+      'gpu-rent-h100-ornn-ocpi', 'gpu-rent-h200-ornn-ocpi',
+    ]);
+    for (const s of ornn) {
+      const claimsOcpi = s.id.endsWith('-ocpi');
+      expect(s.name.includes('(Ornn OCPI)'), s.id).toBe(claimsOcpi);
+      // an OCPI series only holds points whose source names the OCPI index
+      for (const p of s.points) expect(/OCPI/.test(p.source?.title ?? ''), `${s.id} ${p.date}`).toBe(claimsOcpi);
+    }
   });
 
   it('has no look-ahead: back-reported and month-only points are known no earlier than the article could exist',
@@ -118,9 +133,9 @@ describe('data/manual/series.csv', () => {
       expect(at('cds5y-coreweave-ice', '2026-10-15')).toBe('2026-10-22');
       expect(at('cds5y-softbank-tvdelmarva', '2026-10-15')).toBe('2026-11-25');
       expect(at('gpu-rent-h100-spot-silicondata', '2025-12-09')).toBe('2026-10-24');
-      for (const g of ['b200', 'h200', 'h100', 'a100']) expect(at(`gpu-rent-${g}-ornn`, '2026-10-11')).toBe('2026-10-25');
+      for (const g of ['b200', 'h200', 'h100', 'a100']) expect(at(`gpu-rent-${g}-ornn-ocpi`, '2026-10-11')).toBe('2026-10-25');
       expect(at('gpu-rent-h100-reserved-semianalysis', '2025-10-01')).toBe('2026-03-31');
-      expect(at('gpu-rent-b200-ornn', '2026-03-01')).toBe('2026-04-30');
+      expect(at('gpu-rent-b200-ornn-tunguz', '2026-03-01')).toBe('2026-04-30');
       // month-only rows: date = 1st of month, known at the month's last day (or later)
       const monthOnly = rows.filter(r => /date given as [A-Z][a-z]{2} \d{4} only|year to [A-Z][a-z]{2} \d{4}/.test(
         r.source_title));
