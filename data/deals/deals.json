@@ -31,9 +31,9 @@
         "status": "announced"
       },
       {
-        "date": "2026-03-01",
+        "date": "2026-03-31",
         "status": "active",
-        "note": "600 MW Abilene expansion dropped after financing talks failed (Mar 2026; month only in capture; 1st of month used)"
+        "note": "600 MW Abilene expansion dropped after financing talks failed (Mar 2026; month only in capture; last day of month used)"
       },
       {
         "date": "2026-11-25",
@@ -79,7 +79,7 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "~$300B (approximate, as reported). 4.5 GW. ~5 years from 2027 (start: year only in capture; Jan 1 used). Rate, take-or-pay and termination unknown."
+      "notes": "~$300B (approximate, as reported). 4.5 GW. ~5 years from 2027 (start: year only in capture; Jan 1 used for a start date). Rate, take-or-pay and termination unknown."
     },
     "statusHistory": [
       {
@@ -222,7 +222,7 @@
       "loan"
     ],
     "announced": "2026-03-27",
-    "end": "2027-03-01",
+    "end": "2027-03-31",
     "values": {
       "hardMinimumUsd": 40000000000
     },
@@ -232,7 +232,7 @@
       "collateral": "None (unsecured)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$40B bridge loan, unsecured (JPMorgan, Goldman, MUFG). Recourse: an unsecured corporate loan is a claim on SoftBank itself. Rate unknown. Due Mar 2027 (end: month only in capture; 1st of month used). $25.9B prepaid on Sep 15 (year not stated in capture; 2026 from context: loan dated 2026-03-27, due Mar 2027)."
+      "notes": "$40B bridge loan, unsecured (JPMorgan, Goldman, MUFG). Recourse: an unsecured corporate loan is a claim on SoftBank itself. Rate unknown. Due Mar 2027 (end: month only in capture; last day of month used). $25.9B prepaid on Sep 15 (year not stated in capture; 2026 from context: loan dated 2026-03-27, due Mar 2027)."
     },
     "statusHistory": [
       {
@@ -472,8 +472,8 @@
     ]
   },
   {
-    "id": "openai-coreweave",
-    "name": "OpenAI / CoreWeave compute contracts",
+    "id": "openai-coreweave-2025-03",
+    "name": "OpenAI / CoreWeave compute contract (Mar 2025, $11.9B)",
     "payers": [
       "openai"
     ],
@@ -484,31 +484,132 @@
     "types": [
       "compute-lease"
     ],
-    "announced": "2025-03-01",
+    "announced": "2025-03-31",
     "values": {
-      "ceilingUsd": 22400000000
+      "hardMinimumUsd": 11900000000
     },
     "terms": {
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Up to ~$22.4B across three tranches: $11.9B (Mar 2025), $4B add-on (May 2025, through Apr 2029), up to $6.5B (2025-09-25). Other tranche end dates unknown. Financed partly by CoreWeave DDTL 3.0 (coreweave-ddtl-3). Take-or-pay and termination unknown. Announced: month only in capture; 1st of month used."
+      "notes": "$11.9B contract. End date unknown. Announced: Mar 2025 (month only in capture; last day of month used). Capture row: up to ~$22.4B across three tranches ($11.9B Mar 2025; $4B May 2025; up to $6.5B 2025-09-25). Financed partly by CoreWeave DDTL 3.0 (coreweave-ddtl-3). Take-or-pay and termination unknown."
     },
     "statusHistory": [
       {
-        "date": "2025-03-01",
+        "date": "2025-03-31",
         "status": "announced",
-        "note": "$11.9B contract (Mar 2025; month only in capture; 1st of month used)"
+        "note": "Mar 2025; month only in capture; last day of month used"
       },
       {
-        "date": "2025-05-01",
+        "date": "2025-05-31",
         "status": "expanded",
-        "note": "$4B add-on through Apr 2029 (May 2025; month only in capture; 1st of month used)"
+        "note": "$4B add-on; see openai-coreweave-2025-05"
       },
       {
         "date": "2025-09-25",
         "status": "expanded",
-        "note": "Expanded by up to $6.5B"
+        "note": "Up to $6.5B more; see openai-coreweave-2025-09"
+      },
+      {
+        "date": "2026-11-25",
+        "status": "active",
+        "note": "Status at capture (late 2026): active; no expansion after Sep 2025"
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://signalintegrityjournal.com/articles/4096",
+        "title": "Signal Integrity Journal article 4096",
+        "retrieved": "2026-11-25",
+        "status": "secondary"
+      },
+      {
+        "url": "https://bnnbloomberg.ca",
+        "title": "BNN Bloomberg (bare domain in capture)",
+        "retrieved": "2026-11-25",
+        "status": "secondary"
+      }
+    ]
+  },
+  {
+    "id": "openai-coreweave-2025-05",
+    "name": "OpenAI / CoreWeave compute add-on (May 2025, $4B)",
+    "payers": [
+      "openai"
+    ],
+    "payees": [
+      "coreweave"
+    ],
+    "guarantors": [],
+    "types": [
+      "compute-lease"
+    ],
+    "announced": "2025-05-31",
+    "end": "2029-04-30",
+    "values": {
+      "hardMinimumUsd": 4000000000
+    },
+    "terms": {
+      "maturity": "Through Apr 2029",
+      "recourse": "unknown",
+      "takeOrPay": "unknown",
+      "hellOrHighWater": "unknown",
+      "notes": "$4B add-on through Apr 2029 (end: month only in capture; last day of month used). Announced: May 2025 (month only in capture; last day of month used). Capture row: up to ~$22.4B across three tranches ($11.9B Mar 2025; $4B May 2025; up to $6.5B 2025-09-25). Financed partly by CoreWeave DDTL 3.0 (coreweave-ddtl-3). Take-or-pay and termination unknown."
+    },
+    "statusHistory": [
+      {
+        "date": "2025-05-31",
+        "status": "announced",
+        "note": "May 2025; month only in capture; last day of month used"
+      },
+      {
+        "date": "2026-11-25",
+        "status": "active",
+        "note": "Status at capture (late 2026): active; no expansion after Sep 2025"
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://signalintegrityjournal.com/articles/4096",
+        "title": "Signal Integrity Journal article 4096",
+        "retrieved": "2026-11-25",
+        "status": "secondary"
+      },
+      {
+        "url": "https://bnnbloomberg.ca",
+        "title": "BNN Bloomberg (bare domain in capture)",
+        "retrieved": "2026-11-25",
+        "status": "secondary"
+      }
+    ]
+  },
+  {
+    "id": "openai-coreweave-2025-09",
+    "name": "OpenAI / CoreWeave compute expansion (Sep 2025, up to $6.5B)",
+    "payers": [
+      "openai"
+    ],
+    "payees": [
+      "coreweave"
+    ],
+    "guarantors": [],
+    "types": [
+      "compute-lease"
+    ],
+    "announced": "2025-09-25",
+    "values": {
+      "ceilingUsd": 6500000000
+    },
+    "terms": {
+      "recourse": "unknown",
+      "takeOrPay": "unknown",
+      "hellOrHighWater": "unknown",
+      "notes": "Expansion by up to $6.5B. End date unknown. Capture row: up to ~$22.4B across three tranches ($11.9B Mar 2025; $4B May 2025; up to $6.5B 2025-09-25). Financed partly by CoreWeave DDTL 3.0 (coreweave-ddtl-3). Take-or-pay and termination unknown."
+    },
+    "statusHistory": [
+      {
+        "date": "2025-09-25",
+        "status": "announced"
       },
       {
         "date": "2026-11-25",
@@ -672,9 +773,9 @@
         "status": "announced"
       },
       {
-        "date": "2026-02-01",
+        "date": "2026-03-31",
         "status": "replaced",
-        "note": "Never definitive; NVIDIA instead put $30B into OpenAI's $110B -> $122B round (Feb-Mar 2026; month only in capture; 1st of month used). See nvidia-openai-equity-2026"
+        "note": "Never definitive; NVIDIA instead put $30B into OpenAI's $110B -> $122B round (Feb-Mar 2026; range only in capture; latest date the range allows used). See nvidia-openai-equity-2026"
       }
     ],
     "sources": [
@@ -843,7 +944,7 @@
     "types": [
       "compute-lease"
     ],
-    "announced": "2025-11-01",
+    "announced": "2025-11-30",
     "values": {
       "hardMinimumUsd": 38000000000
     },
@@ -852,12 +953,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$38B over 7 years (duration per secondary source). The capture row says the deal includes 2 GW Trainium without saying which tranche. Rate and termination unknown. Announced: month only in capture; 1st of month used (Nov 2025)."
+      "notes": "$38B over 7 years (duration per secondary source). The capture row says the deal includes 2 GW Trainium without saying which tranche. Rate and termination unknown. Announced: month only in capture; last day of month used (Nov 2025)."
     },
     "statusHistory": [
       {
-        "date": "2025-11-01",
-        "status": "announced"
+        "date": "2025-11-30",
+        "status": "announced",
+        "note": "Nov 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-02-27",
@@ -994,7 +1096,7 @@
       "compute-lease"
     ],
     "announced": "2026-01-14",
-    "end": "2028-01-01",
+    "end": "2028-12-31",
     "values": {
       "estimateUsd": 10000000000
     },
@@ -1003,7 +1105,7 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": ">$10B per sources; value undisclosed (estimate is the reported lower bound). 750 MW. Cerebras bears build/lease risk. Through 2028 (end: year only in capture; Jan 1 used)."
+      "notes": ">$10B per sources; value undisclosed (estimate is the reported lower bound). 750 MW. Cerebras bears build/lease risk. Through 2028 (end: year only in capture; Dec 31 used)."
     },
     "statusHistory": [
       {
@@ -1032,8 +1134,8 @@
     ]
   },
   {
-    "id": "anthropic-google-tpu",
-    "name": "Anthropic / Google TPU capacity (with Broadcom)",
+    "id": "anthropic-google-tpu-2025",
+    "name": "Anthropic / Google TPU capacity (Oct 2025, >1 GW)",
     "payers": [
       "anthropic"
     ],
@@ -1045,8 +1147,62 @@
     "types": [
       "compute-lease"
     ],
-    "announced": "2025-10-01",
-    "start": "2027-01-01",
+    "announced": "2025-10-31",
+    "values": {},
+    "terms": {
+      "recourse": "unknown",
+      "takeOrPay": "unknown",
+      "hellOrHighWater": "unknown",
+      "notes": ">1 GW of TPU capacity. Value not in capture for this tranche (the ~$121.3B prospectus figure is on anthropic-google-tpu-2026). Announced: Oct 2025 (month only in capture; last day of month used). Capture row (not split by tranche): from 2027; Broadcom-Google supply through 2031. Broadcom filing: Anthropic's use of extra capacity depends on its commercial performance."
+    },
+    "statusHistory": [
+      {
+        "date": "2025-10-31",
+        "status": "announced",
+        "note": "Oct 2025; month only in capture; last day of month used"
+      },
+      {
+        "date": "2026-04-06",
+        "status": "expanded",
+        "note": "~3.5 GW; see anthropic-google-tpu-2026"
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://anthropic.com/news/google-broadcom-partnership-compute",
+        "title": "Anthropic: Google and Broadcom partnership for compute",
+        "retrieved": "2026-11-25",
+        "status": "primary-company"
+      },
+      {
+        "url": "https://finance.yahoo.com",
+        "title": "Yahoo Finance (bare domain in capture)",
+        "retrieved": "2026-11-25",
+        "status": "secondary"
+      },
+      {
+        "url": "https://cryptobriefing.com/anthropic-compute-commitments-microsoft-google-ipo/",
+        "title": "Crypto Briefing: Anthropic compute commitments to Microsoft and Google ahead of IPO",
+        "retrieved": "2026-11-25",
+        "status": "secondary"
+      }
+    ]
+  },
+  {
+    "id": "anthropic-google-tpu-2026",
+    "name": "Anthropic / Google TPU capacity (Apr 2026, ~3.5 GW, with Broadcom)",
+    "payers": [
+      "anthropic"
+    ],
+    "payees": [
+      "alphabet",
+      "broadcom"
+    ],
+    "guarantors": [],
+    "types": [
+      "compute-lease"
+    ],
+    "announced": "2026-04-06",
     "values": {
       "estimateUsd": 121300000000
     },
@@ -1055,18 +1211,12 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Prospectus: Google commitment ~$121.3B (secondary, approximate). Tranches: >1 GW (Oct 2025), ~3.5 GW (2026-04-06). Broadcom filing: Anthropic's use of extra capacity depends on its commercial performance. Start: from 2027 (year only in capture; Jan 1 used). Announced: month only in capture; 1st of month used."
+      "notes": "~3.5 GW. Prospectus: Google commitment ~$121.3B (secondary, approximate); the capture gives it for the row, not per tranche, and it is attached here, the later record, so it is never shown before 2026-04-06. The prospectus publication date is not in this capture (Task 7 to confirm). Capture row (not split by tranche): from 2027; Broadcom-Google supply through 2031. Broadcom filing: Anthropic's use of extra capacity depends on its commercial performance."
     },
     "statusHistory": [
       {
-        "date": "2025-10-01",
-        "status": "announced",
-        "note": ">1 GW (Oct 2025; month only in capture; 1st of month used)"
-      },
-      {
         "date": "2026-04-06",
-        "status": "expanded",
-        "note": "~3.5 GW"
+        "status": "announced"
       },
       {
         "date": "2026-11-25",
@@ -1114,7 +1264,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2023-01-01",
+    "announced": "2024-12-31",
     "values": {
       "hardMinimumUsd": 8000000000
     },
@@ -1122,13 +1272,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$8B prior investment, dated \"2023-24\" in capture (announced: 2023 start, Jan 1 used; exact dates not in capture)."
+      "notes": "$8B prior investment, dated \"2023-24\" in capture (announced: latest date the range allows, 2024-12-31; exact dates not in capture)."
     },
     "statusHistory": [
       {
-        "date": "2023-01-01",
+        "date": "2024-12-31",
         "status": "announced",
-        "note": "Dated 2023-24 in capture; Jan 1 2023 used"
+        "note": "Dated 2023-24 in capture; range only in capture; latest date the range allows used"
       },
       {
         "date": "2026-04-20",
@@ -1412,21 +1562,21 @@
     "types": [
       "compute-lease"
     ],
-    "announced": "2026-05-01",
-    "end": "2029-05-01",
+    "announced": "2026-05-31",
+    "end": "2029-05-31",
     "values": {},
     "terms": {
       "maturity": "~3 years, through May 2029",
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$1.25B per month through May 2029 per SpaceX S-1 (secondary). No total given in capture, so value fields left empty. >300 MW, ~220k NVIDIA GPUs (Colossus 1); reduced fees during the May-Jun 2026 ramp. Announced and end: month only in capture; 1st of month used."
+      "notes": "$1.25B per month through May 2029 per SpaceX S-1 (secondary). No total given in capture, so value fields left empty. >300 MW, ~220k NVIDIA GPUs (Colossus 1); reduced fees during the May-Jun 2026 ramp. Announced and end: month only in capture; last day of month used."
     },
     "statusHistory": [
       {
-        "date": "2026-05-01",
+        "date": "2026-05-31",
         "status": "announced",
-        "note": "May 2026; month only in capture; 1st of month used"
+        "note": "May 2026; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -1465,7 +1615,7 @@
       "spv-financing"
     ],
     "announced": "2025-10-16",
-    "end": "2049-05-01",
+    "end": "2049-05-31",
     "values": {
       "hardMinimumUsd": 27300000000
     },
@@ -1476,7 +1626,7 @@
       "collateral": "Senior secured (collateral detail not in capture)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$27.3B senior secured bonds, fully amortising; S&P A+. PIMCO ~$18B of the bonds. Recourse to Meta not stated; Meta residual value guarantee is in meta-hyperion-lease. End: month only in capture; 1st of month used (May 2049)."
+      "notes": "$27.3B senior secured bonds, fully amortising; S&P A+. PIMCO ~$18B of the bonds. Recourse to Meta not stated; Meta residual value guarantee is in meta-hyperion-lease. End: month only in capture; last day of month used (May 2049)."
     },
     "statusHistory": [
       {
@@ -1661,7 +1811,7 @@
       "equity",
       "spv-financing"
     ],
-    "announced": "2025-10-01",
+    "announced": "2025-10-31",
     "values": {
       "estimateUsd": 7500000000
     },
@@ -1669,13 +1819,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Reported structure: $20B SPV ($7.5B equity / $12.5B debt) that buys NVIDIA GPUs and leases them to xAI (now part of SpaceX) on a 5-year lease with a purchase option. GPUs are collateral. This record: $7.5B equity, Valor-led (reported). Announced: month only in capture; 1st of month used."
+      "notes": "Reported structure: $20B SPV ($7.5B equity / $12.5B debt) that buys NVIDIA GPUs and leases them to xAI (now part of SpaceX) on a 5-year lease with a purchase option. GPUs are collateral. This record: $7.5B equity, Valor-led (reported). Announced: month only in capture; last day of month used."
     },
     "statusHistory": [
       {
-        "date": "2025-10-01",
+        "date": "2025-10-31",
         "status": "announced",
-        "note": "Reported Oct 2025; month only in capture; 1st of month used"
+        "note": "Reported Oct 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -1726,7 +1876,7 @@
       "loan",
       "spv-financing"
     ],
-    "announced": "2025-10-01",
+    "announced": "2025-10-31",
     "values": {
       "estimateUsd": 12500000000
     },
@@ -1735,13 +1885,13 @@
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Reported structure: $20B SPV ($7.5B equity / $12.5B debt) that buys NVIDIA GPUs and leases them to xAI (now part of SpaceX) on a 5-year lease with a purchase option. GPUs are collateral. This record: $12.5B debt from Apollo and Diameter (reported). Rate unknown. Announced: month only in capture; 1st of month used."
+      "notes": "Reported structure: $20B SPV ($7.5B equity / $12.5B debt) that buys NVIDIA GPUs and leases them to xAI (now part of SpaceX) on a 5-year lease with a purchase option. GPUs are collateral. This record: $12.5B debt from Apollo and Diameter (reported). Rate unknown. Announced: month only in capture; last day of month used."
     },
     "statusHistory": [
       {
-        "date": "2025-10-01",
+        "date": "2025-10-31",
         "status": "announced",
-        "note": "Reported Oct 2025; month only in capture; 1st of month used"
+        "note": "Reported Oct 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -1791,7 +1941,7 @@
       "equity",
       "spv-financing"
     ],
-    "announced": "2025-10-01",
+    "announced": "2025-10-31",
     "values": {
       "ceilingUsd": 2000000000
     },
@@ -1799,13 +1949,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Reported structure: $20B SPV ($7.5B equity / $12.5B debt) that buys NVIDIA GPUs and leases them to xAI (now part of SpaceX) on a 5-year lease with a purchase option. GPUs are collateral. This record: NVIDIA up to $2B equity (reported). May overlap with the ~$20.98B NVIDIA investment in SpaceX/xAI reported in the strategic-investments row (nvidia-spacex-xai-equity); the capture does not break that figure down. Announced: month only in capture; 1st of month used."
+      "notes": "Reported structure: $20B SPV ($7.5B equity / $12.5B debt) that buys NVIDIA GPUs and leases them to xAI (now part of SpaceX) on a 5-year lease with a purchase option. GPUs are collateral. This record: NVIDIA up to $2B equity (reported). May overlap with the ~$20.98B NVIDIA investment in SpaceX/xAI reported in the strategic-investments row (nvidia-spacex-xai-equity); the capture does not break that figure down. Announced: month only in capture; last day of month used."
     },
     "statusHistory": [
       {
-        "date": "2025-10-01",
+        "date": "2025-10-31",
         "status": "announced",
-        "note": "Reported Oct 2025; month only in capture; 1st of month used"
+        "note": "Reported Oct 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -1854,7 +2004,7 @@
     "types": [
       "compute-lease"
     ],
-    "announced": "2025-10-01",
+    "announced": "2025-10-31",
     "values": {},
     "terms": {
       "maturity": "5-year lease plus purchase option",
@@ -1862,13 +2012,13 @@
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Reported structure: $20B SPV ($7.5B equity / $12.5B debt) that buys NVIDIA GPUs and leases them to xAI (now part of SpaceX) on a 5-year lease with a purchase option. GPUs are collateral. This record: the lease from the SPV to xAI; lease payments not in capture. The SPV buys the GPUs from NVIDIA (amount not separately stated). Announced: month only in capture; 1st of month used."
+      "notes": "Reported structure: $20B SPV ($7.5B equity / $12.5B debt) that buys NVIDIA GPUs and leases them to xAI (now part of SpaceX) on a 5-year lease with a purchase option. GPUs are collateral. This record: the lease from the SPV to xAI; lease payments not in capture. The SPV buys the GPUs from NVIDIA (amount not separately stated). Announced: month only in capture; last day of month used."
     },
     "statusHistory": [
       {
-        "date": "2025-10-01",
+        "date": "2025-10-31",
         "status": "announced",
-        "note": "Reported Oct 2025; month only in capture; 1st of month used"
+        "note": "Reported Oct 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -2048,9 +2198,9 @@
     "types": [
       "compute-lease"
     ],
-    "announced": "2024-01-01",
+    "announced": "2024-12-31",
     "start": "2023-01-01",
-    "end": "2030-01-01",
+    "end": "2030-12-31",
     "values": {
       "estimateUsd": 10000000000
     },
@@ -2059,13 +2209,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "~$10B per The Information (unconfirmed). Terms unknown. Reported 2024 (announced: year only in capture; Jan 1 used); runs 2023-2030 (start and end: year only in capture; Jan 1 used). Microsoft was 62% of CoreWeave 2024 revenue."
+      "notes": "~$10B per The Information (unconfirmed). Terms unknown. Reported 2024 (announced: year only in capture; Dec 31 used); runs 2023-2030 (start: year only in capture; Jan 1 used for a start date; end: year only in capture; Dec 31 used). Microsoft was 62% of CoreWeave 2024 revenue."
     },
     "statusHistory": [
       {
-        "date": "2024-01-01",
+        "date": "2024-12-31",
         "status": "announced",
-        "note": "Reported 2024; year only in capture; Jan 1 used"
+        "note": "Reported 2024; year only in capture; Dec 31 used"
       },
       {
         "date": "2026-11-25",
@@ -2146,7 +2296,7 @@
       "compute-lease"
     ],
     "announced": "2026-04-09",
-    "end": "2032-12-01",
+    "end": "2032-12-31",
     "values": {
       "hardMinimumUsd": 21000000000
     },
@@ -2155,7 +2305,7 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "+$21B, Vera Rubin, inference. Through Dec 2032 (end: month only in capture; 1st of month used)."
+      "notes": "+$21B, Vera Rubin, inference. Through Dec 2032 (end: month only in capture; last day of month used)."
     },
     "statusHistory": [
       {
@@ -2252,8 +2402,8 @@
     "types": [
       "loan"
     ],
-    "announced": "2023-07-01",
-    "end": "2028-03-01",
+    "announced": "2023-07-31",
+    "end": "2028-03-31",
     "values": {
       "hardMinimumUsd": 2300000000
     },
@@ -2264,13 +2414,13 @@
       "collateral": "GPUs (secured)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.3B GPU-backed delayed-draw term loan; secured, recourse (aggregator). Facility size; drawn amount not in capture. ~15% effective rate at 2026-06-30. Announced and end: month only in capture; 1st of month used."
+      "notes": "$2.3B GPU-backed delayed-draw term loan; secured, recourse (aggregator). Facility size; drawn amount not in capture. ~15% effective rate at 2026-06-30. Announced and end: month only in capture; last day of month used."
     },
     "statusHistory": [
       {
-        "date": "2023-07-01",
+        "date": "2023-07-31",
         "status": "announced",
-        "note": "Jul 2023; month only in capture; 1st of month used"
+        "note": "Jul 2023; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -2309,7 +2459,7 @@
       "loan"
     ],
     "announced": "2024-05-16",
-    "end": "2030-08-01",
+    "end": "2030-08-31",
     "values": {
       "hardMinimumUsd": 7600000000
     },
@@ -2320,7 +2470,7 @@
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$7.6B GPU-backed delayed-draw term loan. Facility size; drawn amount not in capture. Recourse not stated. End: month only in capture; 1st of month used."
+      "notes": "$7.6B GPU-backed delayed-draw term loan. Facility size; drawn amount not in capture. Recourse not stated. End: month only in capture; last day of month used."
     },
     "statusHistory": [
       {
@@ -2370,7 +2520,7 @@
       "collateral": "Secured by a Compute Acquisition Co. subsidiary (GPUs)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.6B GPU-backed delayed-draw term loan from Morgan Stanley, MUFG and a syndicate (\"banks\" = unnamed syndicate members). Funds the OpenAI contract (openai-coreweave). Facility size; drawn amount not in capture. Recourse not stated."
+      "notes": "$2.6B GPU-backed delayed-draw term loan from Morgan Stanley, MUFG and a syndicate (\"banks\" = unnamed syndicate members). Funds the OpenAI contract (openai-coreweave-* records; tranche not stated). Facility size; drawn amount not in capture. Recourse not stated."
     },
     "statusHistory": [
       {
@@ -2419,7 +2569,7 @@
       "loan"
     ],
     "announced": "2026-03-31",
-    "end": "2032-03-01",
+    "end": "2032-03-31",
     "values": {
       "hardMinimumUsd": 8500000000
     },
@@ -2430,7 +2580,7 @@
       "collateral": "Secured by Compute Acquisition Co. VIII (GPUs)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$8.5B ($7.5B initially) GPU-backed loan; non-recourse. Blackstone anchor; Morgan Stanley and MUFG structured (lending role not stated, so not listed as payers). Moody's A3 / DBRS A(low): first investment-grade GPU-backed loan. Facility size; drawn amount not in capture. End: month only in capture; 1st of month used."
+      "notes": "$8.5B ($7.5B initially) GPU-backed loan; non-recourse. Blackstone anchor; Morgan Stanley and MUFG structured (lending role not stated, so not listed as payers). Moody's A3 / DBRS A(low): first investment-grade GPU-backed loan. Facility size; drawn amount not in capture. End: month only in capture; last day of month used."
     },
     "statusHistory": [
       {
@@ -2535,7 +2685,7 @@
     "types": [
       "loan"
     ],
-    "announced": "2026-08-01",
+    "announced": "2026-08-31",
     "values": {
       "hardMinimumUsd": 2600000000
     },
@@ -2546,13 +2696,13 @@
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.6B GPU-backed loan, syndicated by Morgan Stanley and MUFG (\"banks\" = unnamed syndicate members). Underlying contracts average ~3 years. Facility size; drawn amount not in capture. Recourse not stated. Announced: month only in capture; 1st of month used (Aug 2026)."
+      "notes": "$2.6B GPU-backed loan, syndicated by Morgan Stanley and MUFG (\"banks\" = unnamed syndicate members). Underlying contracts average ~3 years. Facility size; drawn amount not in capture. Recourse not stated. Announced: month only in capture; last day of month used (Aug 2026)."
     },
     "statusHistory": [
       {
-        "date": "2026-08-01",
+        "date": "2026-08-31",
         "status": "announced",
-        "note": "Aug 2026; month only in capture; 1st of month used"
+        "note": "Aug 2026; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -2595,7 +2745,7 @@
       "compute-lease"
     ],
     "announced": "2025-09-08",
-    "end": "2031-01-01",
+    "end": "2031-12-31",
     "values": {
       "hardMinimumUsd": 17400000000,
       "ceilingUsd": 19400000000
@@ -2606,7 +2756,7 @@
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
       "terminationRights": "Termination clause exists; trigger not retrieved",
-      "notes": "$17.4B, up to $19.4B. Vineland, NJ. Value depends on GPU services delivered. Through 2031 (end: year only in capture; Jan 1 used)."
+      "notes": "$17.4B, up to $19.4B. Vineland, NJ. Value depends on GPU services delivered. Through 2031 (end: year only in capture; Dec 31 used)."
     },
     "statusHistory": [
       {
@@ -2762,7 +2912,7 @@
     "types": [
       "loan"
     ],
-    "announced": "2026-02-01",
+    "announced": "2026-02-02",
     "values": {
       "ceilingUsd": 25000000000
     },
@@ -2770,11 +2920,11 @@
       "recourse": "recourse",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Corporate bond: up to $25B, 8 parts, >$129B of orders. Recourse: senior corporate debt of Oracle. No more bonds expected in 2026. Dated 2026-02-01/02 in capture (first date used). Part of a 2026 plan of $45-50B including ~$25B equity (oracle-equity-2026)."
+      "notes": "Corporate bond: up to $25B, 8 parts, >$129B of orders. Recourse: senior corporate debt of Oracle. No more bonds expected in 2026. Dated 2026-02-01/02 in capture (later date used). Part of a 2026 plan of $45-50B including ~$25B equity (oracle-equity-2026)."
     },
     "statusHistory": [
       {
-        "date": "2026-02-01",
+        "date": "2026-02-02",
         "status": "announced"
       },
       {
@@ -2817,7 +2967,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-02-01",
+    "announced": "2026-02-02",
     "values": {
       "estimateUsd": 25000000000
     },
@@ -2825,11 +2975,11 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "~$25B equity within a 2026 financing plan of $45-50B that also includes the bond (oracle-bonds-2026). Dated 2026-02-01/02 in capture (first date used)."
+      "notes": "~$25B equity within a 2026 financing plan of $45-50B that also includes the bond (oracle-bonds-2026). Dated 2026-02-01/02 in capture (later date used)."
     },
     "statusHistory": [
       {
-        "date": "2026-02-01",
+        "date": "2026-02-02",
         "status": "announced"
       },
       {
@@ -2874,7 +3024,7 @@
       "loan",
       "spv-financing"
     ],
-    "announced": "2025-10-01",
+    "announced": "2026-04-30",
     "values": {
       "estimateUsd": 38000000000
     },
@@ -2882,13 +3032,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$38B ($23B + $15B; capture does not say which amount is which site), JPMorgan-led (\"banks\" = other lenders). Oracle is the tenant. Reported financings, so recorded as an estimate. Other terms unknown. Announced: capture dates the group \"late 2025 - Apr 2026\"; Oct 1 2025 used as first of \"late 2025\"; exact date not in capture."
+      "notes": "$38B ($23B + $15B; capture does not say which amount is which site), JPMorgan-led (\"banks\" = other lenders). Oracle is the tenant. Reported financings, so recorded as an estimate. Other terms unknown. Announced: capture dates the group \"late 2025 - Apr 2026\"; latest date the range allows (2026-04-30) used; exact date not in capture."
     },
     "statusHistory": [
       {
-        "date": "2025-10-01",
+        "date": "2026-04-30",
         "status": "announced",
-        "note": "capture dates the group \"late 2025 - Apr 2026\"; Oct 1 2025 used as first of \"late 2025\"; exact date not in capture"
+        "note": "capture dates the group \"late 2025 - Apr 2026\"; latest date the range allows (2026-04-30) used; exact date not in capture"
       },
       {
         "date": "2026-11-25",
@@ -2922,7 +3072,7 @@
       "loan",
       "spv-financing"
     ],
-    "announced": "2025-10-01",
+    "announced": "2026-04-30",
     "values": {
       "estimateUsd": 18000000000
     },
@@ -2930,13 +3080,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$18B from SMBC, MUFG, BNP Paribas and Goldman Sachs. Developer/borrower not named in capture. Oracle is the tenant. Reported financing, so recorded as an estimate. Other terms unknown. Announced: capture dates the group \"late 2025 - Apr 2026\"; Oct 1 2025 used as first of \"late 2025\"; exact date not in capture."
+      "notes": "$18B from SMBC, MUFG, BNP Paribas and Goldman Sachs. Developer/borrower not named in capture. Oracle is the tenant. Reported financing, so recorded as an estimate. Other terms unknown. Announced: capture dates the group \"late 2025 - Apr 2026\"; latest date the range allows (2026-04-30) used; exact date not in capture."
     },
     "statusHistory": [
       {
-        "date": "2025-10-01",
+        "date": "2026-04-30",
         "status": "announced",
-        "note": "capture dates the group \"late 2025 - Apr 2026\"; Oct 1 2025 used as first of \"late 2025\"; exact date not in capture"
+        "note": "capture dates the group \"late 2025 - Apr 2026\"; latest date the range allows (2026-04-30) used; exact date not in capture"
       },
       {
         "date": "2026-11-25",
@@ -2969,7 +3119,7 @@
     ],
     "announced": "2026-04-24",
     "signed": "2026-04-24",
-    "end": "2045-01-01",
+    "end": "2045-12-31",
     "values": {
       "hardMinimumUsd": 14000000000
     },
@@ -2979,7 +3129,7 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$14B 144A bonds at 7.5%, priced 98.75; PIMCO ~$10B. Bank of America structured. Michigan project ~$16B in total with Blackstone ~$2B equity (blackstone-related-digital-michigan-equity). Oracle is the tenant. Closed 2026-04-24 (the only date in capture, used as announced). Bonds to 2045 (end: year only in capture; Jan 1 used)."
+      "notes": "$14B 144A bonds at 7.5%, priced 98.75; PIMCO ~$10B. Bank of America structured. Michigan project ~$16B in total with Blackstone ~$2B equity (blackstone-related-digital-michigan-equity). Oracle is the tenant. Closed 2026-04-24 (the only date in capture, used as announced). Bonds to 2045 (end: year only in capture; Dec 31 used)."
     },
     "statusHistory": [
       {
@@ -3100,9 +3250,9 @@
         "status": "expanded"
       },
       {
-        "date": "2025-12-01",
+        "date": "2025-12-31",
         "status": "active",
-        "note": "First latest-generation shipment Dec 2025; month only in capture; 1st of month used"
+        "note": "First latest-generation shipment Dec 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -3162,9 +3312,9 @@
         "status": "announced"
       },
       {
-        "date": "2025-11-01",
+        "date": "2025-11-30",
         "status": "active",
-        "note": "US export licences Nov 2025 with security assurances; month only in capture; 1st of month used"
+        "note": "US export licences Nov 2025 with security assurances; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -3206,7 +3356,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2025-09-01",
+    "announced": "2026-08-31",
     "values": {
       "hardMinimumUsd": 5000000000
     },
@@ -3214,13 +3364,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$5B at $23.28 per share. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+      "notes": "$5B at $23.28 per share. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
     },
     "statusHistory": [
       {
-        "date": "2025-09-01",
+        "date": "2026-08-31",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
       },
       {
         "date": "2026-11-25",
@@ -3262,7 +3412,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2025-09-01",
+    "announced": "2026-08-31",
     "values": {
       "hardMinimumUsd": 1000000000
     },
@@ -3270,13 +3420,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$1B. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+      "notes": "$1B. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
     },
     "statusHistory": [
       {
-        "date": "2025-09-01",
+        "date": "2026-08-31",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
       },
       {
         "date": "2026-11-25",
@@ -3318,7 +3468,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2025-09-01",
+    "announced": "2026-08-31",
     "values": {
       "hardMinimumUsd": 2000000000
     },
@@ -3326,13 +3476,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2B at $414.79 per share. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+      "notes": "$2B at $414.79 per share. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
     },
     "statusHistory": [
       {
-        "date": "2025-09-01",
+        "date": "2026-08-31",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
       },
       {
         "date": "2026-11-25",
@@ -3374,7 +3524,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2025-09-01",
+    "announced": "2026-08-31",
     "values": {
       "hardMinimumUsd": 2000000000
     },
@@ -3382,13 +3532,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2B. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+      "notes": "$2B. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
     },
     "statusHistory": [
       {
-        "date": "2025-09-01",
+        "date": "2026-08-31",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
       },
       {
         "date": "2026-11-25",
@@ -3430,7 +3580,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2025-09-01",
+    "announced": "2026-08-31",
     "values": {
       "hardMinimumUsd": 2000000000
     },
@@ -3438,13 +3588,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2B. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+      "notes": "$2B. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
     },
     "statusHistory": [
       {
-        "date": "2025-09-01",
+        "date": "2026-08-31",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
       },
       {
         "date": "2026-11-25",
@@ -3486,7 +3636,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-03-01",
+    "announced": "2026-03-31",
     "values": {
       "hardMinimumUsd": 2000000000
     },
@@ -3494,13 +3644,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2B for 8.3% of Nebius (Mar 2026; announced: month only in capture; 1st of month used). Also in the Nebius-Meta row status."
+      "notes": "$2B for 8.3% of Nebius (Mar 2026; announced: month only in capture; last day of month used). Also in the Nebius-Meta row status."
     },
     "statusHistory": [
       {
-        "date": "2026-03-01",
+        "date": "2026-03-31",
         "status": "announced",
-        "note": "Mar 2026; month only in capture; 1st of month used"
+        "note": "Mar 2026; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -3548,7 +3698,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-01-01",
+    "announced": "2026-01-31",
     "values": {
       "hardMinimumUsd": 2000000000
     },
@@ -3556,13 +3706,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "+$2B at $87.20 per share (Jan 2026; announced: month only in capture; 1st of month used). Also in the NVIDIA CoreWeave backstop row status."
+      "notes": "+$2B at $87.20 per share (Jan 2026; announced: month only in capture; last day of month used). Also in the NVIDIA CoreWeave backstop row status."
     },
     "statusHistory": [
       {
-        "date": "2026-01-01",
+        "date": "2026-01-31",
         "status": "announced",
-        "note": "Jan 2026; month only in capture; 1st of month used"
+        "note": "Jan 2026; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
@@ -3672,7 +3822,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-02-01",
+    "announced": "2026-03-31",
     "values": {
       "hardMinimumUsd": 30000000000
     },
@@ -3680,13 +3830,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$30B into OpenAI's $110B -> $122B round (Feb-Mar 2026; announced: month only in capture; 1st of month used, Feb 2026). Replaced the 10 GW LOI (nvidia-openai-loi-10gw)."
+      "notes": "$30B into OpenAI's $110B -> $122B round (Feb-Mar 2026; announced: range only in capture; latest date the range allows used). Replaced the 10 GW LOI (nvidia-openai-loi-10gw)."
     },
     "statusHistory": [
       {
-        "date": "2026-02-01",
+        "date": "2026-03-31",
         "status": "announced",
-        "note": "Feb-Mar 2026; month only in capture; 1st of month used"
+        "note": "Feb-Mar 2026; range only in capture; latest date the range allows used"
       },
       {
         "date": "2026-11-25",
@@ -3740,7 +3890,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2025-09-01",
+    "announced": "2026-08-31",
     "values": {
       "estimateUsd": 20980000000
     },
@@ -3748,13 +3898,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "~$20.98B reported. The capture does not break this down; it may include NVIDIA's participation in the xAI $20B Series E (2026-01-06) and the up-to-$2B Colossus 2 SPV equity (nvidia-xai-colossus2-spv-equity). Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+      "notes": "~$20.98B reported. The capture does not break this down; it may include NVIDIA's participation in the xAI $20B Series E (2026-01-06) and the up-to-$2B Colossus 2 SPV equity (nvidia-xai-colossus2-spv-equity). Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
     },
     "statusHistory": [
       {
-        "date": "2025-09-01",
+        "date": "2026-08-31",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
       },
       {
         "date": "2026-11-25",
@@ -3796,19 +3946,19 @@
     "types": [
       "equity"
     ],
-    "announced": "2025-09-01",
+    "announced": "2026-08-31",
     "values": {},
     "terms": {
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Amount unknown. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+      "notes": "Amount unknown. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
     },
     "statusHistory": [
       {
-        "date": "2025-09-01",
+        "date": "2026-08-31",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the first of that range (Sep 1 2025); exact date not in capture."
+        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
       },
       {
         "date": "2026-11-25",

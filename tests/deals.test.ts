@@ -65,6 +65,44 @@ describe('loadDeals', () => {
       expect(deals.some(d => d.id === id)).toBe(true);
   });
 
+  it('splits multi-tranche deals so no value is dated before it was public', () => {
+    expect(deals.some(d => d.id === 'openai-coreweave' || d.id === 'anthropic-google-tpu')).toBe(false);
+    expect(byId('openai-coreweave-2025-03')).toMatchObject({ announced: '2025-03-31', values: { hardMinimumUsd: 11.9e9 } });
+    expect(byId('openai-coreweave-2025-05')).toMatchObject({ announced: '2025-05-31', values: { hardMinimumUsd: 4e9 } });
+    expect(byId('openai-coreweave-2025-09')).toMatchObject({ announced: '2025-09-25', values: { ceilingUsd: 6.5e9 } });
+    expect(byId('anthropic-google-tpu-2025')).toMatchObject({ announced: '2025-10-31', values: {} });
+    expect(byId('anthropic-google-tpu-2026')).toMatchObject({ announced: '2026-04-06', values: { estimateUsd: 121.3e9 } });
+  });
+
+  it('dates month-only, year-only and range-only items at the latest day they allow (no look-ahead)', () => {
+    const expected: Record<string, string> = {
+      'nvidia-intel-equity': '2026-08-31', 'nvidia-nokia-equity': '2026-08-31', 'nvidia-synopsys-equity': '2026-08-31',
+      'nvidia-lumentum-equity': '2026-08-31', 'nvidia-coherent-equity': '2026-08-31',
+      'nvidia-spacex-xai-equity': '2026-08-31', 'nvidia-mistral-equity': '2026-08-31',
+      'vantage-oracle-tx-wi-loans': '2026-04-30', 'new-mexico-oracle-project-loan': '2026-04-30',
+      'amazon-anthropic-equity-2023-24': '2024-12-31', 'openai-aws-compute-2025': '2025-11-30',
+      'coreweave-ddtl-5-5': '2026-08-31', 'coreweave-ddtl-1': '2023-07-31', 'microsoft-coreweave': '2024-12-31',
+      'xai-colossus2-spv-equity': '2025-10-31', 'xai-colossus2-spv-debt': '2025-10-31',
+      'nvidia-xai-colossus2-spv-equity': '2025-10-31', 'xai-colossus2-gpu-lease': '2025-10-31',
+      'anthropic-spacex-colossus': '2026-05-31', 'nvidia-openai-equity-2026': '2026-03-31',
+      'nvidia-nebius-equity': '2026-03-31', 'nvidia-coreweave-equity-2026': '2026-01-31',
+      'oracle-bonds-2026': '2026-02-02', 'oracle-equity-2026': '2026-02-02',
+    };
+    for (const [id, date] of Object.entries(expected)) {
+      expect(byId(id).announced, id).toBe(date);
+      expect(byId(id).statusHistory[0].date, id).toBe(date);
+    }
+    // No point-in-time date (announced, signed, statusHistory) is a 1st-of-month placeholder.
+    for (const d of deals)
+      for (const date of [d.announced, d.signed, ...d.statusHistory.map(h => h.date)])
+        if (date) expect(date, d.id).not.toMatch(/-01$/);
+  });
+
+  it('keeps the VERIFY-flagged Anthropic equity amounts unverified', () => {
+    for (const id of ['nvidia-anthropic-equity', 'microsoft-anthropic-equity'])
+      expect(byId(id).sources.every(s => s.status === 'unverified')).toBe(true);
+  });
+
   it('keeps every source dated and labelled, and primary-filing only for SEC URLs', () => {
     for (const d of deals) for (const s of d.sources) {
       expect(s.retrieved).toBe('2026-11-25');
