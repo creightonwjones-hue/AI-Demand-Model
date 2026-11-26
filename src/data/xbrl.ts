@@ -188,7 +188,12 @@ export function extractQuarterly(companyFacts: unknown, entity: Entity, metricMa
         if (!raw.length) continue;
         const perQuarter = STOCK_METRICS.has(metric) ? stockFacts(raw, entity, metric) : flowFacts(raw, entity, metric);
         const perFiling = groupBy([...perQuarter.values()].flat(), f => `${f.quarter}|${f.source.url}`);
-        for (const [k, fs] of perFiling) if (!chosen.has(k)) chosen.set(k, fs);
+        for (const [k, fs] of perFiling) {
+          const prev = chosen.get(k);
+          // First tag in priority order wins, except that an all-zero value never beats a lower-priority non-zero
+          // one in the same filing and quarter (e.g. a placeholder LongTermDebt = 0 next to a real LongTermNotesAndLoans).
+          if (!prev || (prev.every(f => f.value === 0) && fs.some(f => f.value !== 0))) chosen.set(k, fs);
+        }
       }
     }
     for (const fs of chosen.values()) out.push(...fs);

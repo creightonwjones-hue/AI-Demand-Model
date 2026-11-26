@@ -89,6 +89,8 @@ function main() {
       seriesPoints: manual.reduce((n, s) => n + s.points.filter(p => p.source?.status === 'unverified').length, 0),
     },
     window: { from: FROM, to: latest },
+    zeroValueFacts: inWindow.filter(f => f.value === 0)
+      .map(f => ({ entityId: f.entityId, metric: f.metric, quarter: f.quarter, asKnownAt: f.asKnownAt })),
   };
 
   mkdirSync(OUT, { recursive: true });
@@ -100,6 +102,8 @@ function main() {
   writeJson('manifest.json', manifestOut);
 
   printTable(entities, inWindow, coverage, latest, manifestOut);
+  console.log(`\nZero-valued facts (reported, not failed): ${manifestOut.zeroValueFacts.length}`);
+  for (const z of manifestOut.zeroValueFacts) console.log(`  ${z.entityId} ${z.metric} ${z.quarter} asKnownAt ${z.asKnownAt}`);
 }
 
 function printTable(entities: Entity[], facts: FinancialFact[], coverage: ReturnType<typeof coverageReport>, latest: string,

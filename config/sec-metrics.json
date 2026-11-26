@@ -3,7 +3,7 @@
   "capex": { "us-gaap": ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"] },
   "operatingCashFlow": { "us-gaap": ["NetCashProvidedByUsedInOperatingActivities"] },
   "cash": { "us-gaap": ["CashAndCashEquivalentsAtCarryingValue"] },
-  "longTermDebt": { "us-gaap": ["LongTermDebt", "LongTermDebtNoncurrent", "LongTermDebtAndCapitalLeaseObligations", "LongTermNotesAndLoans"] },
+  "longTermDebt": { "us-gaap": ["LongTermDebt", "LongTermDebtNoncurrent", "LongTermNotesAndLoans"] },
   "netIncome": { "us-gaap": ["NetIncomeLoss", "NetIncomeLossAvailableToCommonStockholdersBasic", "ProfitLoss"] },
   "epsDiluted": { "us-gaap": ["EarningsPerShareDiluted"] },
   "accountsReceivable": { "us-gaap": ["AccountsReceivableNetCurrent"] },

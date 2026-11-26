@@ -68,6 +68,25 @@ describe('tag priority per filing', () => {
   });
 });
 
+describe('zero values do not beat non-zero fallback tags within a filing', () => {
+  const row = (val: number, filed: string, accn: string) =>
+    ({ end: '2026-03-31', val, accn, fy: 2026, fp: 'Q1', form: '10-Q', filed });
+  const doc = {
+    cik: 1234567, entityName: 'Mini Co',
+    facts: { 'us-gaap': {
+      LongTermDebt: { units: { USD: [row(0, '2026-04-30', '0001234567-26-000001'), row(0, '2026-07-30', '0001234567-26-000002')] } },
+      LongTermNotesAndLoans: { units: { USD: [row(70, '2026-04-30', '0001234567-26-000001')] } },
+    } },
+  };
+  const facts = extractQuarterly(doc, entity, metricMap).filter(f => f.metric === 'longTermDebt');
+  it('uses the non-zero lower-priority tag when the priority tag is zero in the same filing', () => {
+    expect(facts.find(f => f.asKnownAt === '2026-04-30')!.value).toBe(70);
+  });
+  it('keeps a zero when every candidate tag in that filing is zero', () => {
+    expect(facts.find(f => f.asKnownAt === '2026-07-30')!.value).toBe(0);
+  });
+});
+
 describe('balance-sheet quarters align with flow quarters (off-calendar filer)', () => {
   const inst = (end: string, val: number) =>
     ({ end, val, accn: '0001234567-26-000099', fy: 2027, fp: 'Q2', form: '10-Q', filed: '2026-09-01' });
