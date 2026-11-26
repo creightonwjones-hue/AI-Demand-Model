@@ -10,6 +10,7 @@ export const FredConfigSchema = z.array(z.object({
   name: z.string(),
   unit: z.string(),
   kind: z.enum(['condition', 'indicator', 'consensus', 'guidance']),
+  lagDays: z.number().int().min(0), // publication lag: asKnownAt = observation date + lagDays
 }));
 
 async function main(): Promise<void> {

@@ -38,10 +38,13 @@ export function buildSeries(rows: Record<string, string>[]): Series[] {
     if (!provider) throw new Error(`${where}: empty provider`);
     const meta = { id, name: r.name.trim(), unit: r.unit.trim(), provider, kind: r.kind.trim() as Series['kind'] };
     const date = isoDate(r.date, where);
+    const asKnownAt = isoDate(r.as_known_at, where);
+    // A point cannot be public before the period it describes (guards back-reported and month-only rows).
+    if (asKnownAt < date) throw new Error(`${where}: as_known_at ${asKnownAt} is before date ${date} (look-ahead)`);
     const point = {
       date,
       value: parseNumber(r.value, where),
-      asKnownAt: isoDate(r.as_known_at, where),
+      asKnownAt,
       source: SourceRefSchema.parse({
         url: r.source_url.trim(),
         title: r.source_title.trim() || undefined,
@@ -73,13 +76,23 @@ export function loadManualSeries(csvText: string): Series[] {
   return buildSeries(parseCsv(csvText));
 }
 
+function addDays(d: string, n: number): string {
+  const [y, m, day] = d.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, day + n)).toISOString().slice(0, 10);
+}
+
 /**
  * FRED graph CSV (`observation_date,<ID>`; older files use `DATE,<ID>`) -> Series. Missing values (".") and empty
- * cells are skipped, never filled.
+ * cells are skipped, never filled. Each point's `asKnownAt` is its observation date plus the series' publication lag
+ * (`lagDays`, from config/fred-series.json), so the backtest never sees a value before it was published.
  */
 export function fredToSeries(
-  id: string, csvText: string, meta: { name: string; unit: string; kind: Series['kind']; retrieved?: string },
+  id: string, csvText: string,
+  meta: { name: string; unit: string; kind: Series['kind']; lagDays: number; retrieved?: string },
 ): Series {
+  if (!Number.isInteger(meta.lagDays) || meta.lagDays < 0) {
+    throw new Error(`FRED ${id}: lagDays must be a non-negative integer, got ${meta.lagDays}`);
+  }
   const rows = parseCsv(csvText);
   const points: SeriesPoint[] = [];
   for (const r of rows) {
@@ -87,7 +100,8 @@ export function fredToSeries(
     const date = r.observation_date ?? r.DATE;
     const raw = (r[id] ?? '').trim();
     if (raw === '.' || raw === '') continue;
-    points.push({ date: isoDate(date, `FRED ${id}`), value: parseNumber(raw, `FRED ${id} ${date}`) });
+    const day = isoDate(date, `FRED ${id}`);
+    points.push({ date: day, value: parseNumber(raw, `FRED ${id} ${date}`), asKnownAt: addDays(day, meta.lagDays) });
   }
   if (!rows.length) {
     const header = csvText.split(/\r?\n/, 1)[0] ?? '';

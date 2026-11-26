@@ -59,7 +59,7 @@ describe('buildSeries', () => {
   });
 
   it('rejects inconsistent metadata, bad values, statuses and dates', () => {
-    expect(() => buildSeries([row(), row({ unit: '%', date: '2026-01-01' })])).toThrow(/unit/i);
+    expect(() => buildSeries([row(), row({ unit: '%', date: '2026-01-01', as_known_at: '2026-01-01' })])).toThrow(/unit/i);
     expect(() => buildSeries([row({ value: '~106' })])).toThrow(/value/i);
     expect(() => buildSeries([row({ value: '' })])).toThrow(/value/i);
     expect(() => buildSeries([row({ status: 'Primary' })])).toThrow();
@@ -67,14 +67,23 @@ describe('buildSeries', () => {
     expect(() => buildSeries([row({ provider: '' })])).toThrow(/provider/i);
     expect(() => buildSeries([row(), row()])).toThrow(/duplicate/i);
   });
+
+  it('rejects a point known before its observation date (look-ahead)', () => {
+    expect(() => buildSeries([row({ date: '2025-12-09', as_known_at: '2025-12-08' })])).toThrow(/as_known_at/i);
+    expect(buildSeries([row({ date: '2025-12-09', as_known_at: '2026-10-24' })])[0].points[0].asKnownAt)
+      .toBe('2026-10-24');
+  });
 });
 
 describe('fredToSeries', () => {
-  const meta = { name: '10-year Treasury yield', unit: '%', kind: 'condition' as const };
+  const meta = { name: '10-year Treasury yield', unit: '%', kind: 'condition' as const, lagDays: 1 };
 
-  it('parses FRED CSV and skips "." missing values', () => {
+  it('parses FRED CSV, skips "." missing values and dates each point by its publication lag', () => {
     const s = fredToSeries('DGS10', 'observation_date,DGS10\n2026-11-20,4.1\n2026-11-21,.\n', meta);
-    expect(s.points).toEqual([{ date: '2026-11-20', value: 4.1 }]);
+    expect(s.points).toEqual([{ date: '2026-11-20', value: 4.1, asKnownAt: '2026-11-21' }]);
+    const monthly = fredToSeries('RAMPAIALL', 'observation_date,RAMPAIALL\n2026-10-01,56.8\n',
+      { ...meta, lagDays: 45 });
+    expect(monthly.points[0].asKnownAt).toBe('2026-11-15');
     expect(s).toMatchObject({ id: 'DGS10', provider: 'FRED', name: meta.name, unit: '%', kind: 'condition' });
     expect(s.source.url).toBe('https://fred.stlouisfed.org/series/DGS10');
     expect(SeriesSchema.parse(s)).toBeTruthy();
@@ -98,19 +107,53 @@ describe('data/manual/series.csv', () => {
     const ora = series.find(s => s.id === 'cds5y-oracle-spgmi')!;
     expect(ora.points.at(-1)).toMatchObject({ date: '2026-11-25', value: 356 });
   });
+
+  it('has no look-ahead: back-reported and month-only points are known no earlier than the article could exist',
+    () => {
+      const rows = parseCsv(readFileSync('data/manual/series.csv', 'utf8'));
+      const at = (id: string, date: string) => rows.find(r => r.series_id === id && r.date === date)!.as_known_at;
+      // earlier point of a "from -> to" pair is known at the later point's date
+      expect(at('cds5y-oracle-spgmi', '2026-10-08')).toBe('2026-10-15');
+      expect(at('cds5y-oracle-ice', '2026-03-27')).toBe('2026-07-17');
+      expect(at('cds5y-coreweave-ice', '2026-10-15')).toBe('2026-10-22');
+      expect(at('cds5y-softbank-tvdelmarva', '2026-10-15')).toBe('2026-11-25');
+      expect(at('gpu-rent-h100-spot-silicondata', '2025-12-09')).toBe('2026-10-24');
+      for (const g of ['b200', 'h200', 'h100', 'a100']) expect(at(`gpu-rent-${g}-ornn`, '2026-10-11')).toBe('2026-10-25');
+      expect(at('gpu-rent-h100-reserved-semianalysis', '2025-10-01')).toBe('2026-03-31');
+      expect(at('gpu-rent-b200-ornn', '2026-03-01')).toBe('2026-04-30');
+      // month-only rows: date = 1st of month, known at the month's last day (or later)
+      const monthOnly = rows.filter(r => /date given as [A-Z][a-z]{2} \d{4} only|year to [A-Z][a-z]{2} \d{4}/.test(
+        r.source_title));
+      expect(monthOnly.length).toBeGreaterThanOrEqual(16);
+      for (const r of monthOnly) {
+        expect(r.date.endsWith('-01')).toBe(true);
+        const [y, m] = r.date.split('-').map(Number);
+        const monthEnd = new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10);
+        expect(r.as_known_at >= monthEnd, `${r.series_id} ${r.date}`).toBe(true);
+      }
+    });
 });
 
 describe('data/raw/fred', () => {
   const config = JSON.parse(readFileSync('config/fred-series.json', 'utf8')) as
-    Array<{ id: string; name: string; unit: string; kind: 'condition' | 'indicator' }>;
+    Array<{ id: string; name: string; unit: string; kind: 'condition' | 'indicator'; lagDays: number }>;
+  const load = (id: string) => fredToSeries(id, readFileSync(`data/raw/fred/${id}.csv`, 'utf8'),
+    config.find(c => c.id === id)!);
 
-  it('has the 11 configured series, each parsing to a non-empty FRED series', () => {
-    expect(config.map(c => c.id).sort()).toEqual(['BAMLC0A0CM', 'BAMLH0A0HYM2', 'DEXKOUS', 'DEXTAUS', 'DEXUSEU',
-      'DFF', 'DGS10', 'RAMPAIALL', 'SOFR', 'SP500', 'VIXCLS']);
+  it('has the 13 configured series, each parsing to a non-empty FRED series with asKnownAt on every point', () => {
+    expect(config.map(c => c.id).sort()).toEqual(['AAA10Y', 'BAA10Y', 'BAMLC0A0CM', 'BAMLH0A0HYM2', 'DEXKOUS',
+      'DEXTAUS', 'DEXUSEU', 'DFF', 'DGS10', 'RAMPAIALL', 'SOFR', 'SP500', 'VIXCLS']);
     for (const c of config) {
-      const s = fredToSeries(c.id, readFileSync(`data/raw/fred/${c.id}.csv`, 'utf8'), c);
+      expect(c.lagDays).toBe(c.id === 'RAMPAIALL' ? 45 : 1);
+      const s = load(c.id);
       expect(s.points.length).toBeGreaterThan(0);
+      expect(s.points.every(p => p.asKnownAt !== undefined && p.asKnownAt > p.date)).toBe(true);
     }
+  });
+
+  it('has full-history Baa and Aaa corporate spreads (the ICE BofA OAS start only in 2023)', () => {
+    expect(load('BAA10Y').points[0].date < '2022-01-01').toBe(true);
+    expect(load('AAA10Y').points[0].date < '2022-01-01').toBe(true);
   });
 
   it('has the Ramp AI Index through at least 2026-10-01', () => {

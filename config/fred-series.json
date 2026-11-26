@@ -1,13 +1,15 @@
 [
-  { "id": "DGS10", "name": "10-year Treasury constant maturity yield", "unit": "%", "kind": "condition" },
-  { "id": "SOFR", "name": "Secured Overnight Financing Rate", "unit": "%", "kind": "condition" },
-  { "id": "DFF", "name": "Effective federal funds rate", "unit": "%", "kind": "condition" },
-  { "id": "BAMLH0A0HYM2", "name": "ICE BofA US High Yield Index option-adjusted spread", "unit": "%", "kind": "condition" },
-  { "id": "BAMLC0A0CM", "name": "ICE BofA US Corporate (investment grade) Index option-adjusted spread", "unit": "%", "kind": "condition" },
-  { "id": "VIXCLS", "name": "CBOE Volatility Index (VIX) close", "unit": "index", "kind": "indicator" },
-  { "id": "SP500", "name": "S&P 500 index close", "unit": "index", "kind": "indicator" },
-  { "id": "RAMPAIALL", "name": "Ramp AI Index: share of US businesses paying for AI tools", "unit": "%", "kind": "indicator" },
-  { "id": "DEXTAUS", "name": "Taiwan dollars per US dollar", "unit": "TWD per USD", "kind": "indicator" },
-  { "id": "DEXKOUS", "name": "South Korean won per US dollar", "unit": "KRW per USD", "kind": "indicator" },
-  { "id": "DEXUSEU", "name": "US dollars per euro", "unit": "USD per EUR", "kind": "indicator" }
+  { "id": "DGS10", "name": "10-year Treasury constant maturity yield", "unit": "%", "kind": "condition", "lagDays": 1 },
+  { "id": "SOFR", "name": "Secured Overnight Financing Rate", "unit": "%", "kind": "condition", "lagDays": 1 },
+  { "id": "DFF", "name": "Effective federal funds rate", "unit": "%", "kind": "condition", "lagDays": 1 },
+  { "id": "BAMLH0A0HYM2", "name": "ICE BofA US High Yield Index option-adjusted spread", "unit": "%", "kind": "condition", "lagDays": 1 },
+  { "id": "BAMLC0A0CM", "name": "ICE BofA US Corporate (investment grade) Index option-adjusted spread", "unit": "%", "kind": "condition", "lagDays": 1 },
+  { "id": "BAA10Y", "name": "Moody's seasoned Baa corporate bond yield minus 10-year Treasury yield", "unit": "%", "kind": "condition", "lagDays": 1 },
+  { "id": "AAA10Y", "name": "Moody's seasoned Aaa corporate bond yield minus 10-year Treasury yield", "unit": "%", "kind": "condition", "lagDays": 1 },
+  { "id": "VIXCLS", "name": "CBOE Volatility Index (VIX) close", "unit": "index", "kind": "indicator", "lagDays": 1 },
+  { "id": "SP500", "name": "S&P 500 index close", "unit": "index", "kind": "indicator", "lagDays": 1 },
+  { "id": "RAMPAIALL", "name": "Ramp AI Index: share of US businesses paying for AI tools", "unit": "%", "kind": "indicator", "lagDays": 45 },
+  { "id": "DEXTAUS", "name": "Taiwan dollars per US dollar", "unit": "TWD per USD", "kind": "indicator", "lagDays": 1 },
+  { "id": "DEXKOUS", "name": "South Korean won per US dollar", "unit": "KRW per USD", "kind": "indicator", "lagDays": 1 },
+  { "id": "DEXUSEU", "name": "US dollars per euro", "unit": "USD per EUR", "kind": "indicator", "lagDays": 1 }
 ]
