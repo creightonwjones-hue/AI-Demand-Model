@@ -1,7 +1,7 @@
 # AI Capital Flows — design
 
 - Date: 2026-11-26
-- Status: approach approved; written design reviewed by a builder check and updated with the owner's answers; awaiting owner approval
+- Status: approved by the owner on 2026-11-26
 - Owner: the fund's investing manager (the user). Builders: Claude sessions.
 - Related: visual mockup `docs/mockups/canvas-v6.html`, research report `reports/AI demand forecasting methods.md`,
   research notes `research_notes/AI demand forecasting methods/`, source captures `data/sources/`, SEC data `data/raw/sec/`.
