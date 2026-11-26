@@ -1,0 +1,22 @@
+[
+  {
+    "id": "nvidia",
+    "name": "NVIDIA",
+    "layer": "chips",
+    "kind": "public-company",
+    "ticker": "NVDA",
+    "cik": "0001045810",
+    "xbrl": true,
+    "currency": "USD"
+  },
+  {
+    "id": "nvidia",
+    "name": "NVIDIA",
+    "layer": "chips",
+    "kind": "public-company",
+    "ticker": "NVDA",
+    "cik": "0001045810",
+    "xbrl": true,
+    "currency": "USD"
+  }
+]
