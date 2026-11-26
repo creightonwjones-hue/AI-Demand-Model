@@ -50,6 +50,14 @@
     "currency": "USD"
   },
   {
+    "id": "groq",
+    "name": "Groq",
+    "layer": "chips",
+    "kind": "private-company",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
     "id": "microsoft",
     "name": "Microsoft",
     "layer": "cloud",
@@ -211,6 +219,42 @@
     "currency": "EUR"
   },
   {
+    "id": "nokia",
+    "name": "Nokia",
+    "layer": "supply",
+    "kind": "public-company",
+    "ticker": "NOK",
+    "xbrl": false,
+    "currency": "EUR"
+  },
+  {
+    "id": "synopsys",
+    "name": "Synopsys",
+    "layer": "supply",
+    "kind": "public-company",
+    "ticker": "SNPS",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "lumentum",
+    "name": "Lumentum",
+    "layer": "supply",
+    "kind": "public-company",
+    "ticker": "LITE",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "coherent",
+    "name": "Coherent",
+    "layer": "supply",
+    "kind": "public-company",
+    "ticker": "COHR",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
     "id": "openai",
     "name": "OpenAI",
     "layer": "labs",
@@ -249,6 +293,14 @@
     "kind": "private-company",
     "xbrl": false,
     "currency": "USD"
+  },
+  {
+    "id": "mistral",
+    "name": "Mistral AI",
+    "layer": "labs",
+    "kind": "private-company",
+    "xbrl": false,
+    "currency": "EUR"
   },
   {
     "id": "spv-coreweave-ddtl",
@@ -319,6 +371,22 @@
     "name": "Crusoe",
     "layer": "financing",
     "kind": "private-company",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "stargate",
+    "name": "Stargate (OpenAI/SoftBank/Oracle/MGX JV)",
+    "layer": "financing",
+    "kind": "private-company",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "spv-oracle-new-mexico",
+    "name": "New Mexico Oracle-tenant project borrower (unnamed in capture)",
+    "layer": "financing",
+    "kind": "spv",
     "xbrl": false,
     "currency": "USD"
   },
@@ -477,6 +545,62 @@
   {
     "id": "insurers-annuities",
     "name": "Insurers and Annuities",
+    "layer": "money",
+    "kind": "aggregate",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "diameter",
+    "name": "Diameter Capital Partners",
+    "layer": "money",
+    "kind": "lender",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "smbc",
+    "name": "SMBC",
+    "layer": "money",
+    "kind": "lender",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "bnp-paribas",
+    "name": "BNP Paribas",
+    "layer": "money",
+    "kind": "lender",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "blackrock",
+    "name": "BlackRock",
+    "layer": "money",
+    "kind": "lender",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "brookfield",
+    "name": "Brookfield",
+    "layer": "money",
+    "kind": "lender",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "kkr",
+    "name": "KKR",
+    "layer": "money",
+    "kind": "lender",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "equity-market",
+    "name": "Equity Market (public share investors)",
     "layer": "money",
     "kind": "aggregate",
     "xbrl": false,

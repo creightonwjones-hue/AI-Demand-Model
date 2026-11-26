@@ -117,7 +117,7 @@ export const DealSchema = z.object({
     ceilingUsd: z.number().optional(),
     conditionalUsd: z.number().optional(),
     estimateUsd: z.number().optional(),
-  }),
+  }).strict(), // no total field: value types stay separate
   terms: z.object({
     rate: z.string().optional(),
     maturity: z.string().optional(),
@@ -128,7 +128,7 @@ export const DealSchema = z.object({
     terminationRights: z.string().optional(),
     exclusivity: z.string().optional(),
     notes: z.string().optional(),
-  }),
+  }).strict(),
   statusHistory: z.array(z.object({ date: isoDate, status: DealStatusSchema, note: z.string().optional() })),
   sources: z.array(SourceRefSchema),
 }).strict();

@@ -38,6 +38,10 @@ describe('schema', () => {
   it('rejects unknown Deal keys such as totalUsd', () => {
     expect(DealSchema.safeParse({ ...validDeal, totalUsd: 5 }).success).toBe(false);
   });
+  it('rejects a total field inside values and unknown keys inside terms', () => {
+    expect(DealSchema.safeParse({ ...validDeal, values: { totalUsd: 5 } }).success).toBe(false);
+    expect(DealSchema.safeParse({ ...validDeal, terms: { ...validDeal.terms, totalUsd: 5 } }).success).toBe(false);
+  });
   it('rejects unknown verification status', () => {
     expect(SourceRefSchema.safeParse({ url: 'https://x', retrieved: '2026-11-25', status: 'rumour' }).success).toBe(false);
   });

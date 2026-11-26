@@ -1,0 +1,37 @@
+[
+  {
+    "id": "fixture-unknown-vehicle",
+    "name": "Fixture deal with an unknown payer",
+    "payers": [
+      "openai"
+    ],
+    "payees": [
+      "nvidia"
+    ],
+    "guarantors": [],
+    "types": [
+      "chip-purchase"
+    ],
+    "announced": "2026-01-01",
+    "values": {},
+    "terms": {
+      "recourse": "unknown",
+      "takeOrPay": "unknown",
+      "hellOrHighWater": "unknown"
+    },
+    "statusHistory": [
+      {
+        "date": "2026-01-01",
+        "status": "announced"
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://example.com/x",
+        "retrieved": "2026-11-25",
+        "status": "unverified"
+      }
+    ],
+    "vehicle": "no-such-spv"
+  }
+]

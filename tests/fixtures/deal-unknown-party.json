@@ -1,0 +1,15 @@
+[
+  {
+    "id": "fixture-unknown-party",
+    "name": "Fixture deal with an unknown payer",
+    "payers": ["not-a-company"],
+    "payees": ["nvidia"],
+    "guarantors": [],
+    "types": ["chip-purchase"],
+    "announced": "2026-01-01",
+    "values": {},
+    "terms": { "recourse": "unknown", "takeOrPay": "unknown", "hellOrHighWater": "unknown" },
+    "statusHistory": [{ "date": "2026-01-01", "status": "announced" }],
+    "sources": [{ "url": "https://example.com/x", "retrieved": "2026-11-25", "status": "unverified" }]
+  }
+]
