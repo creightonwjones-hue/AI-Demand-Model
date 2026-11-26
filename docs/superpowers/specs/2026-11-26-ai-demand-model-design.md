@@ -241,6 +241,18 @@ are shared within a type, to keep the number of free settings low.
 | NVIDIA | Honour or contest guarantees; keep investing in customers; cut prices; allocate scarce supply | Long-term revenue and protecting its customer base (repeated-game logic) |
 | Suppliers (TSMC, SK Hynix, others) | Capacity expansion; allocation among chip makers | Long-term profit with lead-time risk |
 
+Game formats (one giant game tree is infeasible, so each kind of decision is a small local game):
+
+| Decision | Format | How it is solved |
+|---|---|---|
+| Capex race (hyperscalers, clouds) | Simultaneous-move game: payoff functions over continuous capex choices (a payoff matrix generalised to many players and dollar amounts). Payoff = expected profit − penalty for falling behind rivals − financing risk | Damped quantal best response to the industry average plus the dominant rivals |
+| Pay / delay / renegotiate / walk away | Small sequential game tree (2–3 levels): debtor's move, creditor's response, final outcome; leaf payoffs set by the contract's actual terms | Backward induction (exact), with quantal choice at each node |
+| Lending and rollover | Global game: each lender gets a noisy signal of risk and uses a cutoff rule, accounting for what other lenders will do | Closed-form or precomputed cutoffs per lender type |
+| NVIDIA guarantees and customer investments | Repeated game: one-time cost of honouring vs discounted long-run value of customer trust and future orders | Compare discounted payoffs of each option |
+| New deals | Bargaining: split the gains from a deal according to each side's walk-away value | Nash bargaining solution |
+
+All choices are quantal (better options are chosen more often, not always) with limited look-ahead (1–2 steps).
+
 Solution method:
 
 - **Capex race:** preemption game in the boom, flipping to a war of attrition in a bust. Players track their own
@@ -265,6 +277,13 @@ Solution method:
   and update with a learning filter (Kalman), so they recognise a slowdown gradually.
 - **Every decision records its reason** (the comparison of options) for display: a one-line reason on the map, full
   comparison one click away.
+- **Decision view (decided by the user):** clicking a decision on the canvas (e.g., "OpenAI delayed its Oracle
+  payment") opens the actual mini game the model solved that quarter, with that quarter's numbers: a game tree for
+  sequential decisions (with the chosen branch highlighted and each leaf's payoffs), or a payoff table for the capex
+  race (showing the company's options against what rivals did, with the chosen cell highlighted). The cutoff rule for
+  lenders and the honour-vs-walk-away comparison for guarantees are shown in the same view. It must be readable in a
+  meeting, in the locked visual style. The engine must therefore store, per decision: the options, the payoffs and
+  their components, the probabilities from quantal choice, and the choice made.
 
 ### 8.5 Credit, defaults and contagion
 
@@ -443,7 +462,7 @@ backtest passes.
 earnings, debt, commitments, bankruptcy, getting around commitments); user sets conditions only, never company
 behaviour; drag-the-forecast-line inputs; range-of-outcomes mode (not called "dice"); public data only; light theme;
 visual style A with toned-down D colours; one zoomable canvas; short labels on money lines; zoom into deals in place;
-GitHub Pages with a public link; no database for now; Range of outcomes shows "your view" and "forecast range" side by side; the model creates new deals in forecast years; practical backtest standard; early versions usable in meetings with a not-yet-validated label; sovereign & international buyers with export policy; power as a
+GitHub Pages with a public link; no database for now; Range of outcomes shows "your view" and "forecast range" side by side; the model creates new deals in forecast years; practical backtest standard; early versions usable in meetings with a not-yet-validated label; clicking a decision shows the game tree or payoff table the model solved; sovereign & international buyers with export policy; power as a
 forecast condition; physical AI (cars, robotics) included; gaming excluded; quarterly to 2030; no valuation output for
 now; backtest required; probabilities with uncertainty shown; few seconds after Run is fine; nobody on the team reads
 code; layered engine with all recommended additions; lab leapfrogging, labour-substitution condition, insurers as a
