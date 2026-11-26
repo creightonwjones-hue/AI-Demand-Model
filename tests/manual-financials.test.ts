@@ -105,4 +105,22 @@ describe('data/manual/financials.csv', () => {
     expect(seg('Data Center - Hyperscale')).toBe(60_136_000_000);
     expect(seg('Data Center - AI Clouds, Industrial & Enterprise')).toBe(47_474_000_000);
   });
+
+  it('marks "<Parent> - <Sub>" segment rows with their parent, and the subs add up to the parent (never sum both)', () => {
+    const text = readFileSync('data/manual/financials.csv', 'utf8');
+    const usdOnly: FxTable = { TWD: [], KRW: [], EUR: [] };
+    const usdRows = text.split('\n').filter((l, i) => i === 0 || /,USD,/.test(l)).join('\n');
+    const segs = loadManualFinancials(usdRows, entities, usdOnly).filter(f => f.segment);
+    const subs = segs.filter(f => f.segment!.includes(' - '));
+    expect(subs.length).toBeGreaterThan(0);
+    for (const sub of subs) {
+      const parent = sub.segment!.split(' - ')[0];
+      expect(sub.source.title, sub.segment).toContain(`parentSegment: ${parent}`);
+      const p = segs.find(f => f.entityId === sub.entityId && f.quarter === sub.quarter && f.segment === parent);
+      expect(p, `${sub.entityId} ${sub.quarter} ${parent}`).toBeDefined();
+      const sum = subs.filter(f => f.entityId === sub.entityId && f.quarter === sub.quarter
+        && f.segment!.startsWith(`${parent} - `)).reduce((t, f) => t + f.value, 0);
+      expect(sum).toBe(p!.value);
+    }
+  });
 });
