@@ -1,6 +1,7 @@
 name: Deploy data explorer to GitHub Pages
 
-# Builds the explorer from the committed data/build/*.json (no data is fetched here) and publishes dist/.
+# Checks that the committed data/build/*.json matches a rebuild from committed inputs (no data is fetched here),
+# then builds the explorer from it and publishes dist/.
 on:
   push:
     branches: [main]
@@ -26,6 +27,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      # Rebuild data/build from the committed inputs and fail if it differs from the committed output
+      # (manifest.json builtAt ignored).
+      - run: npm run data:build
+      - run: npm run data:check-fresh
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

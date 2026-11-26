@@ -9,6 +9,7 @@
   "scripts": {
     "test": "vitest run",
     "data:build": "tsx scripts/data/build-all.ts",
+    "data:check-fresh": "tsx scripts/data/check-build-fresh.ts",
     "dev": "vite",
     "build": "vite build"
   },
