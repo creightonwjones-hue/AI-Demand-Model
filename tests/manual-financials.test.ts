@@ -68,13 +68,21 @@ describe('loadManualFinancials', () => {
     expect(() => loadManualFinancials(csv(`tsmc,revenue,,2026-07-01,2026-07-31,1,TWD,${TAIL}`), entities, fx))
       .toThrow(/quarter|period/i);
   });
+
+  it('rejects a row known before its period ended (look-ahead), accepts one known on the last day', () => {
+    const row = (asKnownAt: string) =>
+      `tsmc,revenue,,2026-07-01,2026-09-30,3200000000000,TWD,${asKnownAt},https://www.sec.gov/x,TSMC 6-K,2026-11-26,`
+      + 'primary-filing';
+    expect(() => loadManualFinancials(csv(row('2026-09-29')), entities, fx)).toThrow(/look-ahead/);
+    expect(loadManualFinancials(csv(row('2026-09-30')), entities, fx)[0].asKnownAt).toBe('2026-09-30');
+  });
 });
 
 describe('buildFxTable', () => {
   const fred = (id: string, points: Array<[string, number]>): Series => ({
     id, name: id, unit: 'x', provider: 'FRED', kind: 'indicator',
     source: { url: `https://fred.stlouisfed.org/series/${id}`, retrieved: '2026-11-26', status: 'secondary' },
-    points: points.map(([date, value]) => ({ date, value })),
+    points: points.map(([date, value]) => ({ date, value, asKnownAt: date })),
   });
 
   it('stores every currency as foreign units per USD (DEXUSEU is inverted)', () => {

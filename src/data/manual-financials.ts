@@ -1,8 +1,8 @@
 import { parseCsv } from './csv';
 import { calendarQuarterFor, weeksBetween } from './quarters';
 import { parseNumber } from './series';
-import { FinancialFactSchema, MetricSchema, SourceRefSchema, type Entity, type FinancialFact, type Series,
-  type SeriesPoint } from './schema';
+import { FinancialFactSchema, MetricSchema, SourceRefSchema, type Entity, type FinancialFact, type Series }
+  from './schema';
 
 /**
  * Daily FX rates, all stored as FOREIGN CURRENCY UNITS PER 1 USD (so USD = value / rate for every currency).
@@ -10,7 +10,8 @@ import { FinancialFactSchema, MetricSchema, SourceRefSchema, type Entity, type F
  * way (USD per EUR), so each daily DEXUSEU value is inverted (EUR per USD = 1 / DEXUSEU) when the table is built.
  * `FinancialFact.fxRate` therefore always holds foreign-per-USD, including for EUR.
  */
-export type FxTable = Record<'TWD' | 'KRW' | 'EUR', SeriesPoint[]>;
+export type FxPoint = { date: string; value: number };
+export type FxTable = Record<'TWD' | 'KRW' | 'EUR', FxPoint[]>;
 export type FxCurrency = keyof FxTable;
 
 const FX_CURRENCIES: readonly FxCurrency[] = ['TWD', 'KRW', 'EUR'];
@@ -55,7 +56,7 @@ const isQuarter = (w: number) => w >= 12 && w <= 14;
  * Manual quarterly financials (data/manual/financials.csv) -> FinancialFact[]. Rows are quarter-length flows
  * (12–14 weeks) or instants (period_start == period_end, e.g. cash). Non-USD values are converted to USD with the
  * period-average FX rate; the original currency, value and rate are kept. Throws on a missing currency, an unknown
- * entity or metric, a non-quarter period, missing FX data or any invalid field.
+ * entity or metric, a non-quarter period, missing FX data, an `as_known_at` before `period_end`, or any invalid field.
  */
 export function loadManualFinancials(csvText: string, entities: Entity[], fx: FxTable): FinancialFact[] {
   const known = new Set(entities.map(e => e.id));
@@ -72,6 +73,11 @@ export function loadManualFinancials(csvText: string, entities: Entity[], fx: Fx
     }
     const periodStart = r.period_start.trim();
     const periodEnd = r.period_end.trim();
+    const asKnownAt = r.as_known_at.trim();
+    // Same rule as buildSeries: a figure cannot be public before the period it describes has ended.
+    if (asKnownAt < periodEnd) {
+      throw new Error(`${where}: as_known_at ${asKnownAt} is before period_end ${periodEnd} (look-ahead)`);
+    }
     const instant = periodStart === periodEnd;
     const weeks = instant ? 0 : weeksBetween(periodStart, periodEnd);
     if (!instant && !isQuarter(weeks)) {
@@ -84,7 +90,7 @@ export function loadManualFinancials(csvText: string, entities: Entity[], fx: Fx
     const segment = r.segment.trim() || undefined;
     const fact: FinancialFact = {
       entityId, metric, ...(segment ? { segment } : {}), quarter, periodStart, periodEnd, weeks,
-      value: original, derived: false, asKnownAt: r.as_known_at.trim(),
+      value: original, derived: false, asKnownAt,
       source: SourceRefSchema.parse({
         url: r.source_url.trim(), title: r.source_title.trim() || undefined, retrieved: r.retrieved.trim(),
         status: r.status.trim(),

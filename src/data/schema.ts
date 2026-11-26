@@ -68,9 +68,9 @@ export type FinancialFact = z.infer<typeof FinancialFactSchema>;
 
 // ---- Series ----
 export const SeriesPointSchema = z.object({
-  date: z.string(),
+  date: isoDate,
   value: z.number(),
-  asKnownAt: z.string().optional(),
+  asKnownAt: isoDate, // when the point became public (FRED: date + publication lag; manual: article date)
   // Per-point source for manually transcribed series (each point can come from a different article).
   // FRED points omit it and inherit the series-level source.
   source: SourceRefSchema.optional(),

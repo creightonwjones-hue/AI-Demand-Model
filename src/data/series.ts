@@ -26,8 +26,7 @@ function isoDate(raw: string | undefined, what: string): string {
  * row has a bad number, date or status.
  */
 export function buildSeries(rows: Record<string, string>[]): Series[] {
-  type Acc = { meta: Omit<Series, 'points' | 'source'>; points: Array<Required<Pick<SeriesPoint, 'date' | 'value' |
-    'asKnownAt'>> & { source: SourceRef }> };
+  type Acc = { meta: Omit<Series, 'points' | 'source'>; points: Array<SeriesPoint & { source: SourceRef }> };
   const byId = new Map<string, Acc>();
   rows.forEach((r, idx) => {
     const where = `series row ${idx + 2} (${r.series_id ?? '?'})`;

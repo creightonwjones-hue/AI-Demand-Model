@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DealSchema, SourceRefSchema, FinancialFactSchema, EntitySchema, SeriesSchema } from '../src/data/schema';
+import { DealSchema, SourceRefSchema, FinancialFactSchema, EntitySchema, SeriesSchema, SeriesPointSchema } from '../src/data/schema';
 
 const source = { url: 'https://example.com/f', retrieved: '2026-11-25', status: 'primary-filing' as const };
 
@@ -55,8 +55,17 @@ describe('schema', () => {
     expect(EntitySchema.safeParse({ ...e, cik: '123' }).success).toBe(false);
   });
   it('validates Series', () => {
-    const s = { id: 'x', name: 'X', unit: 'USD', provider: 'p', kind: 'indicator', source, points: [{ date: '2026-01-01', value: 1 }] };
+    const pt = { date: '2026-01-01', value: 1, asKnownAt: '2026-01-02' };
+    const s = { id: 'x', name: 'X', unit: 'USD', provider: 'p', kind: 'indicator', source, points: [pt] };
     expect(SeriesSchema.safeParse(s).success).toBe(true);
     expect(SeriesSchema.safeParse({ ...s, kind: 'bogus' }).success).toBe(false);
+  });
+  it('requires an ISO asKnownAt and ISO date on every series point', () => {
+    const pt = { date: '2026-01-01', value: 1, asKnownAt: '2026-01-02' };
+    const ok = (p: object) => SeriesPointSchema.safeParse(p).success;
+    expect(ok(pt)).toBe(true);
+    expect(ok({ date: pt.date, value: 1 })).toBe(false);
+    expect(ok({ ...pt, asKnownAt: '2026-1-2' })).toBe(false);
+    expect(ok({ ...pt, date: 'Jan 2026' })).toBe(false);
   });
 });
