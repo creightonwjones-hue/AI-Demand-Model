@@ -820,13 +820,13 @@
       "ceilingUsd": 105000000000
     },
     "terms": {
-      "maturity": "Lease length conflicts: 20 years vs 10 years",
+      "maturity": "20-year leases; NVIDIA obligations end at the earliest of the 20th anniversary of each lease commencement, OpenAI terminating the lease, OpenAI reaching a satisfactory credit rating, or other customary events",
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
       "terminationRights": "NVIDIA options: assume the lease, relet, sell, terminate, or defer up to a year",
       "exclusivity": "NVIDIA chips exclusive on site",
-      "notes": "NVIDIA guarantees OpenAI obligations to SB Energy. Guarantee capped at $105B for the initial commitment (SEC filing per capture; no SEC URL captured). Covers part of lease and power payments plus a minimum site value, finished buildings only. Initial scope: land, power and shell for 4.25 of 8 IT-GW. OpenAI reimburses/indemnifies NVIDIA. Lease length conflict: 20 years (Constellation, Futurum) vs 10 years (Axios); both recorded. Includes NVIDIA $1.5B equity in SB Energy; that amount is recorded once, in nvidia-sb-energy-equity, so it is not entered twice. Earlier ~$250B reports are not what was signed."
+      "notes": "NVIDIA residual value guaranties to SB Energy (lessor) for leases to an OpenAI affiliate covering ~4.25 GW of IT load at the PORTS campus, Pike County, Ohio; aggregate payment obligation cumulatively capped at $105 billion for the initial commitment (NVIDIA 8-K 2026-08-17, Item 1.01). Trigger: OpenAI insolvency causing a lease default, or OpenAI failing to pay; NVIDIA then pays the shortfall between the guaranteed minimum value of the lease and what a replacement lease or sale recovers. Guarantees become effective at each lease commencement, grow as each of nine construction phases completes (first expected in NVIDIA fiscal 2029 per the 10-Q; the 8-K says ready-for-service expected beginning in 2028), and are limited to defined portions of lease and power payments. OpenAI reimburses and indemnifies NVIDIA. NVIDIA holds an option on ~3.8 additional GW (8-K and 10-Q; the Ex 99.1 release says 3.75 IT-GW). Lease length settled by the filings: 20-year leases (Ex 99.1 and 10-Q); the earlier 10 years (Axios) report is contradicted and superseded. NVIDIA total guarantee exposure at 2026-07-26 was $108.5B ($105.0B SB Energy + $3.5B other AI-cloud land, power and shell guarantees; 10-Q Note 10). The $1.5B NVIDIA equity in SB Energy is recorded once, in nvidia-sb-energy-equity."
     },
     "statusHistory": [
       {
@@ -863,6 +863,24 @@
         "title": "The Star (Reuters) (bare domain in capture)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000069/nvda-20260817.htm",
+        "title": "NVIDIA 8-K 2026-08-17, Item 1.01 Residual Value Guaranties ($105B cap, triggers, remedies, 20th-anniversary end)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000069/sbeoainvidia-portsrelease.htm",
+        "title": "NVIDIA 8-K 2026-08-17 Ex 99.1 press release (\"under a 20-year lease to OpenAI\")",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+        "title": "NVIDIA 10-Q Q2 FY27 (filed 2026-08-26), Note 10 Guarantees: SB Energy $105.0B, total $108.5B",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -1203,15 +1221,13 @@
       "compute-lease"
     ],
     "announced": "2026-04-06",
-    "values": {
-      "estimateUsd": 121300000000
-    },
+    "values": {},
     "terms": {
       "maturity": "From 2027; Broadcom-Google supply through 2031",
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "~3.5 GW. Prospectus: Google commitment ~$121.3B (secondary, approximate); the capture gives it for the row, not per tranche, and it is attached here, the later record, so it is never shown before 2026-04-06. The prospectus publication date is not in this capture (Task 7 to confirm). Capture row (not split by tranche): from 2027; Broadcom-Google supply through 2031. Broadcom filing: Anthropic's use of extra capacity depends on its commercial performance."
+      "notes": "~3.5 GW. The prospectus hard minimum for the Google CSP hosting agreement (~$121.3B) is in anthropic-google-csp-hosting-2026, dated 2026-11-02 when it was first public, so it is never shown before then. Capture row (not split by tranche): from 2027; Broadcom-Google supply through 2031. Broadcom filing: Anthropic's use of extra capacity depends on its commercial performance."
     },
     "statusHistory": [
       {
@@ -1248,6 +1264,55 @@
         "title": "Crypto Briefing: Anthropic compute commitments to Microsoft and Google ahead of IPO",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      }
+    ]
+  },
+  {
+    "id": "anthropic-google-csp-hosting-2026",
+    "name": "Anthropic / Google CSP hosting agreement minimum commitment (prospectus)",
+    "payers": [
+      "anthropic"
+    ],
+    "payees": [
+      "alphabet"
+    ],
+    "guarantors": [],
+    "types": [
+      "compute-lease"
+    ],
+    "announced": "2026-11-02",
+    "start": "2026-04-30",
+    "end": "2033-07-31",
+    "values": {
+      "hardMinimumUsd": 121300000000
+    },
+    "terms": {
+      "maturity": "April 2026 - July 2033",
+      "recourse": "unknown",
+      "takeOrPay": "yes",
+      "hellOrHighWater": "unknown",
+      "terminationRights": "Non-cancelable except in the event of Google's uncured material breach",
+      "notes": "Entered March 2026, amended between May and October 2026: Anthropic \"committed to spend at least approximately $121.3 billion between April 2026 and July 2033, regardless of actual usage\"; any shortfall is paid to Google as a true-up (S-1/A No. 1 filed 2026-11-02 and 424B4 filed 2026-11-19, MD&A, Contractual Obligations, Infrastructure Service Arrangements). The original S-1 (2026-10-26) gave ~$114.5B (amended through August 2026). Additional TPU compute without a fixed dollar commitment, delivered 2028-2031, is estimated by Anthropic at ~$125.0-150.0B and is not included. Start and end: month only in filing; last day of month used. Announced: first filing that states $121.3B."
+    },
+    "statusHistory": [
+      {
+        "date": "2026-11-02",
+        "status": "announced",
+        "note": "First public in Anthropic S-1/A No. 1 (filed 2026-11-02)"
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm",
+        "title": "Anthropic S-1/A No. 1 (filed 2026-11-02), MD&A Contractual Obligations: Google CSP hosting agreement ~$121.3B",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm",
+        "title": "Anthropic 424B4 (filed 2026-11-19), MD&A Contractual Obligations (p. 179): same figure",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -1373,12 +1438,17 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Anthropic commits >$100B to AWS (hard minimum is the stated lower bound) over 10 years. Up to 5 GW Trainium2-4; ~1 GW online by end 2026."
+      "notes": "Anthropic commits >$100B to AWS (hard minimum is the stated lower bound) over 10 years. Up to 5 GW Trainium2-4; ~1 GW online by end 2026. Anthropic S-1 (2026-10-26) states the April 2026 commitment as at least $110.0B, May 2026 - April 2036 (dated in statusHistory; the announced >$100B value is kept as it was public on 2026-04-20)."
     },
     "statusHistory": [
       {
         "date": "2026-04-20",
         "status": "announced"
+      },
+      {
+        "date": "2026-10-26",
+        "status": "active",
+        "note": "Anthropic S-1: April 2026 agreement, at least $110.0B committed May 2026 - April 2036, regardless of actual usage; non-cancelable except uncured Amazon breach"
       },
       {
         "date": "2026-11-25",
@@ -1398,6 +1468,12 @@
         "title": "Anthropic: Anthropic and Amazon compute",
         "retrieved": "2026-11-25",
         "status": "primary-company"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
+        "title": "Anthropic S-1 (filed 2026-10-26), MD&A Infrastructure Service Arrangements: Amazon at least $110.0B",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -1422,12 +1498,22 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$30B of Azure compute plus up to 1 GW of capacity (Grace Blackwell / Vera Rubin). Duration unknown. Anthropic S-1/A added >$10B of minimum commitments to Microsoft and Google combined (not split by party, so not entered as a value)."
+      "notes": "$30B of Azure compute plus up to 1 GW of capacity (Grace Blackwell / Vera Rubin). Duration unknown. Anthropic S-1/A added >$10B of minimum commitments to Microsoft and Google combined (not split by party, so not entered as a value). Prospectus figures (later amendments, dated in statusHistory, not entered as values): S-1 2026-10-26 at least $44.9B; S-1/A No. 2 2026-11-10 at least $47.2B, up to $49.2B."
     },
     "statusHistory": [
       {
         "date": "2025-11-18",
         "status": "announced"
+      },
+      {
+        "date": "2026-10-26",
+        "status": "expanded",
+        "note": "Anthropic S-1: agreement amended Feb and Oct 2026; at least $44.9B committed Nov 2026 - May 2033, regardless of actual usage"
+      },
+      {
+        "date": "2026-11-10",
+        "status": "expanded",
+        "note": "Anthropic S-1/A No. 2 (and 424B4): amended Feb - Nov 2026; at least $47.2B and up to $49.2B Nov 2026 - Jun 2033, regardless of actual usage; non-cancelable except uncured Microsoft breach or undelivered tranches"
       },
       {
         "date": "2026-11-25",
@@ -1453,6 +1539,18 @@
         "title": "Crypto Briefing (bare domain in capture)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
+        "title": "Anthropic S-1 (filed 2026-10-26), MD&A Infrastructure Service Arrangements: Microsoft at least $44.9B",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026072484/anthropicpbc-sx1ax2.htm",
+        "title": "Anthropic S-1/A No. 2 (filed 2026-11-10), MD&A Infrastructure Service Arrangements: Microsoft at least $47.2B, up to $49.2B",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -1477,7 +1575,7 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Equity reported up to $10B. Capture flags this amount VERIFY (truncated in retrieval)."
+      "notes": "Up to $10B, confirmed by NVIDIA 10-Q Q3 FY26 (filed 2025-11-19): \"In November 2025, we entered into an agreement, subject to certain closing conditions, to invest up to $10 billion in Anthropic.\" Separate from NVIDIA's ~$10.0B purchase of Class N common stock in the concurrent private placement at Anthropic's IPO (424B4 2026-11-19), which is not entered here."
     },
     "statusHistory": [
       {
@@ -1493,15 +1591,21 @@
     "sources": [
       {
         "url": "https://blogs.nvidia.com/blog/microsoft-nvidia-anthropic-announce-partnership",
-        "title": "NVIDIA blog: Microsoft, NVIDIA, Anthropic announce partnership (capture flags the equity amount VERIFY: truncated in retrieval)",
+        "title": "NVIDIA blog: Microsoft, NVIDIA, Anthropic announce partnership (equity amount confirmed by the NVIDIA 10-Q source below)",
         "retrieved": "2026-11-25",
-        "status": "unverified"
+        "status": "primary-company"
       },
       {
         "url": "https://blogs.microsoft.com/blog/2025/11/18/microsoft-nvidia-and-anthropic-announce-strategic-partnerships/",
-        "title": "Microsoft blog: Microsoft, NVIDIA and Anthropic announce strategic partnerships (capture flags the equity amount VERIFY: truncated in retrieval)",
+        "title": "Microsoft blog: Microsoft, NVIDIA and Anthropic announce strategic partnerships (equity amount confirmed by the NVIDIA 10-Q source below)",
         "retrieved": "2026-11-25",
-        "status": "unverified"
+        "status": "primary-company"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000230/nvda-20251026.htm",
+        "title": "NVIDIA 10-Q Q3 FY26 (filed 2025-11-19), Note: investment commitments and Liquidity (\"invest up to $10 billion in Anthropic\")",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -1526,7 +1630,7 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Equity reported up to $5B. Capture flags this amount VERIFY (truncated in retrieval)."
+      "notes": "Equity reported up to $5B. Capture flags this amount VERIFY (truncated in retrieval). Not found in SEC filings on 2026-11-26: Anthropic S-1/S-1/A No. 2/424B4 and Microsoft 10-Q/8-K filings do not state it (Microsoft 8-K 2026-07-29 Ex 99.1 only mentions \"a $3.2 billion gain from our investment in Anthropic\")."
     },
     "statusHistory": [
       {
@@ -1751,11 +1855,11 @@
     "announced": "2025-10-21",
     "values": {},
     "terms": {
-      "maturity": "4-year initial lease plus renewals; residual value guarantee 16 years",
+      "maturity": "Initial 4-year term with renewal options for a total lease period of up to 20 years; lease commences 2029",
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Meta leases from Beignet: 4-year initial term plus renewals. Meta residual value guarantee for 16 years (triggered by non-renewal, early termination or default). Meta covers cost overruns above 105% of budget. Lease payment amounts not in capture."
+      "notes": "Meta 10-Q Q3 2026 (Note 5, Data Center Ventures) describes the \"Louisiana Venture\" entered October 2025 (identified with Hyperion/Beignet by location and date; the filing does not use those names): Meta holds 20%; parties fund pro rata ~$27B estimated development cost; lease commences 2029 with an initial four-year term and renewals up to 20 years in total; Meta gives a residual value guarantee paying the shortfall between fair value and the RVG threshold if Meta terminates or does not renew. Maximum RVG $28,091M at 2025-12-31 (Louisiana only) and $41,493M at 2026-09-30 (Louisiana plus the July 2026 Texas Venture combined). The capture's 16-year RVG length and the >105% cost-overrun cover are not stated in the filing. Lease payment amounts not in filing."
     },
     "statusHistory": [
       {
@@ -1793,6 +1897,12 @@
         "title": "iTiger (WSJ) (bare domain in capture)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1326801/000162828026066773/meta-20260930.htm",
+        "title": "Meta 10-Q Q3 2026 (filed 2026-10-22), Note 5 Non-Marketable Equity Investments, Data Center Ventures",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -2352,7 +2462,8 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$6.3B initial. NVIDIA buys only capacity CoreWeave cannot sell, subject to availability and delivery, so the amount is conditional. Order dated 2025-09-09 under a master services agreement of 2023-04-10; disclosed 2025-09-15."
+      "notes": "Order form dated 2025-09-09 under the master services agreement of 2023-04-10, initial value $6.3 billion. Where CoreWeave capacity is not fully used by its own customers, NVIDIA must buy the residual unsold capacity through 2032-04-13, subject to delivery and availability-of-service requirements, so the amount is conditional. Disclosed in CoreWeave 8-K filed 2025-09-15 (Item 1.01). All terms confirmed by that filing.",
+      "terminationRights": "Either party may terminate the MSA and any order on 30 days' written notice of a breach, or on the other party's insolvency proceedings not dismissed within 90 days"
     },
     "statusHistory": [
       {
@@ -2384,6 +2495,12 @@
         "title": "24/7 Wall St.: NVIDIA is building an AI infrastructure empire",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000047/crwv-20250909.htm",
+        "title": "CoreWeave 8-K filed 2025-09-15, Item 1.01 (order form 2025-09-09, $6.3B initial value, through 2032-04-13)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -2403,18 +2520,18 @@
       "loan"
     ],
     "announced": "2023-07-31",
-    "end": "2028-03-31",
+    "end": "2028-03-28",
     "values": {
       "hardMinimumUsd": 2300000000
     },
     "terms": {
       "rate": "SOFR + 9.62%",
-      "maturity": "Mar 2028",
+      "maturity": "2028-03-28 (final payment)",
       "recourse": "recourse",
       "collateral": "GPUs (secured)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.3B GPU-backed delayed-draw term loan; secured, recourse (aggregator). Facility size; drawn amount not in capture. ~15% effective rate at 2026-06-30. Announced and end: month only in capture; last day of month used."
+      "notes": "$2.3B GPU-backed delayed-draw term loan entered July 2023 (10-K: \"up to $2.3 billion\"; final payment due March 28, 2028). Recourse: listed under recourse debt in the Q3 2026 10-Q; 15% effective rate there. SOFR + 9.62% not found in the filings read (aggregator figure). Facility size; $1,139M outstanding at 2026-09-30. Announced: month only; last day of month used."
     },
     "statusHistory": [
       {
@@ -2440,6 +2557,18 @@
         "title": "FourWeekMBA (bare domain in capture)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+        "title": "CoreWeave 10-K 2025 (filed 2026-03-02), Debt note: DDTL 1.0-3.0 sizes and final payment dates",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/crwv-20260930.htm",
+        "title": "CoreWeave 10-Q Q3 2026 (filed 2026-11-12), Note 10 Debt: recourse/non-recourse table, maturities, terms",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -2466,11 +2595,11 @@
     "terms": {
       "rate": "SOFR + 6.00-13.00% by end-customer rating",
       "maturity": "Aug 2030",
-      "recourse": "unknown",
+      "recourse": "recourse",
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$7.6B GPU-backed delayed-draw term loan. Facility size; drawn amount not in capture. Recourse not stated. End: month only in capture; last day of month used."
+      "notes": "$7.6B GPU-backed delayed-draw term loan entered May 2024 (10-K: \"up to $7.6 billion\"; each loan repaid quarterly from January 2026, final payment five years after funding; 10-Q maturity column Aug 2030). Recourse: listed under recourse debt in the Q3 2026 10-Q. SOFR + 6.00-13.00% not found in the filings read (aggregator). A September 2025 $3.0B DDTL 2.1 tranche (SOFR + 4.25%) is not entered as a separate record. End: month only; last day of month used."
     },
     "statusHistory": [
       {
@@ -2489,6 +2618,18 @@
         "title": "AM Compute (EDGAR) (bare domain in capture)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+        "title": "CoreWeave 10-K 2025 (filed 2026-03-02), Debt note: DDTL 1.0-3.0 sizes and final payment dates",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/crwv-20260930.htm",
+        "title": "CoreWeave 10-Q Q3 2026 (filed 2026-11-12), Note 10 Debt: recourse/non-recourse table, maturities, terms",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -2516,11 +2657,11 @@
     "terms": {
       "rate": "SOFR + 4.00%",
       "maturity": "2030-08-21",
-      "recourse": "unknown",
+      "recourse": "recourse",
       "collateral": "Secured by a Compute Acquisition Co. subsidiary (GPUs)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.6B GPU-backed delayed-draw term loan from Morgan Stanley, MUFG and a syndicate (\"banks\" = unnamed syndicate members). Funds the OpenAI contract (openai-coreweave-* records; tranche not stated). Facility size; drawn amount not in capture. Recourse not stated."
+      "notes": "$2.6B GPU-backed delayed-draw term loan entered July 2025, SOFR + 4.00%, drawable through July 2026, monthly repayment from April 2026, final payment August 2030 (10-K). Recourse: listed under recourse debt in the Q3 2026 10-Q. From Morgan Stanley, MUFG and a syndicate (\"banks\" = unnamed syndicate members; lenders not named in the filings read). Funds the OpenAI contract (openai-coreweave-* records; tranche not stated)."
     },
     "statusHistory": [
       {
@@ -2551,6 +2692,18 @@
         "title": "The Asset (bare domain in capture)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+        "title": "CoreWeave 10-K 2025 (filed 2026-03-02), Debt note: DDTL 1.0-3.0 sizes and final payment dates",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/crwv-20260930.htm",
+        "title": "CoreWeave 10-Q Q3 2026 (filed 2026-11-12), Note 10 Debt: recourse/non-recourse table, maturities, terms",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -2574,13 +2727,13 @@
       "hardMinimumUsd": 8500000000
     },
     "terms": {
-      "rate": "SOFR + 2.25% / fixed ~5.9%",
+      "rate": "SOFR + 2.25% (floating) / US Treasury + 2.00% (fixed)",
       "maturity": "Mar 2032",
       "recourse": "non-recourse",
       "collateral": "Secured by Compute Acquisition Co. VIII (GPUs)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$8.5B ($7.5B initially) GPU-backed loan; non-recourse. Blackstone anchor; Morgan Stanley and MUFG structured (lending role not stated, so not listed as payers). Moody's A3 / DBRS A(low): first investment-grade GPU-backed loan. Facility size; drawn amount not in capture. End: month only in capture; last day of month used."
+      "notes": "$8.5B delayed-draw term loan to CoreWeave Compute Acquisition Co. VIII, credit agreement dated 2026-03-30 (8-K filed 2026-03-31), drawable to June 2027, matures 2032-03-31. Floating: daily compounded SOFR + 2.25%; fixed: 2.00% plus a blended US Treasury rate. Non-recourse except a limited \"bad acts\" guarantee from CoreWeave. MUFG administrative agent; MUFG and Morgan Stanley Asset Funding lead arrangers. Blackstone anchor, $7.5B initial size, ~5.9% fixed, Moody's A3 / DBRS A(low): from the capture, not in the filings read. $4,583M outstanding at 2026-09-30."
     },
     "statusHistory": [
       {
@@ -2605,8 +2758,21 @@
         "title": "Business Wire: CoreWeave release 20260330529766",
         "retrieved": "2026-11-25",
         "status": "primary-company"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000129/crwv-20260330.htm",
+        "title": "CoreWeave 8-K filed 2026-03-31, Item 1.01 (DDTL 4.0 Facility)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/crwv-20260930.htm",
+        "title": "CoreWeave 10-Q Q3 2026 (filed 2026-11-12), Note 10 Debt: recourse/non-recourse table, maturities, terms",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
-    ]
+    ],
+    "signed": "2026-03-30"
   },
   {
     "id": "coreweave-ddtl-5",
@@ -2629,13 +2795,13 @@
       "hardMinimumUsd": 3100000000
     },
     "terms": {
-      "rate": "SOFR + 4.50% (tightened 50bp)",
-      "maturity": "~5.5 years",
-      "recourse": "unknown",
+      "rate": "SOFR + 4.50%",
+      "maturity": "2031-11-15 (8-K); 10-Q text says expected final payment May 2031",
+      "recourse": "recourse",
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$3.1B GPU-backed loan, syndicated by Morgan Stanley and MUFG (\"banks\" = unnamed syndicate members). Backed by contracts with two non-investment-grade customers. Facility size; drawn amount not in capture. Recourse not stated."
+      "notes": "$3.1B delayed-draw term loan to CoreWeave Financing DDTL V, credit agreement dated 2026-05-15 (8-K filed 2026-05-18), drawable to September 2026, maturity 2031-11-15. Daily compounded SOFR + 4.50%. Recourse: unconditionally guaranteed by CoreWeave (parent guarantee and pledge). Morgan Stanley Senior Funding administrative agent; MUFG and Morgan Stanley lead arrangers (\"banks\" = other lenders). Two non-investment-grade customers and the 50bp tightening: capture only. $2,749M outstanding at 2026-09-30."
     },
     "statusHistory": [
       {
@@ -2666,14 +2832,28 @@
         "title": "Finviz (bare domain in capture)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000236/crwv-20260515.htm",
+        "title": "CoreWeave 8-K filed 2026-05-18, Item 1.01 (DDTL 5.0 Facility)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/crwv-20260930.htm",
+        "title": "CoreWeave 10-Q Q3 2026 (filed 2026-11-12), Note 10 Debt: recourse/non-recourse table, maturities, terms",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
-    ]
+    ],
+    "signed": "2026-05-15",
+    "end": "2031-11-15"
   },
   {
     "id": "coreweave-ddtl-5-5",
     "name": "CoreWeave DDTL 5.5",
     "payers": [
-      "morgan-stanley",
+      "jpmorgan",
       "mufg",
       "banks"
     ],
@@ -2685,24 +2865,24 @@
     "types": [
       "loan"
     ],
-    "announced": "2026-08-31",
+    "announced": "2026-08-10",
     "values": {
       "hardMinimumUsd": 2600000000
     },
     "terms": {
-      "rate": "SOFR + 5.50%",
-      "maturity": "~5 years",
-      "recourse": "unknown",
+      "rate": "Term SOFR + 5.50%",
+      "maturity": "2031-09-01 (8-K); 10-Q text says expected final payment July 2031",
+      "recourse": "recourse",
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.6B GPU-backed loan, syndicated by Morgan Stanley and MUFG (\"banks\" = unnamed syndicate members). Underlying contracts average ~3 years. Facility size; drawn amount not in capture. Recourse not stated. Announced: month only in capture; last day of month used (Aug 2026)."
+      "notes": "$2.6B delayed-draw term loan to CoreWeave Financing DDTL V-V, credit agreement dated 2026-08-07 (8-K filed 2026-08-10), drawable to December 2026, maturity 2031-09-01. Term SOFR + 5.50%. Recourse: unconditionally guaranteed by CoreWeave. JPMorgan Chase Bank administrative agent; JPMorgan and MUFG joint lead arrangers (\"banks\" = other lenders). Payers corrected from Morgan Stanley to JPMorgan per the 8-K. Contracts averaging ~3 years: capture only. $1,555M outstanding at 2026-09-30. Date is exact (8-K filing date)."
     },
     "statusHistory": [
       {
-        "date": "2026-08-31",
+        "date": "2026-08-10",
         "status": "announced",
-        "note": "Aug 2026; month only in capture; last day of month used"
+        "note": "CoreWeave 8-K filed 2026-08-10 (credit agreement dated 2026-08-07)"
       },
       {
         "date": "2026-11-25",
@@ -2728,8 +2908,22 @@
         "title": "Finviz (bare domain in capture)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000357/crwv-20260807.htm",
+        "title": "CoreWeave 8-K filed 2026-08-10, Item 1.01 (DDTL 5.5 Facility)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/crwv-20260930.htm",
+        "title": "CoreWeave 10-Q Q3 2026 (filed 2026-11-12), Note 10 Debt: recourse/non-recourse table, maturities, terms",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
-    ]
+    ],
+    "signed": "2026-08-07",
+    "end": "2031-09-01"
   },
   {
     "id": "microsoft-nebius-vineland",
@@ -2914,18 +3108,23 @@
     ],
     "announced": "2026-02-02",
     "values": {
-      "ceilingUsd": 25000000000
+      "hardMinimumUsd": 25000000000
     },
     "terms": {
       "recourse": "recourse",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Corporate bond: up to $25B, 8 parts, >$129B of orders. Recourse: senior corporate debt of Oracle. No more bonds expected in 2026. Dated 2026-02-01/02 in capture (later date used). Part of a 2026 plan of $45-50B including ~$25B equity (oracle-equity-2026)."
+      "notes": "$25.0B of senior notes in 8 series (floating 2029; 4.550% 2029; 4.950% 2031; 5.350% 2033; 5.700% 2036; 6.550% 2046; 6.700% 2056; 6.850% 2066), priced 2026-02-02 (FWP) and issued 2026-02-04 (8-K), offered concurrently with a depositary shares offering. Value corrected from a ceiling (\"up to $25B\") to the issued principal. >$129B of orders and \"no more bonds expected in 2026\": capture only. Part of a 2026 plan of $45-50B including ~$25B equity (oracle-equity-2026)."
     },
     "statusHistory": [
       {
         "date": "2026-02-02",
         "status": "announced"
+      },
+      {
+        "date": "2026-02-04",
+        "status": "completed",
+        "note": "Notes issued (Oracle 8-K filed 2026-02-04)"
       },
       {
         "date": "2026-11-25",
@@ -2951,6 +3150,18 @@
         "title": "IntuitionLabs (bare domain in capture)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526034351/d24013dfwp.htm",
+        "title": "Oracle FWP pricing term sheet dated 2026-02-02 ($25.0B concurrent notes offering)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526037840/d23732d8k.htm",
+        "title": "Oracle 8-K filed 2026-02-04 (\"Issuance of $25 Billion Aggregate Principal Amount of Notes\")",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -3356,7 +3567,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-08-31",
+    "announced": "2025-09-18",
     "values": {
       "hardMinimumUsd": 5000000000
     },
@@ -3364,13 +3575,18 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$5B at $23.28 per share. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
+      "notes": "$5.0B for 214,776,632 Intel common shares at $23.28 (securities purchase agreement 2025-09-15; Intel 8-K and press release 2025-09-18). Closed 2025-12-26 (Intel 8-K 2025-12-29). Date is exact (filing date)."
     },
     "statusHistory": [
       {
-        "date": "2026-08-31",
+        "date": "2025-09-18",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
+        "note": "Intel 8-K filed 2025-09-18 (purchase agreement dated 2025-09-15)"
+      },
+      {
+        "date": "2025-12-26",
+        "status": "completed",
+        "note": "Shares issued to NVIDIA (Intel 8-K filed 2025-12-29)"
       },
       {
         "date": "2026-11-25",
@@ -3381,23 +3597,36 @@
     "sources": [
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000155/intc-20250915.htm",
+        "title": "Intel 8-K filed 2025-09-18, Item 3.02 (NVIDIA $5.0B at $23.28)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/50863/000005086325000204/intc-20251226.htm",
+        "title": "Intel 8-K filed 2025-12-29, Item 3.02 (sale to NVIDIA completed 2025-12-26)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
-    ]
+    ],
+    "signed": "2025-09-15"
   },
   {
     "id": "nvidia-nokia-equity",
@@ -3412,7 +3641,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-08-31",
+    "announced": "2025-10-28",
     "values": {
       "hardMinimumUsd": 1000000000
     },
@@ -3420,13 +3649,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$1B. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
+      "notes": "$1.0B (EUR 0.86B) for 166,389,351 new Nokia shares at $6.01, a 2.90% stake, subject to customary closing conditions (Nokia 6-K 2025-10-28). Date is exact (release date)."
     },
     "statusHistory": [
       {
-        "date": "2026-08-31",
+        "date": "2025-10-28",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
+        "note": "Nokia stock exchange release 2025-10-28 (6-K filed 2025-10-28)"
       },
       {
         "date": "2026-11-25",
@@ -3437,21 +3666,27 @@
     "sources": [
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/924613/000110465925103038/tm2529638d1_6k.htm",
+        "title": "Nokia 6-K filed 2025-10-28: NVIDIA USD 1.0 billion equity investment",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -3468,7 +3703,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-08-31",
+    "announced": "2025-12-01",
     "values": {
       "hardMinimumUsd": 2000000000
     },
@@ -3476,13 +3711,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2B at $414.79 per share. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
+      "notes": "$2B for 4,821,717 Synopsys shares at $414.79 (Synopsys 8-K 2025-12-01). Date is exact (agreement, release and filing all dated 2025-12-01; not a month placeholder)."
     },
     "statusHistory": [
       {
-        "date": "2026-08-31",
+        "date": "2025-12-01",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
+        "note": "Synopsys 8-K filed 2025-12-01 (purchase agreement and joint release dated 2025-12-01)"
       },
       {
         "date": "2026-11-25",
@@ -3493,21 +3728,27 @@
     "sources": [
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/883241/000119312525303209/d36680d8k.htm",
+        "title": "Synopsys 8-K filed 2025-12-01, Item 3.02 (NVIDIA $2B at $414.79)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -3524,7 +3765,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-08-31",
+    "announced": "2026-03-02",
     "values": {
       "hardMinimumUsd": 2000000000
     },
@@ -3532,13 +3773,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2B. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
+      "notes": "$2.0B for 2,876,415 shares of Lumentum Series A Convertible Preferred Stock at $695.31 (Lumentum 8-K 2026-03-02). Date is exact (filing date)."
     },
     "statusHistory": [
       {
-        "date": "2026-08-31",
+        "date": "2026-03-02",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
+        "note": "Lumentum 8-K filed 2026-03-02 (agreement and closing 2026-03-02)"
       },
       {
         "date": "2026-11-25",
@@ -3549,21 +3790,27 @@
     "sources": [
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1633978/000119312526085412/d41019d8k.htm",
+        "title": "Lumentum 8-K filed 2026-03-02, Item 3.02 (NVIDIA $2.0B Series A Convertible Preferred)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -3580,7 +3827,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-08-31",
+    "announced": "2026-03-02",
     "values": {
       "hardMinimumUsd": 2000000000
     },
@@ -3588,13 +3835,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2B. Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
+      "notes": "$2B for 7,788,161 Coherent common shares at $256.80 (Coherent 8-K 2026-03-02). Date is exact (filing date)."
     },
     "statusHistory": [
       {
-        "date": "2026-08-31",
+        "date": "2026-03-02",
         "status": "announced",
-        "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
+        "note": "Coherent 8-K filed 2026-03-02 (agreement and closing 2026-03-02)"
       },
       {
         "date": "2026-11-25",
@@ -3605,21 +3852,27 @@
     "sources": [
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/820318/000119312526084366/d42735d8k.htm",
+        "title": "Coherent 8-K filed 2026-03-02, Item 3.02 (NVIDIA $2B at $256.80)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -3636,7 +3889,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-03-31",
+    "announced": "2026-03-11",
     "values": {
       "hardMinimumUsd": 2000000000
     },
@@ -3644,13 +3897,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2B for 8.3% of Nebius (Mar 2026; announced: month only in capture; last day of month used). Also in the Nebius-Meta row status."
+      "notes": "$2B (Nebius 6-K Ex 99.1, joint release dated 2026-03-11: \"NVIDIA will invest $2 billion in Nebius\"). The 8.3% stake is from the capture, not the release. Date is exact (release date). Also in the Nebius-Meta row status."
     },
     "statusHistory": [
       {
-        "date": "2026-03-31",
+        "date": "2026-03-11",
         "status": "announced",
-        "note": "Mar 2026; month only in capture; last day of month used"
+        "note": "NVIDIA-Nebius joint release 2026-03-11 (Nebius 6-K Ex 99.1)"
       },
       {
         "date": "2026-11-25",
@@ -3667,21 +3920,27 @@
       },
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926026163/tm268532d1_ex99-1.htm",
+        "title": "Nebius 6-K Ex 99.1, NVIDIA and Nebius release dated 2026-03-11",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -3698,7 +3957,7 @@
     "types": [
       "equity"
     ],
-    "announced": "2026-01-31",
+    "announced": "2026-01-26",
     "values": {
       "hardMinimumUsd": 2000000000
     },
@@ -3706,13 +3965,13 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "+$2B at $87.20 per share (Jan 2026; announced: month only in capture; last day of month used). Also in the NVIDIA CoreWeave backstop row status."
+      "notes": "$2B for 22,935,780 CoreWeave Class A shares at $87.20 (CoreWeave 8-K filed 2026-01-26; agreement and closing 2026-01-23). Date is exact (filing date). Also in the NVIDIA CoreWeave backstop row status."
     },
     "statusHistory": [
       {
-        "date": "2026-01-31",
+        "date": "2026-01-26",
         "status": "announced",
-        "note": "Jan 2026; month only in capture; last day of month used"
+        "note": "CoreWeave 8-K and joint release 2026-01-26 (agreement and closing 2026-01-23)"
       },
       {
         "date": "2026-11-25",
@@ -3729,23 +3988,30 @@
       },
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000044/crwv-20260123.htm",
+        "title": "CoreWeave 8-K filed 2026-01-26, Item 3.02 (NVIDIA $2B at $87.20)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
-    ]
+    ],
+    "signed": "2026-01-23"
   },
   {
     "id": "nvidia-sb-energy-equity",
@@ -3791,21 +4057,27 @@
       },
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000069/sbeoainvidia-portsrelease.htm",
+        "title": "NVIDIA 8-K 2026-08-17 Ex 99.1 (\"NVIDIA will invest $1.5 billion in SB Energy\")",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
@@ -3859,19 +4131,19 @@
       },
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       }
@@ -3915,19 +4187,19 @@
     "sources": [
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       }
@@ -3969,19 +4241,19 @@
     "sources": [
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       }
@@ -4000,21 +4272,21 @@
     "types": [
       "other"
     ],
-    "announced": "2026-11-17",
+    "announced": "2026-08-26",
     "values": {
-      "hardMinimumUsd": 2940000000
+      "hardMinimumUsd": 2944000000
     },
     "terms": {
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "NVIDIA Q3 FY27 cash-flow statement shows $2.94B to \"Groq, Inc.\" over 9 months (a reported cash payment). Groq terms unknown, so the type is \"other\". Announced: date of NVIDIA's Q3 FY27 results release (2026-11-17, from the prompt-1 capture)."
+      "notes": "NVIDIA financing cash outflow \"Groq, Inc.\" of $2,944M in fiscal 2027, first shown for the six months to 2026-07-26 (10-Q filed 2026-08-26) and unchanged for nine months in the Q3 FY27 release. Per NVIDIA 10-K FY26 Note 2, this relates to a December 2025 non-exclusive license of Groq's LPU technology plus hiring of Groq employees: $13.0B paid at closing and $4B (incl. imputed interest) payable within one year; no equity acquired. Type stays \"other\". Value corrected from $2.94B (rounded) to $2,944M."
     },
     "statusHistory": [
       {
-        "date": "2026-11-17",
+        "date": "2026-08-26",
         "status": "announced",
-        "note": "Shown in NVIDIA Q3 FY27 cash-flow statement"
+        "note": "First shown in NVIDIA 10-Q Q2 FY27 cash-flow statement (filed 2026-08-26)"
       },
       {
         "date": "2026-11-25",
@@ -4025,21 +4297,33 @@
     "sources": [
       {
         "url": "https://finance.yahoo.com/news/nvidia-buys-3-billion-under-023701359.html",
-        "title": "Yahoo Finance: NVIDIA buys $3 billion ...",
+        "title": "Yahoo Finance: NVIDIA buys $3 billion ... (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://247wallst.com/investing/2026/04/01/",
-        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture)",
+        "title": "24/7 Wall St. (2026-04-01; abbreviated path in capture) (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
       },
       {
         "url": "https://techspot.com/news/113498",
-        "title": "TechSpot news 113498",
+        "title": "TechSpot news 113498 (row-level source for the capture's \"NVIDIA strategic investments\" row; not specific to this instrument)",
         "retrieved": "2026-11-25",
         "status": "secondary"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm",
+        "title": "NVIDIA 10-Q Q2 FY27 (filed 2026-08-26), cash-flow statement: Groq, Inc. (2,944)",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+        "title": "NVIDIA 10-K FY26 (filed 2026-02-25), Note 2 Groq",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
       }
     ]
   },
