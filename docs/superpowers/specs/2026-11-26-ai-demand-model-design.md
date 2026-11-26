@@ -248,6 +248,12 @@ Solution method:
 - **Renegotiation and default:** a bargaining step (Nash/Rubinstein style) over each contract in distress, bounded by
   each side's walk-away value (Hart–Moore: a party that can walk away caps what it can credibly owe). Contract terms
   (hell-or-high-water, recourse, guarantees, buyer-of-last-resort clauses) set walk-away values.
+- **New deals in forecast years (decided by the user: the model creates them):** when a company's expected needs
+  (capacity, funding) exceed what its contracts cover, it seeks new deals. Counterparties are matched by availability
+  and price; deal types and terms (rate, length, recourse, guarantees, NVIDIA investments and backstops) are sampled
+  from the distribution of real deals in the database, adjusted for current conditions (credit spreads, GPU prices,
+  counterparty health). Each side accepts only if the deal beats its walk-away value. New deals enter the ledger like
+  real ones, so vendor financing and contagion can keep building up after today's deals expire.
 - **Announced-deal realisation:** announced deals are discounted by a realisation rate learned from real cases (the
   $100B NVIDIA–OpenAI letter became $30B equity; the Ohio backstop went from ~$250B in talks to $105B; Abilene
   expansion dropped; Microsoft–OpenAI amended twice).
@@ -376,7 +382,12 @@ session (or by editing the data file following a documented template).
 - **Pattern checks:** supplier revenue declines in a bust consistent with telecom-era ranges; switching contagion off
   cuts private losses by roughly the ~30% found in "Clouds of Credit" (NBER WP 36032, 2026).
 - **Live scoring:** timestamped forecasts scored as each quarter is reported.
-- **Gate:** if the backtest fails, forecasts are labelled as not validated in the UI.
+- **Standard (decided by the user: practical):** a conditional backtest. Real past conditions and real deals are fed
+  in as inputs; each company starts when its public data exists (labs from 2023–2024); reconstructed starting values
+  are labelled. It **passes** if, for NVIDIA revenue (total and Data Center), hyperscaler capex and lab revenue, the
+  model beats the naive, drift and exponential-smoothing benchmarks on CRPS, and its 80% ranges contain roughly 80%
+  of actual outcomes. Errors are always shown, pass or fail.
+- **Gate:** until the backtest passes, forecasts are labelled "early version: not yet validated" in the UI.
 
 ## 14. Technical shape
 
@@ -390,7 +401,9 @@ session (or by editing the data file following a documented template).
 
 ## 15. Build order
 
-This is several connected sub-projects. Proposed order (each phase ends with something the user can see):
+This is several connected sub-projects. Each phase ends with something the user can see. The team may use each
+checkpoint in meetings (decided by the user), with a visible "early version: not yet validated" label until the
+backtest passes.
 
 1. **Data foundation:** cleaned company financials from SEC data, the deal database in structured form with
    verification status, condition histories and ranges. Verify the flagged 2026 figures.
