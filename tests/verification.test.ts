@@ -56,4 +56,21 @@ describe('2026-11 verification log', () => {
     for (const r of parseCsv(readFile('data/manual/financials.csv')))
       if (r.status === 'primary-filing') expect(r.source_url).toMatch(/^https:\/\/www\.sec\.gov\//);
   });
+
+  it('enters NVIDIA\'s 10-Q guarantee exposure as primary-filing series points', () => {
+    const series = loadManualSeries(readFile('data/manual/series.csv'));
+    const point = (id: string) => series.find(s => s.id === id)?.points.find(p => p.date === '2026-07-26');
+    const expected: Record<string, number> = {
+      'nvidia-guarantees-total-10q': 108.5e9, 'nvidia-guarantees-sbenergy-10q': 105e9,
+      'nvidia-guarantees-aicloud-lps-10q': 3.5e9,
+    };
+    for (const [id, value] of Object.entries(expected)) {
+      const p = point(id);
+      expect(p, id).toMatchObject({ value, asKnownAt: '2026-08-26' });
+      expect(p!.source).toMatchObject({ status: 'primary-filing' });
+      expect(p!.source!.url).toMatch(/^https:\/\/www\.sec\.gov\/.*nvda-20260726\.htm$/);
+    }
+    expect(expected['nvidia-guarantees-sbenergy-10q'] + expected['nvidia-guarantees-aicloud-lps-10q'])
+      .toBe(expected['nvidia-guarantees-total-10q']);
+  });
 });

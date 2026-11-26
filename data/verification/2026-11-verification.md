@@ -84,7 +84,12 @@
     phases expected in fiscal 2029 (the 8-K says ready-for-service expected beginning in 2028).
 - **Records updated**: `id:nvidia-openai-ohio-backstop` (maturity now "20-year leases ..."; notes rewritten from the
   8-K and 10-Q, 10-year report marked superseded; three SEC sources added as `primary-filing`). Old → new: lease
-  length "conflict: 20 vs 10 years" → "20 years".
+  length "conflict: 20 vs 10 years" → "20 years". Fix round 1: the Note 10 exposure table is entered as data, date
+  2026-07-26 (balance-sheet date), known 2026-08-26 (10-Q filing date), `primary-filing`:
+  `id:nvidia-guarantees-total-10q` ($108.5B), `id:nvidia-guarantees-sbenergy-10q` ($105.0B),
+  `id:nvidia-guarantees-aicloud-lps-10q` ($3.5B). The Q1 FY27 10-Q
+  (https://www.sec.gov/Archives/edgar/data/1045810/000104581026000052/nvda-20260426.htm) has no such table (the SB
+  Energy guarantees date from August 2026), and the Q3 FY27 10-Q is not yet filed, so there are no other points.
 
 ## Item 4: NVIDIA $6.3B CoreWeave backstop
 
@@ -155,9 +160,19 @@
   are not related persons in the Series G table). Separately, the 424B4 cover/summary states a $26.0B concurrent
   private placement at the $83.00 IPO price in which "NVIDIA Corporation ... will purchase 120,481,927 shares of our
   Class N common stock for approximately $10.0 billion" and Microsoft also participates; this is a different
-  instrument and is not entered as a record (follow-up).
-- **Records updated**: `id:nvidia-anthropic-equity` (NVIDIA 10-Q source added as `primary-filing`; the two blog
-  sources relabelled `unverified` → `primary-company` because the amount they were flagged for is now confirmed).
+  instrument. Fix round 1: entered as `id:nvidia-anthropic-ipo-placement`. First disclosed in S-1/A No. 3 filed
+  2026-11-17 (https://www.sec.gov/Archives/edgar/data/2130357/000162828026074338/anthropicpbc-sx1ax3.htm; NVIDIA
+  "would purchase 135,135,135 shares ... for approximately $10.0 billion" at the assumed $74.00 midpoint; S-1/A No. 1
+  and No. 2 do not mention the placement). Closing: Anthropic 8-K filed 2026-11-25
+  (https://www.sec.gov/Archives/edgar/data/2130357/000162828026075973/ant-20261119.htm), Item 3.02: "On November 20,
+  2026, immediately subsequent to the closing of the IPO, the Company completed the private placement of an aggregate
+  of 313,253,007 shares of its Class N common stock" to the purchasers including NVIDIA Corporation; 313,253,007
+  equals the sum of the 424B4 per-purchaser counts, so NVIDIA's purchase closed in full. Value: hardMinimumUsd
+  $10.0B (stated "approximately $10.0 billion"; closing confirmed). Announced 2026-11-17; completed 2026-11-20.
+- **Records updated**: `id:nvidia-anthropic-equity` (NVIDIA 10-Q source added as `primary-filing`; notes now point
+  to `id:nvidia-anthropic-ipo-placement`). Fix round 1: the two NVIDIA/Microsoft blog sources were first relabelled
+  `unverified` → `primary-company`; that is reverted to `unverified`, because the blogs were not read (blocked host).
+  Their titles say the SEC source on the record confirms the amount. New record `id:nvidia-anthropic-ipo-placement`.
   `id:microsoft-anthropic-equity` unchanged (stays `unverified`; note records what was searched).
 
 ## Item 7b: Anthropic $121.3B Google commitment (carried) and other prospectus commitments

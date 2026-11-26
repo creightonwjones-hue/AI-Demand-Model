@@ -1575,7 +1575,7 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Up to $10B, confirmed by NVIDIA 10-Q Q3 FY26 (filed 2025-11-19): \"In November 2025, we entered into an agreement, subject to certain closing conditions, to invest up to $10 billion in Anthropic.\" Separate from NVIDIA's ~$10.0B purchase of Class N common stock in the concurrent private placement at Anthropic's IPO (424B4 2026-11-19), which is not entered here."
+      "notes": "Up to $10B, confirmed by NVIDIA 10-Q Q3 FY26 (filed 2025-11-19): \"In November 2025, we entered into an agreement, subject to certain closing conditions, to invest up to $10 billion in Anthropic.\" Separate from NVIDIA's ~$10.0B purchase of Anthropic Class N common stock in the concurrent private placement at the IPO, which is recorded in nvidia-anthropic-ipo-placement."
     },
     "statusHistory": [
       {
@@ -1591,19 +1591,75 @@
     "sources": [
       {
         "url": "https://blogs.nvidia.com/blog/microsoft-nvidia-anthropic-announce-partnership",
-        "title": "NVIDIA blog: Microsoft, NVIDIA, Anthropic announce partnership (equity amount confirmed by the NVIDIA 10-Q source below)",
+        "title": "NVIDIA blog: Microsoft, NVIDIA, Anthropic announce partnership (not read; the equity amount is confirmed by the NVIDIA 10-Q SEC source on this record)",
         "retrieved": "2026-11-25",
-        "status": "primary-company"
+        "status": "unverified"
       },
       {
         "url": "https://blogs.microsoft.com/blog/2025/11/18/microsoft-nvidia-and-anthropic-announce-strategic-partnerships/",
-        "title": "Microsoft blog: Microsoft, NVIDIA and Anthropic announce strategic partnerships (equity amount confirmed by the NVIDIA 10-Q source below)",
+        "title": "Microsoft blog: Microsoft, NVIDIA and Anthropic announce strategic partnerships (not read; the equity amount is confirmed by the NVIDIA 10-Q SEC source on this record)",
         "retrieved": "2026-11-25",
-        "status": "primary-company"
+        "status": "unverified"
       },
       {
         "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000230/nvda-20251026.htm",
         "title": "NVIDIA 10-Q Q3 FY26 (filed 2025-11-19), Note: investment commitments and Liquidity (\"invest up to $10 billion in Anthropic\")",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      }
+    ]
+  },
+  {
+    "id": "nvidia-anthropic-ipo-placement",
+    "name": "NVIDIA purchase of Anthropic Class N common stock in the IPO concurrent private placement",
+    "payers": [
+      "nvidia"
+    ],
+    "payees": [
+      "anthropic"
+    ],
+    "guarantors": [],
+    "types": [
+      "equity"
+    ],
+    "announced": "2026-11-17",
+    "values": {
+      "hardMinimumUsd": 10000000000
+    },
+    "terms": {
+      "recourse": "unknown",
+      "takeOrPay": "unknown",
+      "hellOrHighWater": "unknown",
+      "notes": "NVIDIA agreed to buy Anthropic Class N common stock for \"approximately $10.0 billion\" at the IPO price, part of a $26.0B concurrent private placement with Google, AMD, Broadcom, Micron, Microsoft and TSMC, contingent on the IPO. First disclosed in S-1/A No. 3 (filed 2026-11-17; 135,135,135 shares at the assumed $74.00 midpoint). 424B4 (2026-11-19): \"NVIDIA Corporation (\"NVIDIA\") will purchase 120,481,927 shares of our Class N common stock for approximately $10.0 billion\" at $83.00. Closing: Anthropic 8-K filed 2026-11-25 says that on November 20, 2026 it \"completed the private placement of an aggregate of 313,253,007 shares\" to the purchasers including NVIDIA, proceeds ~$26.0B; that total equals the sum of the 424B4 per-purchaser share counts, so NVIDIA's 120,481,927 shares were sold in full. Value is the stated \"approximately $10.0 billion\" (hard minimum because closing is confirmed). Signing date not stated (the S-1/A No. 3 says the agreement had been entered into by its filing date), so no signed date is entered. Separate from the November 2025 up-to-$10B commitment (nvidia-anthropic-equity)."
+    },
+    "statusHistory": [
+      {
+        "date": "2026-11-17",
+        "status": "announced",
+        "note": "Disclosed in Anthropic S-1/A No. 3 (filed 2026-11-17), contingent on the IPO"
+      },
+      {
+        "date": "2026-11-20",
+        "status": "completed",
+        "note": "Concurrent private placement completed (Anthropic 8-K filed 2026-11-25)"
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026074338/anthropicpbc-sx1ax3.htm",
+        "title": "Anthropic S-1/A No. 3 (filed 2026-11-17), cover page and Prospectus Summary: concurrent private placement, NVIDIA ~$10.0B",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm",
+        "title": "Anthropic 424B4 (filed 2026-11-19), The Offering: NVIDIA 120,481,927 Class N shares for ~$10.0B at $83.00",
+        "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026075973/ant-20261119.htm",
+        "title": "Anthropic 8-K (filed 2026-11-25), Item 3.02: concurrent private placement of 313,253,007 Class N shares completed 2026-11-20",
         "retrieved": "2026-11-26",
         "status": "primary-filing"
       }

@@ -122,8 +122,19 @@ describe('loadDeals', () => {
     const nvda = byId('nvidia-anthropic-equity');
     expect(nvda.values.ceilingUsd).toBe(10e9);
     expect(nvda.sources.some(s => s.status === 'primary-filing' && /sec\.gov/.test(s.url))).toBe(true);
-    expect(nvda.sources.some(s => s.status === 'unverified')).toBe(false);
+    // The two blog sources were not read, so they stay unverified; the SEC source carries the record.
+    expect(nvda.sources.filter(s => /blogs\./.test(s.url)).every(s => s.status === 'unverified')).toBe(true);
+    expect(nvda.terms.notes).toMatch(/nvidia-anthropic-ipo-placement/);
     expect(byId('microsoft-anthropic-equity').sources.every(s => s.status === 'unverified')).toBe(true);
+  });
+
+  it('records NVIDIA\'s IPO concurrent private placement in Anthropic from SEC filings', () => {
+    const p = byId('nvidia-anthropic-ipo-placement');
+    expect(p).toMatchObject({ payers: ['nvidia'], payees: ['anthropic'], types: ['equity'], announced: '2026-11-17',
+      values: { hardMinimumUsd: 10e9 } });
+    expect(p.statusHistory.map(h => h.status)).toEqual(['announced', 'completed']);
+    expect(p.sources.length).toBeGreaterThanOrEqual(2);
+    expect(p.sources.every(s => s.status === 'primary-filing' && /^https:\/\/www\.sec\.gov\//.test(s.url))).toBe(true);
   });
 
   it('keeps every source dated and labelled, and primary-filing only for SEC URLs', () => {
