@@ -39,10 +39,14 @@ const isHalf = (w: number) => w >= 25 && w <= 27;
 const isNineMonth = (w: number) => w >= 38 && w <= 40;
 const isAnnual = (w: number) => w >= 51 && w <= 53;
 
-function nextDay(d: string): string {
+function addDays(d: string, n: number): string {
   const [y, m, day] = d.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, day + 1)).toISOString().slice(0, 10);
+  return new Date(Date.UTC(y, m - 1, day + n)).toISOString().slice(0, 10);
 }
+const nextDay = (d: string) => addDays(d, 1);
+
+/** Quarter of a balance-sheet instant: the ~3-month period ending on it, so it lines up with flow quarters. */
+const instantQuarter = (instant: string) => calendarQuarterFor(addDays(instant, -90), instant);
 
 /** Raw facts for one tag: allowed forms and units only, exact repeats (period, value, filed) removed. */
 function rawFactsFor(companyFacts: z.infer<typeof CompanyFactsSchema>, taxonomy: string, tag: string): RawFact[] {
@@ -67,12 +71,13 @@ function rawFactsFor(companyFacts: z.infer<typeof CompanyFactsSchema>, taxonomy:
 function makeFact(
   entity: Entity, metric: Metric, periodStart: string, periodEnd: string, weeks: number,
   value: number, derived: boolean, filing: RawFact,
+  quarter: QuarterKey = calendarQuarterFor(periodStart, periodEnd),
 ): FinancialFact {
   const cik = String(Number(entity.cik));
   return {
     entityId: entity.id,
     metric,
-    quarter: calendarQuarterFor(periodStart, periodEnd),
+    quarter,
     periodStart,
     periodEnd,
     weeks,
@@ -99,15 +104,15 @@ function groupBy<T>(items: T[], key: (t: T) => string): Map<string, T[]> {
   return m;
 }
 
-/** Instant facts -> quarterly facts keyed by the instant's calendar quarter (latest instant in the quarter wins). */
+/** Instant facts -> quarterly facts keyed by the quarter ending on the instant (latest instant in the quarter wins). */
 function stockFacts(raw: RawFact[], entity: Entity, metric: Metric): Map<QuarterKey, FinancialFact[]> {
   const instants = raw.filter(f => f.start === undefined);
-  const byQuarter = groupBy(instants, f => calendarQuarterFor(f.end, f.end));
+  const byQuarter = groupBy(instants, f => instantQuarter(f.end));
   const out = new Map<QuarterKey, FinancialFact[]>();
   for (const [q, fs] of byQuarter) {
     const lastDate = fs.reduce((d, f) => (f.end > d ? f.end : d), fs[0].end);
     out.set(q, fs.filter(f => f.end === lastDate)
-      .map(f => makeFact(entity, metric, f.end, f.end, 0, f.val, false, f)));
+      .map(f => makeFact(entity, metric, f.end, f.end, 0, f.val, false, f, q)));
   }
   return out;
 }
@@ -164,8 +169,8 @@ function flowFacts(raw: RawFact[], entity: Entity, metric: Metric): Map<QuarterK
 
 /**
  * Quarterly financial facts from an SEC company-facts document. Every filing version of a period is kept
- * (restatements appear as extra facts with a later `asKnownAt`). For each metric and quarter, the
- * highest-priority tag with a value for that quarter is used.
+ * (restatements appear as extra facts with a later `asKnownAt`). For each metric, quarter and filing, the
+ * highest-priority tag with a value for that quarter in that filing is used.
  */
 export function extractQuarterly(companyFacts: unknown, entity: Entity, metricMap: MetricMap): FinancialFact[] {
   if (!entity.cik) throw new Error(`entity ${entity.id} has no CIK`);
@@ -174,13 +179,16 @@ export function extractQuarterly(companyFacts: unknown, entity: Entity, metricMa
   for (const metric of MetricSchema.options) {
     const taxonomies = metricMap[metric];
     if (!taxonomies) continue;
-    const chosen = new Map<QuarterKey, FinancialFact[]>();
+    // Tag priority is resolved per filing: (quarter, filing) -> facts from the highest-priority tag in that filing.
+    // The source URL identifies the filing (one URL per accession number).
+    const chosen = new Map<string, FinancialFact[]>();
     for (const [taxonomy, tags] of Object.entries(taxonomies)) {
       for (const tag of tags) {
         const raw = rawFactsFor(doc, taxonomy, tag);
         if (!raw.length) continue;
         const perQuarter = STOCK_METRICS.has(metric) ? stockFacts(raw, entity, metric) : flowFacts(raw, entity, metric);
-        for (const [q, fs] of perQuarter) if (!chosen.has(q)) chosen.set(q, fs);
+        const perFiling = groupBy([...perQuarter.values()].flat(), f => `${f.quarter}|${f.source.url}`);
+        for (const [k, fs] of perFiling) if (!chosen.has(k)) chosen.set(k, fs);
       }
     }
     for (const fs of chosen.values()) out.push(...fs);

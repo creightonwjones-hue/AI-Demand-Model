@@ -57,6 +57,50 @@ describe('extractQuarterly (fixture)', () => {
   });
 });
 
+describe('tag priority per filing', () => {
+  const facts = extractQuarterly(fixture, entity, metricMap);
+  it('keeps a fallback-tag vintage from an earlier filing when a later filing uses the priority tag', () => {
+    const capex = facts.filter(f => f.metric === 'capex' && f.quarter === '2026Q1');
+    // 10-Q (2026-04-30): fallback tag only -> 30; 10-K (2027-02-15): priority tag 31 beats fallback 32
+    expect(capex.map(f => [f.asKnownAt, f.value])).toEqual([['2026-04-30', 30], ['2027-02-15', 31]]);
+    expect(valueAsOf(facts, entity.id, 'capex', '2026Q1', '2026-12-31')!.value).toBe(30);
+    expect(valueAsOf(facts, entity.id, 'capex', '2026Q1', '2027-03-01')!.value).toBe(31);
+  });
+});
+
+describe('balance-sheet quarters align with flow quarters (off-calendar filer)', () => {
+  const inst = (end: string, val: number) =>
+    ({ end, val, accn: '0001234567-26-000099', fy: 2027, fp: 'Q2', form: '10-Q', filed: '2026-09-01' });
+  const offCal = {
+    cik: 1234567, entityName: 'Mini Co',
+    facts: { 'us-gaap': {
+      Revenues: { units: { USD: [
+        { start: '2026-04-27', end: '2026-07-26', val: 500, accn: '0001234567-26-000099', fy: 2027, fp: 'Q2', form: '10-Q', filed: '2026-09-01' },
+      ] } },
+      CashAndCashEquivalentsAtCarryingValue: { units: { USD: [
+        inst('2026-07-26', 1), inst('2026-08-31', 2), inst('2026-01-25', 3), inst('2026-03-31', 4),
+      ] } },
+    } },
+  };
+  const facts = extractQuarterly(offCal, entity, metricMap);
+  const cashQ = (end: string) => facts.find(f => f.metric === 'cash' && f.periodEnd === end)?.quarter;
+  it('assigns each instant to the quarter ending on it', () => {
+    expect(facts.find(f => f.metric === 'revenue')!.quarter).toBe('2026Q2');
+    expect(cashQ('2026-07-26')).toBe('2026Q2');
+    expect(cashQ('2026-08-31')).toBe('2026Q3');
+    expect(cashQ('2026-01-25')).toBe('2025Q4');
+    expect(cashQ('2026-03-31')).toBe('2026Q1');
+  });
+});
+
+describe('extractQuarterly (real Alphabet data)', () => {
+  it('keeps the original 10-Q vintage filed under a fallback tag', () => {
+    const alphabet = loadEntities().find(e => e.id === 'alphabet')!;
+    const facts = extractQuarterly(readJson('data/raw/sec/GOOGL_companyfacts.json'), alphabet, metricMap);
+    expect(valueAsOf(facts, 'alphabet', 'revenue', '2020Q1', '2020-12-31')!.value).toBe(41_159_000_000);
+  });
+});
+
 describe('extractQuarterly (real NVIDIA data)', () => {
   it('matches reported revenue', () => {
     const nvidia = loadEntities().find(e => e.id === 'nvidia')!;
