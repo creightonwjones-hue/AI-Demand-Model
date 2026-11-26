@@ -69,7 +69,7 @@ function rawFactsFor(companyFacts: z.infer<typeof CompanyFactsSchema>, taxonomy:
 }
 
 function makeFact(
-  entity: Entity, metric: Metric, periodStart: string, periodEnd: string, weeks: number,
+  entity: Entity, metric: Metric, tag: string, periodStart: string, periodEnd: string, weeks: number,
   value: number, derived: boolean, filing: RawFact,
   quarter: QuarterKey = calendarQuarterFor(periodStart, periodEnd),
 ): FinancialFact {
@@ -77,6 +77,7 @@ function makeFact(
   return {
     entityId: entity.id,
     metric,
+    tag,
     quarter,
     periodStart,
     periodEnd,
@@ -105,26 +106,42 @@ function groupBy<T>(items: T[], key: (t: T) => string): Map<string, T[]> {
 }
 
 /** Instant facts -> quarterly facts keyed by the quarter ending on the instant (latest instant in the quarter wins). */
-function stockFacts(raw: RawFact[], entity: Entity, metric: Metric): Map<QuarterKey, FinancialFact[]> {
+function stockFacts(raw: RawFact[], entity: Entity, metric: Metric, tag: string): Map<QuarterKey, FinancialFact[]> {
   const instants = raw.filter(f => f.start === undefined);
   const byQuarter = groupBy(instants, f => instantQuarter(f.end));
   const out = new Map<QuarterKey, FinancialFact[]>();
   for (const [q, fs] of byQuarter) {
     const lastDate = fs.reduce((d, f) => (f.end > d ? f.end : d), fs[0].end);
     out.set(q, fs.filter(f => f.end === lastDate)
-      .map(f => makeFact(entity, metric, f.end, f.end, 0, f.val, false, f, q)));
+      .map(f => makeFact(entity, metric, tag, f.end, f.end, 0, f.val, false, f, q)));
   }
   return out;
 }
 
+/** Key identifying a value reported for a period ending on `end` in one filing. */
+const longKey = (f: RawFact) => `${f.accn}|${f.end}|${f.val}`;
+
+/**
+ * `accn|end|val` of every duration fact of at least 25 weeks, across all of a metric's tags. A "3-month" fact whose
+ * value equals one of these (same filing, same end date) is a mis-tagged year-to-date total, e.g. Oracle's FY22 10-K
+ * tags the annual $42.44B under `Revenues` with start 2022-03-01.
+ */
+function longDurationKeys(raws: RawFact[]): Set<string> {
+  return new Set(raws.filter(f => f.start !== undefined && weeksBetween(f.start, f.end) >= 25).map(longKey));
+}
+
 /** Duration facts -> quarterly facts: 3-month facts where present, else de-cumulated year-to-date facts. */
-function flowFacts(raw: RawFact[], entity: Entity, metric: Metric): Map<QuarterKey, FinancialFact[]> {
+function flowFacts(
+  raw: RawFact[], entity: Entity, metric: Metric, tag: string, longKeys: Set<string> = new Set(),
+): Map<QuarterKey, FinancialFact[]> {
   const durations = raw.filter((f): f is RawFact & { start: string } => f.start !== undefined)
-    .map(f => ({ ...f, weeks: weeksBetween(f.start, f.end) }));
+    .map(f => ({ ...f, weeks: weeksBetween(f.start, f.end) }))
+    // Drop mis-tagged "3-month" facts that repeat a longer period's total from the same filing.
+    .filter(f => !(isQuarter(f.weeks) && longKeys.has(longKey(f))));
 
   const direct = new Map<QuarterKey, FinancialFact[]>();
   for (const f of durations.filter(d => isQuarter(d.weeks))) {
-    const fact = makeFact(entity, metric, f.start, f.end, f.weeks, f.val, false, f);
+    const fact = makeFact(entity, metric, tag, f.start, f.end, f.weeks, f.val, false, f);
     const arr = direct.get(fact.quarter);
     if (arr) arr.push(fact); else direct.set(fact.quarter, [fact]);
   }
@@ -157,7 +174,7 @@ function flowFacts(raw: RawFact[], entity: Entity, metric: Metric): Map<QuarterK
         const known = component.filter(c => c.filed <= larger.filed);
         const comp = known.length ? known[known.length - 1] : component[0];
         const later = comp.filed > larger.filed ? comp : larger;
-        const fact = makeFact(entity, metric, periodStart, periodEnd, weeks, larger.val - comp.val, true, later);
+        const fact = makeFact(entity, metric, tag, periodStart, periodEnd, weeks, larger.val - comp.val, true, later);
         const arr = derived.get(quarter);
         if (arr) arr.push(fact); else derived.set(quarter, [fact]);
       }
@@ -182,18 +199,20 @@ export function extractQuarterly(companyFacts: unknown, entity: Entity, metricMa
     // Tag priority is resolved per filing: (quarter, filing) -> facts from the highest-priority tag in that filing.
     // The source URL identifies the filing (one URL per accession number).
     const chosen = new Map<string, FinancialFact[]>();
-    for (const [taxonomy, tags] of Object.entries(taxonomies)) {
-      for (const tag of tags) {
-        const raw = rawFactsFor(doc, taxonomy, tag);
-        if (!raw.length) continue;
-        const perQuarter = STOCK_METRICS.has(metric) ? stockFacts(raw, entity, metric) : flowFacts(raw, entity, metric);
-        const perFiling = groupBy([...perQuarter.values()].flat(), f => `${f.quarter}|${f.source.url}`);
-        for (const [k, fs] of perFiling) {
-          const prev = chosen.get(k);
-          // First tag in priority order wins, except that an all-zero value never beats a lower-priority non-zero
-          // one in the same filing and quarter (e.g. a placeholder LongTermDebt = 0 next to a real LongTermNotesAndLoans).
-          if (!prev || (prev.every(f => f.value === 0) && fs.some(f => f.value !== 0))) chosen.set(k, fs);
-        }
+    const tagged = Object.entries(taxonomies).flatMap(([taxonomy, tags]) =>
+      tags.map(tag => ({ tag, raw: rawFactsFor(doc, taxonomy, tag) })));
+    const longKeys = longDurationKeys(tagged.flatMap(t => t.raw));
+    for (const { tag, raw } of tagged) {
+      if (!raw.length) continue;
+      const perQuarter = STOCK_METRICS.has(metric)
+        ? stockFacts(raw, entity, metric, tag)
+        : flowFacts(raw, entity, metric, tag, longKeys);
+      const perFiling = groupBy([...perQuarter.values()].flat(), f => `${f.quarter}|${f.source.url}`);
+      for (const [k, fs] of perFiling) {
+        const prev = chosen.get(k);
+        // First tag in priority order wins, except that an all-zero value never beats a lower-priority non-zero
+        // one in the same filing and quarter (e.g. a placeholder LongTermDebt = 0 next to a real LongTermNotesAndLoans).
+        if (!prev || (prev.every(f => f.value === 0) && fs.some(f => f.value !== 0))) chosen.set(k, fs);
       }
     }
     for (const fs of chosen.values()) out.push(...fs);

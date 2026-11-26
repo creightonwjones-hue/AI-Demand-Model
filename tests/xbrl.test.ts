@@ -130,3 +130,60 @@ describe('extractQuarterly (real NVIDIA data)', () => {
       .toMatchObject({ value: 215_938_000_000 - 147_811_000_000, derived: true, asKnownAt: '2026-02-25' });
   });
 });
+
+describe('mis-tagged "3-month" fact repeating a longer total (Oracle FY22 10-K pattern)', () => {
+  const k10 = '0001234567-26-000040';
+  const q10 = '0001234567-26-000030';
+  const dur = (start: string, end: string, val: number, accn: string, form: string, filed: string) =>
+    ({ start, end, val, accn, fy: 2026, fp: form === '10-K' ? 'FY' : 'Q3', form, filed });
+  const doc = {
+    cik: 1234567, entityName: 'Mini Co',
+    facts: { 'us-gaap': {
+      // 10-K tags the annual total under the priority tag with a 3-month start date
+      Revenues: { units: { USD: [dur('2026-03-01', '2026-05-31', 400, k10, '10-K', '2026-06-20')] } },
+      RevenueFromContractWithCustomerExcludingAssessedTax: { units: { USD: [
+        dur('2025-06-01', '2026-02-28', 290, q10, '10-Q', '2026-03-10'),
+        dur('2025-06-01', '2026-05-31', 400, k10, '10-K', '2026-06-20'),
+      ] } },
+    } },
+  };
+  const facts = extractQuarterly(doc, entity, metricMap).filter(f => f.metric === 'revenue' && f.quarter === '2026Q2');
+  it('drops the mis-tagged fact so the derived annual - 9-month value is used', () => {
+    expect(facts).toHaveLength(1);
+    expect(facts[0]).toMatchObject({
+      value: 110, derived: true, asKnownAt: '2026-06-20', tag: 'RevenueFromContractWithCustomerExcludingAssessedTax',
+    });
+  });
+  it('keeps a genuine 3-month fact whose value differs from the annual total', () => {
+    const ok = structuredClone(doc);
+    (ok.facts['us-gaap'].Revenues.units.USD[0] as { val: number }).val = 111;
+    const f = extractQuarterly(ok, entity, metricMap).filter(x => x.metric === 'revenue' && x.quarter === '2026Q2');
+    expect(f.map(x => [x.value, x.derived, x.tag])).toEqual([[111, false, 'Revenues']]);
+  });
+});
+
+describe('extractQuarterly (real Oracle data)', () => {
+  it('uses the derived FY22 Q4 revenue, not the annual total mis-tagged as a 3-month fact', () => {
+    const oracle = loadEntities().find(e => e.id === 'oracle')!;
+    const facts = extractQuarterly(readJson('data/raw/sec/ORCL_companyfacts.json'), oracle, metricMap);
+    const v = valueAsOf(facts, 'oracle', 'revenue', '2022Q2', '2022-12-31')!;
+    expect(v.value).toBeCloseTo(11.84e9, -7);
+    expect(v).toMatchObject({ asKnownAt: '2022-06-21', derived: true });
+  });
+});
+
+describe('XBRL tag recorded on each fact; noncurrent debt preferred', () => {
+  const inst = (tag: string, val: number) => ({
+    [tag]: { units: { USD: [{ end: '2026-03-31', val, accn: '0001234567-26-000001', fy: 2026, fp: 'Q1', form: '10-Q', filed: '2026-04-30' }] } },
+  });
+  const doc = { cik: 1234567, entityName: 'Mini Co', facts: { 'us-gaap': {
+    ...inst('LongTermDebt', 120), ...inst('LongTermDebtNoncurrent', 100),
+  } } };
+  it('uses LongTermDebtNoncurrent over LongTermDebt (total incl. current portion) in the same filing', () => {
+    const debt = extractQuarterly(doc, entity, metricMap).filter(f => f.metric === 'longTermDebt');
+    expect(debt.map(f => [f.value, f.tag])).toEqual([[100, 'LongTermDebtNoncurrent']]);
+  });
+  it('sets tag on every fixture fact', () => {
+    for (const f of extractQuarterly(fixture, entity, metricMap)) expect(f.tag).toMatch(/^[A-Z]\w+$/);
+  });
+});

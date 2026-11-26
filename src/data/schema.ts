@@ -48,6 +48,8 @@ export type Metric = z.infer<typeof MetricSchema>;
 export const FinancialFactSchema = z.object({
   entityId: z.string(),
   metric: MetricSchema,
+  // XBRL tag the value came from (e.g. "LongTermDebtNoncurrent"); undefined for manual rows.
+  tag: z.string().optional(),
   segment: z.string().optional(),
   quarter: QuarterKeySchema,
   periodStart: isoDate,
