@@ -1,0 +1,131 @@
+import { z } from 'zod';
+
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
+
+// ---- SourceRef ----
+export const VerificationStatusSchema = z.enum(['primary-filing', 'primary-company', 'secondary', 'unverified']);
+export type VerificationStatus = z.infer<typeof VerificationStatusSchema>;
+
+export const SourceRefSchema = z.object({
+  url: z.string(),
+  title: z.string().optional(),
+  retrieved: isoDate,
+  status: VerificationStatusSchema,
+});
+export type SourceRef = z.infer<typeof SourceRefSchema>;
+
+// ---- Entity ----
+export const LayerSchema = z.enum(['money', 'labs', 'financing', 'cloud', 'chips', 'supply']);
+export type Layer = z.infer<typeof LayerSchema>;
+
+export const EntityKindSchema = z.enum(['public-company', 'private-company', 'spv', 'lender', 'aggregate', 'government']);
+export type EntityKind = z.infer<typeof EntityKindSchema>;
+
+export const EntitySchema = z.object({
+  id: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'expected kebab-case'),
+  name: z.string(),
+  layer: LayerSchema,
+  group: z.string().optional(),
+  kind: EntityKindSchema,
+  ticker: z.string().optional(),
+  cik: z.string().regex(/^\d{10}$/, 'expected 10 digits').optional(),
+  xbrl: z.boolean(),
+  currency: z.enum(['USD', 'TWD', 'KRW', 'EUR']),
+});
+export type Entity = z.infer<typeof EntitySchema>;
+
+// ---- FinancialFact ----
+export const QuarterKeySchema = z.string().regex(/^\d{4}Q[1-4]$/, 'expected YYYYQn');
+export type QuarterKey = z.infer<typeof QuarterKeySchema>;
+
+export const MetricSchema = z.enum([
+  'revenue', 'capex', 'operatingCashFlow', 'cash', 'longTermDebt', 'netIncome',
+  'epsDiluted', 'accountsReceivable', 'grossProfit', 'segmentRevenue',
+]);
+export type Metric = z.infer<typeof MetricSchema>;
+
+export const FinancialFactSchema = z.object({
+  entityId: z.string(),
+  metric: MetricSchema,
+  segment: z.string().optional(),
+  quarter: QuarterKeySchema,
+  periodStart: isoDate,
+  periodEnd: isoDate,
+  weeks: z.number(),
+  value: z.number(), // USD, or USD/share for epsDiluted
+  originalCurrency: z.string().optional(),
+  originalValue: z.number().optional(),
+  fxRate: z.number().optional(),
+  derived: z.boolean(),
+  asKnownAt: isoDate,
+  form: z.string().optional(),
+  source: SourceRefSchema,
+});
+export type FinancialFact = z.infer<typeof FinancialFactSchema>;
+
+// ---- Series ----
+export const SeriesPointSchema = z.object({
+  date: z.string(),
+  value: z.number(),
+  asKnownAt: z.string().optional(),
+});
+export type SeriesPoint = z.infer<typeof SeriesPointSchema>;
+
+export const SeriesSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  unit: z.string(),
+  provider: z.string(),
+  kind: z.enum(['condition', 'indicator', 'consensus', 'guidance']),
+  source: SourceRefSchema,
+  points: z.array(SeriesPointSchema),
+});
+export type Series = z.infer<typeof SeriesSchema>;
+
+// ---- Deal ----
+export const DealTypeSchema = z.enum([
+  'compute-lease', 'chip-purchase', 'equity', 'loan', 'spv-financing', 'capacity-guarantee',
+  'warrants', 'jv', 'buyer-of-last-resort', 'other',
+]);
+export type DealType = z.infer<typeof DealTypeSchema>;
+
+export const DealStatusSchema = z.enum([
+  'announced', 'active', 'expanded', 'delayed', 'renegotiated', 'cancelled', 'replaced', 'completed',
+]);
+export type DealStatus = z.infer<typeof DealStatusSchema>;
+
+const triState = z.enum(['yes', 'no', 'unknown']);
+
+export const DealSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  payers: z.array(z.string()),
+  payees: z.array(z.string()),
+  guarantors: z.array(z.string()),
+  vehicle: z.string().optional(),
+  types: z.array(DealTypeSchema),
+  announced: isoDate,
+  signed: isoDate.optional(),
+  start: isoDate.optional(),
+  end: isoDate.optional(),
+  values: z.object({
+    hardMinimumUsd: z.number().optional(),
+    ceilingUsd: z.number().optional(),
+    conditionalUsd: z.number().optional(),
+    estimateUsd: z.number().optional(),
+  }),
+  terms: z.object({
+    rate: z.string().optional(),
+    maturity: z.string().optional(),
+    recourse: z.enum(['recourse', 'non-recourse', 'unknown']),
+    collateral: z.string().optional(),
+    takeOrPay: triState,
+    hellOrHighWater: triState,
+    terminationRights: z.string().optional(),
+    exclusivity: z.string().optional(),
+    notes: z.string().optional(),
+  }),
+  statusHistory: z.array(z.object({ date: isoDate, status: DealStatusSchema, note: z.string().optional() })),
+  sources: z.array(SourceRefSchema),
+}).strict();
+export type Deal = z.infer<typeof DealSchema>;
