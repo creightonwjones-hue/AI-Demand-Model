@@ -59,6 +59,10 @@ export interface EngineState {
   modelled: Record<string, boolean>;
   /** Extension: plain-language caveats about the opening state (stale facts, placeholders, missing quarters). */
   notes: string[];
+  /** Extension: entities NVIDIA has invested in or guarantees (deals known at asOf) — for customerFinancedShare. */
+  nvidiaLinked: string[];
+  /** Extension: values carried between quarters by the layers (e.g. last rent per cloud, expected shipments). */
+  memory: Record<string, number>;
 }
 
 /** Company-stated lab revenue series for labs without quarterly facts (mirrors the aiSpend labs in conditions.json). */
@@ -210,5 +214,18 @@ export function initState(data: AsOfData, params: EngineParams, grid: Grid, star
       gpuResale: param(params, 'gpuResaleNoDataFraction'),
     },
     expectations, pipeline: [], active, defaulted, modelled, notes,
+    nvidiaLinked: nvidiaLinkedEntities(data),
+    memory: {},
   };
+}
+
+/** Payees of NVIDIA equity deals and parties to deals NVIDIA guarantees, among deals known at asOf. */
+export function nvidiaLinkedEntities(data: AsOfData): string[] {
+  const linked = new Set<string>();
+  for (const d of data.deals) {
+    if (d.statusAsOf === 'cancelled' || d.statusAsOf === 'replaced') continue;
+    if (d.payers.includes('nvidia') && d.types.includes('equity')) d.payees.forEach(x => linked.add(x));
+    if (d.guarantors.includes('nvidia')) [...d.payers, ...d.payees].filter(x => x !== 'nvidia').forEach(x => linked.add(x));
+  }
+  return [...linked].sort();
 }

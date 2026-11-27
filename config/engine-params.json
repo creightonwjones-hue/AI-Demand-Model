@@ -497,5 +497,52 @@
     "min": 1e-06,
     "description": "Token price index level at which the AI-spend condition applies unchanged; elasticity scales spend relative to it.",
     "source": "assumption \u2014 conditions express token price as an index of 1 at the as-of quarter"
+  },
+  "capexPerQuarterlyRentUsd": {
+    "value": 10,
+    "unit": "USD of capex per USD of quarterly rent",
+    "min": 2,
+    "max": 30,
+    "description": "How much a cloud invests to add capacity that earns one dollar of AI rent per quarter (roughly the payback period in quarters).",
+    "source": "assumption \u2014 calibrated in Task 12"
+  },
+  "customChipShareOfBudget": {
+    "value": 0.3,
+    "unit": "fraction",
+    "min": 0,
+    "max": 1,
+    "description": "Share of Alphabet's and Amazon's chip budget spent on their own designs (Google TPU with Broadcom, Amazon Trainium with Marvell) rather than NVIDIA or AMD.",
+    "source": "assumption \u2014 calibrated in Task 12"
+  },
+  "maxLendingCreditSpread": {
+    "value": 6,
+    "unit": "percentage points (Baa minus 10-year Treasury)",
+    "min": 2,
+    "max": 15,
+    "description": "Credit spread above which lenders stop extending new credit to debt-funded clouds in this simple phase-2 rule.",
+    "source": "assumption \u2014 Baa spread peaked near 6 points in 2008-09 (FRED BAA10Y)"
+  },
+  "creditCapacityMultipleOfRent": {
+    "value": 4,
+    "unit": "USD of new credit per USD of quarterly rent",
+    "min": 0,
+    "max": 20,
+    "description": "How much new debt a debt-funded cloud can raise in a quarter, as a multiple of its quarterly rent revenue, when credit is open.",
+    "source": "assumption \u2014 calibrated in Task 12"
+  },
+  "edgeNonAiQuarterlyUsd": {
+    "value": 8200000000.0,
+    "unit": "USD per quarter",
+    "min": 0,
+    "description": "NVIDIA Edge Computing revenue (PCs, gaming, cars, robots) held flat as a simple trend; physical-AI spend from the demand layer is added separately.",
+    "source": "NVIDIA 8-K 2026-11-17 CFO commentary: Edge Computing $8.2B in Q3 FY27 (includes some physical AI; overlap noted)"
+  },
+  "newLoanRateSpreadOverRiskFree": {
+    "value": 4,
+    "unit": "percentage points",
+    "min": 0,
+    "max": 20,
+    "description": "Extra interest over the 10-year Treasury plus the credit-spread condition that debt-funded clouds pay on new loans.",
+    "source": "assumption \u2014 CoreWeave DDTL margins of SOFR+2.25% to +13% (data/deals/deals.json)"
   }
 }

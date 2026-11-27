@@ -605,5 +605,21 @@
     "kind": "aggregate",
     "xbrl": false,
     "currency": "USD"
+  },
+  {
+    "id": "construction-and-power",
+    "name": "Construction and power suppliers",
+    "layer": "supply",
+    "kind": "aggregate",
+    "xbrl": false,
+    "currency": "USD"
+  },
+  {
+    "id": "non-ai-customers",
+    "name": "Non-AI customers (PCs, gaming)",
+    "layer": "money",
+    "kind": "aggregate",
+    "xbrl": false,
+    "currency": "USD"
   }
 ]

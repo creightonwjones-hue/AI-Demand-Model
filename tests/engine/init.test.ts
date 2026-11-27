@@ -216,3 +216,12 @@ describe('initState (edge rules)', () => {
     expect(() => initState(asOfView(fixture(), '2026-11-26'), params, grid, '2031Q1')).toThrow(/outside the grid/)
   })
 })
+
+describe('nvidiaLinked', () => {
+  it('lists customers NVIDIA invested in or guarantees, from deals known at asOf', () => {
+    const s = initState(asOfView(loadBuild(), '2026-11-26'), loadParams(), makeGrid(), '2026Q4')
+    expect(s.nvidiaLinked).toEqual(expect.arrayContaining(['openai', 'coreweave', 'anthropic']))
+    const s24 = initState(asOfView(loadBuild(), '2024-06-30'), loadParams(), makeGrid(), '2024Q3')
+    expect(s24.nvidiaLinked).not.toContain('openai')
+  })
+})
