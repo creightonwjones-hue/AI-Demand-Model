@@ -21,6 +21,8 @@ export interface ConditionPath {
   low: number[];
   high: number[];
   rangeSource: string;
+  /** Plain-language caveats: partial or spliced history, quarters filled by the model, placeholders. */
+  notes?: string;
 }
 
 export type Conditions = Record<ConditionId, ConditionPath>;

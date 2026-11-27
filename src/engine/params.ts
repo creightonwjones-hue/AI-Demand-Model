@@ -34,7 +34,7 @@ export function loadParams(path = 'config/engine-params.json'): EngineParams {
 
 /** Numeric value of a parameter; throws on an unknown key. */
 export function param(p: EngineParams, key: string): number {
-  const v = p[key];
-  if (!v) throw new Error(`unknown param: ${key}`);
-  return v.value;
+  // Own keys only: inherited names such as 'constructor' are not params.
+  if (!Object.hasOwn(p, key)) throw new Error(`unknown param: ${key}`);
+  return p[key].value;
 }

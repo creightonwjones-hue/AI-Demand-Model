@@ -1,0 +1,184 @@
+{
+  "aiSpend": {
+    "name": "Frontier-lab revenue (AI spend)",
+    "unit": "USD per year",
+    "historyKind": "lab-revenue",
+    "historySeries": [],
+    "labs": [
+      { "label": "Anthropic", "entityId": "anthropic", "metric": "revenue" },
+      { "label": "OpenAI", "missingReason": "no OpenAI revenue series is committed in data/build (press run-rates in the research notes are not data); when one is added it enters as run-rate / 4 per quarter" }
+    ],
+    "defaultMethod": "trend-decay",
+    "rangeMethod": "log-widening",
+    "params": {
+      "longRunGrowth": "aiSpendLongRunQuarterlyGrowth",
+      "halfLife": "aiSpendGrowthHalfLifeQuarters",
+      "rangeA": "aiSpendRangeLogA",
+      "rangeB": "aiSpendRangeLogB",
+      "noDataValue": "aiSpendNoDataUsdPerYear"
+    },
+    "rangeSourceLabel": "Anthropic quarterly revenue from its S-1 (primary filing), annualised (x4); OpenAI not yet in the data. Default: latest growth decaying to a long-run rate; range widens ±(a + b × quarters ahead) in log terms (Farmer–Lafond style), a and b in engine params",
+    "notes": "Annualised: each history quarter is that quarter's lab revenue x 4."
+  },
+  "tokenPrice": {
+    "name": "Token price index",
+    "unit": "index (1 = as-of quarter)",
+    "historyKind": "none",
+    "historySeries": [],
+    "defaultMethod": "hold-last",
+    "rangeMethod": "volatility",
+    "volMode": "log",
+    "params": { "noDataValue": "tokenPriceIndexBase", "fallbackVol": "tokenPriceQuarterlyLogVol" },
+    "rangeSourceLabel": "Assumption: no token price history is committed, so the index is held at 1.0; range ±k × an assumed quarterly volatility × √(quarters away), set wide because published declines span 9x to 900x a year (Epoch, via research notes)",
+    "notes": "Context only, not used: OpenRouter blended price per million tokens fell from $1.21 to $0.52 (closed-weight) in 2026, https://openrouter.ai/data/october-2026."
+  },
+  "priceElasticity": {
+    "name": "Price elasticity of AI usage",
+    "unit": "elasticity (magnitude; 1 = unit elastic)",
+    "historyKind": "none",
+    "historySeries": [],
+    "defaultMethod": "hold-last",
+    "rangeMethod": "volatility",
+    "volMode": "level",
+    "bounds": { "min": 0 },
+    "params": { "noDataValue": "priceElasticityDefault", "fallbackVol": "priceElasticityQuarterlyVol" },
+    "rangeSourceLabel": "Assumption: no published estimate of how AI usage responds to token price was found, so it is held at unit elasticity (1); range ±k × an assumed quarterly volatility × √(quarters away)"
+  },
+  "creditSpread": {
+    "name": "Corporate credit spread",
+    "unit": "percent",
+    "historyKind": "series",
+    "historySeries": ["BAMLH0A0HYM2", "BAA10Y"],
+    "defaultMethod": "hold-last",
+    "rangeMethod": "volatility",
+    "volMode": "level",
+    "bounds": { "min": 0 },
+    "params": {},
+    "rangeSourceLabel": "FRED ICE BofA US high-yield option-adjusted spread (BAMLH0A0HYM2) where available, else Moody's Baa minus 10-year Treasury (BAA10Y); quarterly mean of daily values; range ±k × quarterly volatility of the same series × √(quarters ahead)",
+    "notes": "Spliced: FRED serves BAMLH0A0HYM2 only from 2023-11-27, so earlier quarters use BAA10Y. The two measure different spreads (high-yield OAS is about 2 percentage points above Baa-minus-Treasury), so history is not like-for-like across the switch; volatility uses only steps within one series."
+  },
+  "riskFree": {
+    "name": "US 10-year Treasury yield",
+    "unit": "percent",
+    "historyKind": "series",
+    "historySeries": ["DGS10"],
+    "defaultMethod": "hold-last",
+    "rangeMethod": "volatility",
+    "volMode": "level",
+    "params": {},
+    "rangeSourceLabel": "FRED DGS10 (10-year Treasury constant-maturity yield), quarterly mean of daily values; range ±k × the quarterly volatility of its history × √(quarters ahead), k and lookback in engine params"
+  },
+  "gpuResale": {
+    "name": "Used GPU resale value",
+    "unit": "fraction of new price",
+    "historyKind": "ratio",
+    "historySeries": [
+      "used-gpu-h100-pcie-80gb-low-servnet", "used-gpu-h100-pcie-80gb-high-servnet",
+      "new-gpu-h100-pcie-80gb-low-servnet", "new-gpu-h100-pcie-80gb-high-servnet"
+    ],
+    "ratio": {
+      "numerator": ["used-gpu-h100-pcie-80gb-low-servnet", "used-gpu-h100-pcie-80gb-high-servnet"],
+      "denominator": ["new-gpu-h100-pcie-80gb-low-servnet", "new-gpu-h100-pcie-80gb-high-servnet"]
+    },
+    "initialGrowthSeries": { "id": "used-gpu-h100-sxm-yoy-amcompute", "unit": "percent-yoy" },
+    "defaultMethod": "trend-decay",
+    "rangeMethod": "log-widening",
+    "params": {
+      "longRunGrowth": "gpuResaleLongRunQuarterlyGrowth",
+      "halfLife": "gpuResaleGrowthHalfLifeQuarters",
+      "rangeA": "gpuResaleRangeLogA",
+      "rangeB": "gpuResaleRangeLogB",
+      "noDataValue": "gpuResaleNoDataFraction"
+    },
+    "rangeSourceLabel": "Used H100 PCIe 80GB price over new price (ServerNet low/high quotes, secondary); default starts from the used H100 SXM year-on-year change (AMCompute) and decays to the used A100 rate of decline; range widens ±(a + b × quarters ahead) in log terms",
+    "notes": "When only one history quarter is known, the starting growth is the used H100 SXM price change with the new price assumed unchanged (an assumption)."
+  },
+  "gpuRental": {
+    "name": "H100 rental price",
+    "unit": "USD per GPU-hour",
+    "historyKind": "series",
+    "historySeries": ["gpu-rent-h100-reserved-semianalysis"],
+    "defaultMethod": "hold-last",
+    "rangeMethod": "volatility",
+    "volMode": "log",
+    "bounds": { "min": 0 },
+    "params": { "noDataValue": "gpuRentalNoDataUsdPerGpuHour", "fallbackVol": "gpuRentalFallbackQuarterlyLogVol" },
+    "rangeSourceLabel": "SemiAnalysis H100 1-year reserved rental price (via FourWeekMBA, secondary); range ±k × quarterly volatility of its few history points × √(quarters ahead)"
+  },
+  "powerGw": {
+    "name": "Global data-centre power",
+    "unit": "GW",
+    "historyKind": "none",
+    "historySeries": [],
+    "defaultMethod": "published",
+    "rangeMethod": "published",
+    "published": {
+      "sourceUnit": "TWh per year",
+      "conversion": "twh-per-year-to-gw-capacity",
+      "points": [
+        { "quarter": "2024Q2", "value": 415, "asKnownAt": "2025-04-10", "label": "IEA Energy and AI (Apr 2025): global data-centre electricity 2024, about 415 TWh", "source": { "url": "https://www.iea.org/reports/energy-and-ai/executive-summary", "status": "secondary" } },
+        { "quarter": "2030Q2", "value": 945, "asKnownAt": "2025-04-10", "label": "IEA Energy and AI (Apr 2025) Base Case: about 945 TWh in 2030", "source": { "url": "https://www.iea.org/reports/energy-and-ai/executive-summary", "status": "secondary" } },
+        { "quarter": "2030Q2", "value": 1000, "asKnownAt": "2026-11-19", "label": "IEA World Energy Outlook 2026 (STEPS): about 1,000 TWh by 2030", "source": { "url": "https://www.cnbc.com/2026/11/19/data-center-electricity-demand-iea.html", "status": "secondary" } }
+      ],
+      "crossChecks": [
+        { "label": "LBNL 2024 US Data Center Energy Usage Report (Dec 2024), US only: 176 TWh in 2023, 325–580 TWh by 2028; sets the range widening rate (powerRangeLogB), not the path", "source": { "url": "https://eta-publications.lbl.gov/sites/default/files/2024-12/us_data_center_energy_usage_report_lbnl-2001637.pdf", "status": "secondary" } }
+      ]
+    },
+    "params": {
+      "loadFactor": "powerLoadFactor",
+      "rangeA": "powerRangeLogA",
+      "rangeB": "powerRangeLogB",
+      "noDataValue": "powerGwNoData"
+    },
+    "rangeSourceLabel": "IEA data-centre electricity, global (Energy and AI, Apr 2025; World Energy Outlook 2026), TWh/yr converted to GW of capacity (TWh × 1000 / 8760 / powerLoadFactor), linear between published years; range = spread between IEA editions, widened ±(a + b × quarters away) in log terms with b calibrated to the LBNL 2024 US report's 2028 low–high spread (325–580 TWh)",
+    "notes": "Annual figures are placed at mid-year (Q2) and held flat before the first and after the last point. GW is capacity: average load divided by powerLoadFactor. LBNL is US-only, so it sets the range width, not the level."
+  },
+  "exportRegime": {
+    "name": "US export regime for AI chips to China",
+    "unit": "regime code (1 open, 0.5 licensed with limits, 0 closed)",
+    "historyKind": "none",
+    "historySeries": [],
+    "defaultMethod": "hold-last",
+    "rangeMethod": "volatility",
+    "volMode": "level",
+    "bounds": { "min": 0, "max": 1 },
+    "params": { "noDataValue": "exportRegimeDefault", "fallbackVol": "exportRegimeQuarterlyVol" },
+    "rangeSourceLabel": "Assumption: no export-regime series is committed; held at 0.5 (licensed with limits), the status in Nov 2026 per the research notes; range ±k × an assumed quarterly volatility × √(quarters away), clipped to 0..1",
+    "notes": "Why 0.5 and not 0: NVIDIA shipped $2.4B of Hopper products to China in Q3 FY27 and H200 licences were reportedly granted (shipments stalled), so sales are licensed with limits rather than banned. NVIDIA's Q4 FY27 guidance assumes no China data-centre compute revenue; that is NVIDIA's revenue assumption, not the regime. Sources: https://www.guru3d.com/story/nvidia-q3-fy2027-usd-1158-billion-revenue-data-center-usd-1076-billion-usd-130-billion-q4/ and Tom's Hardware (research notes section 5)."
+  },
+  "equitySentiment": {
+    "name": "Equity market fear gauge (VIX)",
+    "unit": "index points",
+    "historyKind": "series",
+    "historySeries": ["VIXCLS"],
+    "defaultMethod": "hold-last",
+    "rangeMethod": "volatility",
+    "volMode": "log",
+    "bounds": { "min": 0 },
+    "params": {},
+    "rangeSourceLabel": "FRED VIXCLS (CBOE Volatility Index), quarterly mean of daily closes; range ±k × quarterly volatility of its log level × √(quarters ahead)"
+  },
+  "physicalAiGrowth": {
+    "name": "Physical-AI demand index",
+    "unit": "index (1 = as-of quarter)",
+    "historyKind": "none",
+    "historySeries": [],
+    "defaultMethod": "hold-last",
+    "rangeMethod": "volatility",
+    "volMode": "log",
+    "params": { "noDataValue": "physicalAiIndexBase", "fallbackVol": "physicalAiQuarterlyLogVol" },
+    "rangeSourceLabel": "Assumption: no physical-AI revenue history is committed (only NVIDIA's guidance of at least $25B in FY2027), so the index is held at 1.0; range ±k × an assumed quarterly volatility × √(quarters away)"
+  },
+  "labourSubstitution": {
+    "name": "AI labour substitution (adoption proxy)",
+    "unit": "percent of US businesses paying for AI tools",
+    "historyKind": "series",
+    "historySeries": ["RAMPAIALL"],
+    "defaultMethod": "hold-last",
+    "rangeMethod": "volatility",
+    "volMode": "level",
+    "bounds": { "min": 0, "max": 100 },
+    "params": { "noDataValue": "labourSubstitutionNoDataPercent", "fallbackVol": "labourSubstitutionFallbackQuarterlyVol" },
+    "rangeSourceLabel": "Assumption: business AI adoption stands in for labour substitution, using the Ramp AI Index (FRED RAMPAIALL, share of US businesses paying for AI tools, quarterly mean of monthly values); range ±k × quarterly volatility of its history × √(quarters ahead)"
+  }
+}

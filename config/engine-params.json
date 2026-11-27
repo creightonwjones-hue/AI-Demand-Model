@@ -214,5 +214,226 @@
     "source": "assumption",
     "min": 0.05,
     "max": 1.5
+  },
+  "holdLastRangeK": {
+    "value": 1.645,
+    "unit": "standard deviations",
+    "description": "Width of a hold-last condition range in standard deviations of its quarterly changes (1.645 gives a two-sided 90% band under a random walk).",
+    "source": "assumption — 90% two-sided normal band",
+    "min": 0.5,
+    "max": 4
+  },
+  "holdLastVolLookbackQuarters": {
+    "value": 20,
+    "unit": "quarters",
+    "description": "Number of most recent history quarters whose quarter-to-quarter changes set the volatility of a hold-last range.",
+    "source": "assumption — five years of quarterly history",
+    "min": 4,
+    "max": 120
+  },
+  "trendDecayGrowthLookbackQuarters": {
+    "value": 1,
+    "unit": "quarter-to-quarter steps",
+    "description": "Number of latest history steps averaged to get the starting growth rate of a trend-decay default path (1 = the latest quarter-on-quarter growth).",
+    "source": "assumption",
+    "min": 1,
+    "max": 8
+  },
+  "aiSpendLongRunQuarterlyGrowth": {
+    "value": 0.04,
+    "unit": "fraction per quarter",
+    "description": "Long-run growth rate of frontier-lab revenue that the aiSpend default growth decays towards (0.04 a quarter is about 17% a year).",
+    "source": "assumption — no published long-run lab revenue forecast in the committed data",
+    "min": -0.1,
+    "max": 0.2
+  },
+  "aiSpendGrowthHalfLifeQuarters": {
+    "value": 4,
+    "unit": "quarters",
+    "description": "Half-life of the gap between the latest observed aiSpend growth rate and its long-run rate in the trend-decay default.",
+    "source": "assumption",
+    "min": 1,
+    "max": 20
+  },
+  "aiSpendRangeLogA": {
+    "value": 0.1,
+    "unit": "log points",
+    "description": "Base half-width (log terms) of the aiSpend forecast range one quarter ahead; covers the missing OpenAI component and revenue-recognition differences.",
+    "source": "assumption — Farmer–Lafond-style widening band (research_notes statistical_judgmental.md)",
+    "min": 0,
+    "max": 1
+  },
+  "aiSpendRangeLogB": {
+    "value": 0.05,
+    "unit": "log points per quarter",
+    "description": "Extra half-width (log terms) of the aiSpend forecast range for each further quarter ahead.",
+    "source": "assumption — Farmer–Lafond-style widening band (research_notes statistical_judgmental.md)",
+    "min": 0,
+    "max": 0.5
+  },
+  "aiSpendNoDataUsdPerYear": {
+    "value": 4000000000,
+    "unit": "USD per year",
+    "description": "Placeholder aiSpend used only when no lab revenue is public at the as-of date (before the Anthropic S-1 of Oct 2026); the range source then says Assumption.",
+    "source": "assumption — order-of-magnitude placeholder, not data; no lab revenue was filed publicly before Oct 2026",
+    "min": 0
+  },
+  "gpuResaleLongRunQuarterlyGrowth": {
+    "value": -0.097,
+    "unit": "fraction per quarter",
+    "description": "Long-run quarterly change in the used-to-new price ratio once a GPU is no longer the frontier part; the gpuResale default decays towards it.",
+    "source": "derived from used-gpu-a100-80gb-yoy-amcompute (used A100 -33.5% in the year to Aug 2026): 0.665^(1/4) - 1 = -0.097; secondary",
+    "min": -0.3,
+    "max": 0.1
+  },
+  "gpuResaleGrowthHalfLifeQuarters": {
+    "value": 4,
+    "unit": "quarters",
+    "description": "Half-life of the gap between the latest observed gpuResale growth rate and its long-run rate in the trend-decay default.",
+    "source": "assumption",
+    "min": 1,
+    "max": 20
+  },
+  "gpuResaleRangeLogA": {
+    "value": 0.25,
+    "unit": "log points",
+    "description": "Base half-width (log terms) of the gpuResale range one quarter ahead, set from the spread of used H100 PCIe quotes.",
+    "source": "derived from used-gpu-h100-pcie-80gb-low/high-servnet (14,000 to 25,000 USD around a 19,500 midpoint: ln(25000/19500) = 0.25); secondary",
+    "min": 0,
+    "max": 1
+  },
+  "gpuResaleRangeLogB": {
+    "value": 0.03,
+    "unit": "log points per quarter",
+    "description": "Extra half-width (log terms) of the gpuResale forecast range for each further quarter ahead.",
+    "source": "assumption — Farmer–Lafond-style widening band",
+    "min": 0,
+    "max": 0.5
+  },
+  "gpuResaleNoDataFraction": {
+    "value": 0.7,
+    "unit": "fraction of new price",
+    "description": "Placeholder used-to-new GPU price ratio used only when no used and new GPU prices are public at the as-of date.",
+    "source": "assumption — placeholder, not data",
+    "min": 0,
+    "max": 2
+  },
+  "gpuRentalNoDataUsdPerGpuHour": {
+    "value": 2,
+    "unit": "USD per GPU-hour",
+    "description": "Placeholder H100 reserved rental price used only when no SemiAnalysis reserved price is public at the as-of date.",
+    "source": "assumption — placeholder, not data",
+    "min": 0
+  },
+  "gpuRentalFallbackQuarterlyLogVol": {
+    "value": 0.15,
+    "unit": "log points per quarter",
+    "description": "Quarterly volatility used for the gpuRental range when fewer than two history quarters are known.",
+    "source": "assumption",
+    "min": 0.01,
+    "max": 1
+  },
+  "labourSubstitutionNoDataPercent": {
+    "value": 5,
+    "unit": "percent of US businesses",
+    "description": "Placeholder for the Ramp AI Index used only when no RAMPAIALL point is public at the as-of date (before Feb 2023).",
+    "source": "assumption — placeholder, not data",
+    "min": 0,
+    "max": 100
+  },
+  "labourSubstitutionFallbackQuarterlyVol": {
+    "value": 3,
+    "unit": "percentage points per quarter",
+    "description": "Quarterly volatility used for the labourSubstitution range when fewer than two history quarters are known.",
+    "source": "assumption",
+    "min": 0.1,
+    "max": 20
+  },
+  "powerGwNoData": {
+    "value": 50,
+    "unit": "GW",
+    "description": "Placeholder global data-centre capacity used only when no IEA data-centre electricity figure is public at the as-of date (before Apr 2025).",
+    "source": "assumption — placeholder, not data",
+    "min": 0
+  },
+  "powerRangeLogA": {
+    "value": 0.05,
+    "unit": "log points",
+    "description": "Base half-width (log terms) of the powerGw range around the published IEA path.",
+    "source": "assumption",
+    "min": 0.001,
+    "max": 1
+  },
+  "powerRangeLogB": {
+    "value": 0.017,
+    "unit": "log points per quarter",
+    "description": "Extra half-width (log terms) of the powerGw range per quarter away from the as-of date, calibrated to the LBNL 2024 report spread.",
+    "source": "derived from LBNL 2024 US Data Center Energy Usage Report: 2028 range 325–580 TWh is about ±0.29 log around its midpoint, 14 quarters after publication (Dec 2024): (0.29 - 0.05) / 14 = 0.017; secondary",
+    "min": 0,
+    "max": 0.5
+  },
+  "tokenPriceIndexBase": {
+    "value": 1,
+    "unit": "index",
+    "description": "Token price index level at the as-of quarter; the tokenPrice condition is an index with no committed price history.",
+    "source": "definition — index base",
+    "min": 1,
+    "max": 1
+  },
+  "tokenPriceQuarterlyLogVol": {
+    "value": 0.3,
+    "unit": "log points per quarter",
+    "description": "Quarterly volatility of the token price index used for its range; wide because published declines span 9x to 900x a year.",
+    "source": "assumption — informed by the Epoch-based 9x–900x a year decline range (research_notes existing_ai_models_data.md section 4)",
+    "min": 0.01,
+    "max": 2
+  },
+  "priceElasticityDefault": {
+    "value": 1,
+    "unit": "elasticity (magnitude)",
+    "description": "Percent rise in AI usage for a 1% fall in token price (1 = unit elastic); no quantitative estimate was found in the research.",
+    "source": "assumption — research_notes historical_analogs.md: no quantitative estimate of the elasticity of AI usage to token price was found",
+    "min": 0,
+    "max": 5
+  },
+  "priceElasticityQuarterlyVol": {
+    "value": 0.15,
+    "unit": "elasticity per quarter",
+    "description": "Quarterly volatility used for the priceElasticity range around its assumed value.",
+    "source": "assumption",
+    "min": 0.01,
+    "max": 2
+  },
+  "physicalAiIndexBase": {
+    "value": 1,
+    "unit": "index",
+    "description": "Physical-AI demand index level at the as-of quarter; there is no committed physical-AI revenue history to start from.",
+    "source": "definition — index base",
+    "min": 1,
+    "max": 1
+  },
+  "physicalAiQuarterlyLogVol": {
+    "value": 0.15,
+    "unit": "log points per quarter",
+    "description": "Quarterly volatility of the physical-AI demand index used for its range.",
+    "source": "assumption",
+    "min": 0.01,
+    "max": 2
+  },
+  "exportRegimeDefault": {
+    "value": 0.5,
+    "unit": "regime code (1 open, 0.5 licensed with limits, 0 closed)",
+    "description": "US export regime for AI chips to China; 0.5 = licensed with limits, the status as of Nov 2026 per the research notes.",
+    "source": "assumption — research_notes existing_ai_models_data.md section 5 (Hopper shipments to China in Q3 FY27, H200 licences reportedly granted)",
+    "min": 0,
+    "max": 1
+  },
+  "exportRegimeQuarterlyVol": {
+    "value": 0.1,
+    "unit": "regime code per quarter",
+    "description": "Quarterly volatility used for the exportRegime range; the range is clipped to 0..1.",
+    "source": "assumption",
+    "min": 0.01,
+    "max": 1
   }
 }
