@@ -69,7 +69,7 @@ There is no total field and the code never adds these fields together. A record 
 | Field | Use for | Example |
 | --- | --- | --- |
 | `hardMinimumUsd` | A signed, fixed amount the payer must pay. | "a $12B five-year contract" |
-| `ceilingUsd` | An "up to" figure or the value if all options are used, exactly as stated. | "up to $27B" |
+| `ceilingUsd` | An "up to" figure or the value if all options are used, exactly as stated. A credit facility drawn at the borrower's option (e.g. a delayed-draw term loan) is a ceiling: only draws become debt. | "up to $27B"; "up to $2.3 billion in delayed draw term loans" |
 | `conditionalUsd` | An amount that is paid only if an event happens. | "$15B that Meta buys only if Nebius cannot sell it first" |
 | `estimateUsd` | A figure from anonymous sources, "reported", or an analyst's number. | "people familiar said about $10B" |
 

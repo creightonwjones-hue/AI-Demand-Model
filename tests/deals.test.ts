@@ -44,10 +44,29 @@ describe('loadDeals', () => {
   it('splits CoreWeave DDTL facilities with their own terms', () => {
     const ddtl4 = byId('coreweave-ddtl-4');
     expect(ddtl4.terms.recourse).toBe('non-recourse');
-    expect(ddtl4.values.hardMinimumUsd).toBe(8_500_000_000);
+    expect(ddtl4.values.ceilingUsd).toBe(8_500_000_000);
     expect(byId('coreweave-ddtl-1').terms.recourse).toBe('recourse');
-    expect(byId('coreweave-ddtl-5').values.hardMinimumUsd).toBe(3_100_000_000);
-    expect(byId('coreweave-ddtl-5-5').values.hardMinimumUsd).toBe(2_600_000_000);
+    expect(byId('coreweave-ddtl-5').values.ceilingUsd).toBe(3_100_000_000);
+    expect(byId('coreweave-ddtl-5-5').values.ceilingUsd).toBe(2_600_000_000);
+  });
+
+  it('records every CoreWeave DDTL facility size as a ceiling, never a hard minimum ("up to", drawn at the borrower\'s option)', () => {
+    const ddtls = deals.filter(d => d.id.startsWith('coreweave-ddtl-'));
+    expect(ddtls.map(d => d.id).sort()).toEqual(['coreweave-ddtl-1', 'coreweave-ddtl-2', 'coreweave-ddtl-2-1',
+      'coreweave-ddtl-3', 'coreweave-ddtl-4', 'coreweave-ddtl-5', 'coreweave-ddtl-5-5']);
+    for (const d of ddtls) {
+      expect(d.values.hardMinimumUsd, d.id).toBeUndefined();
+      expect(d.values.ceilingUsd, d.id).toBeGreaterThan(0);
+      expect(d.terms.notes, d.id).toMatch(/ceilingUsd holds the facility size/);
+    }
+  });
+
+  it('takes the DDTL 2.0 margins from the CoreWeave 8-K filed 2025-10-02', () => {
+    const d = byId('coreweave-ddtl-2');
+    expect(d.terms.rate).toBe('SOFR + 6.00-6.50% (investment-grade loans) / SOFR + 13.00% (non-investment-grade loans)');
+    expect(d.terms.notes).not.toMatch(/not found in the filings read/);
+    expect(d.sources).toContainEqual(expect.objectContaining({ status: 'primary-filing',
+      url: 'https://www.sec.gov/Archives/edgar/data/1769628/000119312525227562/d910811d8k.htm' }));
   });
 
   it('maps value types: conditional, ceiling, estimate and hard minimum stay separate', () => {
@@ -178,7 +197,9 @@ describe('loadDeals', () => {
     expect(loadDeals().find(d => d.id === 'coreweave-ddtl-2-1')).toMatchObject({ terms: { recourse: 'recourse' } })
     const d = byId('coreweave-ddtl-2-1');
     expect(d).toMatchObject({ payees: ['coreweave'], vehicle: 'spv-coreweave-ddtl', types: ['loan'],
-      announced: '2025-10-02', signed: '2025-09-29', end: '2031-03-31', values: { hardMinimumUsd: 3_000_000_000 } });
+      announced: '2025-10-02', signed: '2025-09-29', end: '2031-03-31', values: { ceilingUsd: 3_000_000_000 } });
+    // The recorded maturity (Mar 2031) is first stated in the 10-Q Q3 2026, filed 2026-11-12.
+    expect(d.terms.asKnownAt).toBe('2026-11-12');
     expect(d.terms.rate).toMatch(/SOFR \+ 4\.25%/);
     expect(d.terms.maturity).toMatch(/Mar 2031/);
     expect(d.sources.every(s => s.status === 'primary-filing' && /^https:\/\/www\.sec\.gov\//.test(s.url))).toBe(true);

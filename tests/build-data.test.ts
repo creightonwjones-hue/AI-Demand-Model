@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import type { FinancialFact } from '../src/data/schema';
 import { quarterRange } from '../src/data/quarters';
+import { valueAsOf } from '../src/data/xbrl';
 
 // Checks over the committed build output (data/build/financials.json). Run `npm run data:build` first after changes.
 const facts: FinancialFact[] = JSON.parse(readFileSync('data/build/financials.json', 'utf8'));
@@ -109,6 +110,31 @@ describe('data/build/financials.json phase 2 additions', () => {
     const hs = facts.filter(f => f.entityId === 'nvidia' && f.segment === 'Data Center - Hyperscale' && f.quarter === '2026Q1')
       .sort((a, b) => a.asKnownAt.localeCompare(b.asKnownAt));
     expect(hs.map(f => [f.asKnownAt, f.value])).toEqual([['2026-05-20', 37_869_000_000], ['2026-08-26', 43_050_000_000]]);
+  });
+
+  it('has NVIDIA capex for 2022Q1-2023Q2 known at its original filing (cash-flow statements, before the late XBRL vintages)', () => {
+    const capex = facts.filter(f => f.entityId === 'nvidia' && f.metric === 'capex');
+    const first = (q: string) => capex.filter(f => f.quarter === q).sort((a, b) => a.asKnownAt.localeCompare(b.asKnownAt))[0];
+    for (const q of quarterRange('2022Q1', '2023Q2')) {
+      expect(first(q), q).toBeDefined();
+      expect(first(q).asKnownAt <= '2023-09-30', `${q} ${first(q).asKnownAt}`).toBe(true);
+    }
+    const expected: Record<string, [number, string]> = {
+      '2022Q1': [361e6, '2022-05-27'], '2022Q2': [433e6, '2022-08-31'], '2022Q3': [530e6, '2022-11-18'],
+      '2022Q4': [509e6, '2023-02-24'], '2023Q1': [248e6, '2023-05-26'], '2023Q2': [289e6, '2023-08-28'],
+    };
+    for (const [q, [value, asKnownAt]] of Object.entries(expected)) {
+      expect(first(q), q).toMatchObject({ value, asKnownAt });
+      expect(first(q).source.status, q).toBe('primary-filing');
+      // Every later vintage of the quarter (the late XBRL facts) agrees, so as-of lookups never flip value.
+      for (const f of capex.filter(x => x.quarter === q)) expect(f.value, `${q} ${f.asKnownAt}`).toBe(value);
+    }
+    // As-of: the manual row answers from its filing date; the later XBRL vintage takes over once filed.
+    expect(valueAsOf(facts, 'nvidia', 'capex', '2022Q4', '2023-02-23')).toBeUndefined();
+    expect(valueAsOf(facts, 'nvidia', 'capex', '2022Q4', '2023-03-01')).toMatchObject({ value: 509e6, asKnownAt: '2023-02-24' });
+    expect(valueAsOf(facts, 'nvidia', 'capex', '2022Q4', '2023-03-01')!.tag).toBeUndefined(); // the manual row
+    expect(valueAsOf(facts, 'nvidia', 'capex', '2022Q4', '2024-03-01')).toMatchObject({ value: 509e6, asKnownAt: '2024-02-21',
+      tag: 'PaymentsToAcquireProductiveAssets' });
   });
 
   it('has Anthropic quarterly revenue from the prospectus, known at the first filing that contained it', () => {

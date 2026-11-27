@@ -2687,7 +2687,7 @@
     "announced": "2023-07-31",
     "end": "2028-03-28",
     "values": {
-      "hardMinimumUsd": 2300000000
+      "ceilingUsd": 2300000000
     },
     "terms": {
       "rate": "SOFR + 9.62%",
@@ -2696,7 +2696,7 @@
       "collateral": "GPUs (secured)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.3B GPU-backed delayed-draw term loan entered July 2023 (10-K: \"up to $2.3 billion\"; final payment due March 28, 2028). Recourse: listed under recourse debt in the Q3 2026 10-Q; 15% effective rate there. SOFR + 9.62% not found in the filings read (aggregator figure). Facility size; $1,139M outstanding at 2026-09-30. Announced: month only; last day of month used. Recourse first stated in the CoreWeave 10-K 2025 (filed 2026-03-02): \"All obligations under the DDTL Facilities are unconditionally guaranteed by us\"; terms.asKnownAt is that filing date.",
+      "notes": "$2.3B GPU-backed delayed-draw term loan entered July 2023 (10-K: \"up to $2.3 billion\"; final payment due March 28, 2028). Recourse: listed under recourse debt in the Q3 2026 10-Q; 15% effective rate there. SOFR + 9.62% not found in the filings read (aggregator figure). Facility size; $1,139M outstanding at 2026-09-30. Announced: month only; last day of month used. Recourse first stated in the CoreWeave 10-K 2025 (filed 2026-03-02): \"All obligations under the DDTL Facilities are unconditionally guaranteed by us\"; terms.asKnownAt is that filing date. Value field: ceilingUsd holds the facility size, because the filings describe an \"up to\" delayed-draw facility drawn at the borrower's option (draws, not the size, become debt), so it is not a hard minimum.",
       "asKnownAt": "2026-03-02"
     },
     "statusHistory": [
@@ -2758,16 +2758,16 @@
     "announced": "2024-05-16",
     "end": "2030-08-31",
     "values": {
-      "hardMinimumUsd": 7600000000
+      "ceilingUsd": 7600000000
     },
     "terms": {
-      "rate": "SOFR + 6.00-13.00% by end-customer rating",
+      "rate": "SOFR + 6.00-6.50% (investment-grade loans) / SOFR + 13.00% (non-investment-grade loans)",
       "maturity": "Aug 2030",
       "recourse": "recourse",
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$7.6B GPU-backed delayed-draw term loan entered May 2024 (10-K: \"up to $7.6 billion\"; each loan repaid quarterly from January 2026, final payment five years after funding; 10-Q maturity column Aug 2030). Recourse: listed under recourse debt in the Q3 2026 10-Q. SOFR + 6.00-13.00% not found in the filings read (aggregator). The September 2025 $3.0B DDTL 2.1 tranche (SOFR + 4.25%) is recorded as coreweave-ddtl-2-1. End: month only; last day of month used. Recourse first stated in the CoreWeave 10-K 2025 (filed 2026-03-02): \"All obligations under the DDTL Facilities are unconditionally guaranteed by us\"; terms.asKnownAt is that filing date.",
+      "notes": "$7.6B GPU-backed delayed-draw term loan entered May 2024 (10-K: \"up to $7.6 billion\"; each loan repaid quarterly from January 2026, final payment five years after funding; 10-Q maturity column Aug 2030). Recourse: listed under recourse debt in the Q3 2026 10-Q. Rate from the CoreWeave 8-K filed 2025-10-02 (Item 1.01, describing the DDTL 2.0 credit agreement before the Fifth Amendment): term SOFR plus 6.00-6.50% for investment-grade loans, depending on the contract, and 13.00% for non-investment-grade loans (three-month term SOFR, 0.00% floor). The capture's \"SOFR + 6.00-13.00% by end-customer rating\" agrees. The September 2025 $3.0B DDTL 2.1 tranche (SOFR + 4.25%) is recorded as coreweave-ddtl-2-1. End: month only; last day of month used. Recourse first stated in the CoreWeave 10-K 2025 (filed 2026-03-02): \"All obligations under the DDTL Facilities are unconditionally guaranteed by us\"; terms.asKnownAt is that filing date. Value field: ceilingUsd holds the facility size, because the filings describe an \"up to\" delayed-draw facility drawn at the borrower's option (draws, not the size, become debt), so it is not a hard minimum.",
       "asKnownAt": "2026-03-02"
     },
     "statusHistory": [
@@ -2801,6 +2801,12 @@
         "title": "CoreWeave 10-Q Q3 2026 (filed 2026-11-12), Note 10 Debt: recourse/non-recourse table, maturities, terms",
         "retrieved": "2026-11-26",
         "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525227562/d910811d8k.htm",
+        "title": "CoreWeave 8-K filed 2025-10-02, Item 1.01: DDTL 2.0 margins before the Fifth Amendment (SOFR + 6.00-6.50% investment-grade, 13.00% non-investment-grade)",
+        "retrieved": "2026-11-27",
+        "status": "primary-filing"
       }
     ]
   },
@@ -2822,7 +2828,7 @@
     "signed": "2025-09-29",
     "end": "2031-03-31",
     "values": {
-      "hardMinimumUsd": 3000000000
+      "ceilingUsd": 3000000000
     },
     "terms": {
       "rate": "Term SOFR + 4.25% (base rate + 3.25%)",
@@ -2831,8 +2837,8 @@
       "collateral": "GPU servers and related infrastructure: substantially all assets of the borrowing subsidiary and a pledge of 100% of its equity",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Incremental $3.0B delayed-draw term loan tranche added to the DDTL 2.0 credit agreement by the Fifth Amendment dated 2025-09-29 (CoreWeave 8-K filed 2025-10-02, Item 1.01): borrower CoreWeave Compute Acquisition Co. IV; U.S. Bank Trust Company administrative agent; available in draws to March 2026; each draw matures five years after it is drawn; term SOFR + 4.25% or base rate + 3.25%; 1.50% upfront fee on each draw; 3.00% commitment fee on any shortfall of draws below $2.4B. Recourse: \"All obligations under the DDTL 2.1 Facility are unconditionally guaranteed by us\" (10-Q Q3 2025, filed 2025-11-13), and listed under recourse debt in the 10-Q Q3 2026 (maturity Mar 2031, 9% effective rate, $2,494M outstanding at 2026-09-30; the 10-K 2025 maturity column said December 2030). Repaid quarterly from July 2026. Value field: the tranche size (borrowing capacity), as for the other DDTL records. Payers: the lenders are not named in the filings (\"banks\" = unnamed lenders party to the DDTL 2.0 credit agreement). End: month only in filing; last day of month used.",
-      "asKnownAt": "2025-11-13"
+      "notes": "Incremental $3.0B delayed-draw term loan tranche added to the DDTL 2.0 credit agreement by the Fifth Amendment dated 2025-09-29 (CoreWeave 8-K filed 2025-10-02, Item 1.01): borrower CoreWeave Compute Acquisition Co. IV; U.S. Bank Trust Company administrative agent; available in draws to March 2026; each draw matures five years after it is drawn; term SOFR + 4.25% or base rate + 3.25%; 1.50% upfront fee on each draw; 3.00% commitment fee on any shortfall of draws below $2.4B. terms.asKnownAt is 2026-11-12, the filing date of the 10-Q Q3 2026 that states the recorded Mar 2031 maturity (recourse and rate were public from 2025-11-13 and 2025-10-02). Recourse: \"All obligations under the DDTL 2.1 Facility are unconditionally guaranteed by us\" (10-Q Q3 2025, filed 2025-11-13), and listed under recourse debt in the 10-Q Q3 2026 (maturity Mar 2031, 9% effective rate, $2,494M outstanding at 2026-09-30; the 10-K 2025 maturity column said December 2030). Repaid quarterly from July 2026. Value field: ceilingUsd holds the facility size, because the filings describe an \"up to\" delayed-draw facility drawn at the borrower's option (draws, not the size, become debt), so it is not a hard minimum. Payers: the lenders are not named in the filings (\"banks\" = unnamed lenders party to the DDTL 2.0 credit agreement). End: month only in filing; last day of month used.",
+      "asKnownAt": "2026-11-12"
     },
     "statusHistory": [
       {
@@ -2900,7 +2906,7 @@
     "announced": "2025-07-31",
     "end": "2030-08-21",
     "values": {
-      "hardMinimumUsd": 2600000000
+      "ceilingUsd": 2600000000
     },
     "terms": {
       "rate": "SOFR + 4.00%",
@@ -2909,7 +2915,7 @@
       "collateral": "Secured by a Compute Acquisition Co. subsidiary (GPUs)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.6B GPU-backed delayed-draw term loan entered July 2025, SOFR + 4.00%, drawable through July 2026, monthly repayment from April 2026, final payment August 2030 (10-K). Recourse: listed under recourse debt in the Q3 2026 10-Q. From Morgan Stanley, MUFG and a syndicate (\"banks\" = unnamed syndicate members; lenders not named in the filings read). Funds the OpenAI contract (openai-coreweave-* records; tranche not stated). Recourse first stated in the CoreWeave 10-K 2025 (filed 2026-03-02): \"All obligations under the DDTL Facilities are unconditionally guaranteed by us\"; terms.asKnownAt is that filing date.",
+      "notes": "$2.6B GPU-backed delayed-draw term loan entered July 2025, SOFR + 4.00%, drawable through July 2026, monthly repayment from April 2026, final payment August 2030 (10-K). Recourse: listed under recourse debt in the Q3 2026 10-Q. From Morgan Stanley, MUFG and a syndicate (\"banks\" = unnamed syndicate members; lenders not named in the filings read). Funds the OpenAI contract (openai-coreweave-* records; tranche not stated). Recourse first stated in the CoreWeave 10-K 2025 (filed 2026-03-02): \"All obligations under the DDTL Facilities are unconditionally guaranteed by us\"; terms.asKnownAt is that filing date. Value field: ceilingUsd holds the facility size, because the filings describe an \"up to\" delayed-draw facility drawn at the borrower's option (draws, not the size, become debt), so it is not a hard minimum.",
       "asKnownAt": "2026-03-02"
     },
     "statusHistory": [
@@ -2975,7 +2981,7 @@
     "announced": "2026-03-31",
     "end": "2032-03-31",
     "values": {
-      "hardMinimumUsd": 8500000000
+      "ceilingUsd": 8500000000
     },
     "terms": {
       "rate": "SOFR + 2.25% (floating) / US Treasury + 2.00% (fixed)",
@@ -2984,7 +2990,7 @@
       "collateral": "Secured by Compute Acquisition Co. VIII (GPUs)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$8.5B delayed-draw term loan to CoreWeave Compute Acquisition Co. VIII, credit agreement dated 2026-03-30 (8-K filed 2026-03-31), drawable to June 2027, matures 2032-03-31. Floating: daily compounded SOFR + 2.25%; fixed: 2.00% plus a blended US Treasury rate. Non-recourse except a limited \"bad acts\" guarantee from CoreWeave. MUFG administrative agent; MUFG and Morgan Stanley Asset Funding lead arrangers. Blackstone anchor, $7.5B initial size, ~5.9% fixed, Moody's A3 / DBRS A(low): from the capture, not in the filings read. $4,583M outstanding at 2026-09-30."
+      "notes": "$8.5B delayed-draw term loan to CoreWeave Compute Acquisition Co. VIII, credit agreement dated 2026-03-30 (8-K filed 2026-03-31), drawable to June 2027, matures 2032-03-31. Floating: daily compounded SOFR + 2.25%; fixed: 2.00% plus a blended US Treasury rate. Non-recourse except a limited \"bad acts\" guarantee from CoreWeave. MUFG administrative agent; MUFG and Morgan Stanley Asset Funding lead arrangers. Blackstone anchor, $7.5B initial size, ~5.9% fixed, Moody's A3 / DBRS A(low): from the capture, not in the filings read. $4,583M outstanding at 2026-09-30. Value field: ceilingUsd holds the facility size, because the filings describe an \"up to\" delayed-draw facility drawn at the borrower's option (draws, not the size, become debt), so it is not a hard minimum."
     },
     "statusHistory": [
       {
@@ -3045,7 +3051,7 @@
     ],
     "announced": "2026-05-18",
     "values": {
-      "hardMinimumUsd": 3100000000
+      "ceilingUsd": 3100000000
     },
     "terms": {
       "rate": "SOFR + 4.50%",
@@ -3054,7 +3060,7 @@
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$3.1B delayed-draw term loan to CoreWeave Financing DDTL V, credit agreement dated 2026-05-15 (8-K filed 2026-05-18), drawable to September 2026, maturity 2031-11-15. Daily compounded SOFR + 4.50%. Recourse: unconditionally guaranteed by CoreWeave (parent guarantee and pledge). Morgan Stanley Senior Funding administrative agent; MUFG and Morgan Stanley lead arrangers (\"banks\" = other lenders). Two non-investment-grade customers and the 50bp tightening: capture only. $2,749M outstanding at 2026-09-30."
+      "notes": "$3.1B delayed-draw term loan to CoreWeave Financing DDTL V, credit agreement dated 2026-05-15 (8-K filed 2026-05-18), drawable to September 2026, maturity 2031-11-15. Daily compounded SOFR + 4.50%. Recourse: unconditionally guaranteed by CoreWeave (parent guarantee and pledge). Morgan Stanley Senior Funding administrative agent; MUFG and Morgan Stanley lead arrangers (\"banks\" = other lenders). Two non-investment-grade customers and the 50bp tightening: capture only. $2,749M outstanding at 2026-09-30. Value field: ceilingUsd holds the facility size, because the filings describe an \"up to\" delayed-draw facility drawn at the borrower's option (draws, not the size, become debt), so it is not a hard minimum."
     },
     "statusHistory": [
       {
@@ -3122,7 +3128,7 @@
     ],
     "announced": "2026-08-10",
     "values": {
-      "hardMinimumUsd": 2600000000
+      "ceilingUsd": 2600000000
     },
     "terms": {
       "rate": "Term SOFR + 5.50%",
@@ -3131,7 +3137,7 @@
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.6B delayed-draw term loan to CoreWeave Financing DDTL V-V, credit agreement dated 2026-08-07 (8-K filed 2026-08-10), drawable to December 2026, maturity 2031-09-01. Term SOFR + 5.50%. Recourse: unconditionally guaranteed by CoreWeave. JPMorgan Chase Bank administrative agent; JPMorgan and MUFG joint lead arrangers (\"banks\" = other lenders). Payers corrected from Morgan Stanley to JPMorgan per the 8-K. Contracts averaging ~3 years: capture only. $1,555M outstanding at 2026-09-30. Date is exact (8-K filing date)."
+      "notes": "$2.6B delayed-draw term loan to CoreWeave Financing DDTL V-V, credit agreement dated 2026-08-07 (8-K filed 2026-08-10), drawable to December 2026, maturity 2031-09-01. Term SOFR + 5.50%. Recourse: unconditionally guaranteed by CoreWeave. JPMorgan Chase Bank administrative agent; JPMorgan and MUFG joint lead arrangers (\"banks\" = other lenders). Payers corrected from Morgan Stanley to JPMorgan per the 8-K. Contracts averaging ~3 years: capture only. $1,555M outstanding at 2026-09-30. Date is exact (8-K filing date). Value field: ceilingUsd holds the facility size, because the filings describe an \"up to\" delayed-draw facility drawn at the borrower's option (draws, not the size, become debt), so it is not a hard minimum."
     },
     "statusHistory": [
       {
