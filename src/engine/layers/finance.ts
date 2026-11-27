@@ -46,7 +46,6 @@ export function stepFinance(s: EngineState, flows: Flow[], p: EngineParams, ctx:
   const canDefault = (id: string) => !NEVER_DEFAULT.has(s.kinds[id] ?? 'aggregate');
   const creditOpen = (ctx.creditSpread ?? 0) <= param(p, 'maxLendingCreditSpread');
   const emergencyRate = ((ctx.riskFree ?? 0) + (ctx.creditSpread ?? 0) + param(p, 'newLoanRateSpreadOverRiskFree')) / PCT / QUARTERS_PER_YEAR;
-  let emergencySeq = 0;
 
   const per: Record<string, { revenue: number; purchased: number; capex: number; interest: number; principal: number; equity: number }> = {};
   const acc = (id: string) => (per[id] ??= { revenue: 0, purchased: 0, capex: 0, interest: 0, principal: 0, equity: 0 });
@@ -109,27 +108,34 @@ export function stepFinance(s: EngineState, flows: Flow[], p: EngineParams, ctx:
     if (x.flow.kind === 'principal') o.principal += x.flow.amountUsd;
   }
 
-  // 4. Pay, borrowing to cover shortfalls while credit is open; otherwise default and write the rest down.
+  // 4. Pay. Each firm's total due (excluding loan draws) is compared with its cash once: a shortfall is covered by ONE
+  //    rescue loan for the quarter while credit is open, otherwise the firm defaults and its unpaid obligations are
+  //    written down (nothing is posted). One loan per firm per quarter keeps the number of debt instruments linear.
+  for (const x of due) if (x.flow.kind === 'loan-draw' && !s.defaulted[x.payer] && x.flow.amountUsd > 0) {
+    drawLoan(l, x.flow, { id: x.debtId ?? `deal:${x.flow.dealId}:${x.flow.to}`, ...x.terms! });
+    record(x.flow);
+  }
+  const totalDue: Record<string, number> = {};
+  for (const x of due) if (x.flow.kind !== 'loan-draw' && x.flow.amountUsd > 0) totalDue[x.payer] = (totalDue[x.payer] ?? 0) + x.flow.amountUsd;
+  for (const [payerId, amount] of Object.entries(totalDue)) {
+    if (s.defaulted[payerId] || !canDefault(payerId)) continue;
+    const short = amount - l.sheets[payerId].cash;
+    if (short <= 0) continue;
+    if (creditOpen) {
+      const f: Flow = { quarter, from: EMERGENCY_LENDER, to: payerId, amountUsd: short, kind: 'loan-draw', label: 'Borrows' };
+      drawLoan(l, f, { id: `rescue:${payerId}:${quarter}`, ratePerQuarter: emergencyRate, maturity: s.grid.quarters[s.grid.quarters.length - 1], recourse: 'recourse' });
+      record(f);
+      events.push({ quarter, entityId: payerId, kind: 'loan-draw', reason: `Borrowed ${fmt(short)} to meet payments due` });
+    } else {
+      s.defaulted[payerId] = true;
+      const o = owed[payerId] ?? { interest: 0, principal: 0 };
+      events.push({ quarter, entityId: payerId, kind: 'default',
+        reason: `Cash ran out with ${fmt(o.interest + o.principal)} of debt service due; credit at ${(ctx.creditSpread ?? 0).toFixed(1)} points of spread was unavailable` });
+    }
+  }
   for (const x of due) {
     const { flow } = x;
-    if (s.defaulted[x.payer] || flow.amountUsd <= 0) continue;
-    if (flow.kind === 'loan-draw') { drawLoan(l, flow, { id: x.debtId ?? `deal:${flow.dealId}:${flow.to}`, ...x.terms! }); record(flow); continue; }
-    const payer = l.sheets[x.payer];
-    const short = flow.amountUsd - payer.cash;
-    if (short > 0 && canDefault(x.payer)) {
-      if (creditOpen) {
-        const f: Flow = { quarter, from: EMERGENCY_LENDER, to: x.payer, amountUsd: short, kind: 'loan-draw', label: 'Borrows' };
-        drawLoan(l, f, { id: `rescue:${x.payer}:${quarter}:${emergencySeq++}`, ratePerQuarter: emergencyRate, maturity: s.grid.quarters[s.grid.quarters.length - 1], recourse: 'recourse' });
-        record(f);
-        events.push({ quarter, entityId: x.payer, kind: 'loan-draw', reason: `Borrowed ${fmt(short)} to meet ${flow.label.toLowerCase()} due` });
-      } else {
-        s.defaulted[x.payer] = true;
-        const o = owed[x.payer];
-        events.push({ quarter, entityId: x.payer, kind: 'default',
-          reason: `Cash ran out with ${fmt(o.interest + o.principal)} of debt service due; credit at ${(ctx.creditSpread ?? 0).toFixed(1)} points of spread was unavailable` });
-        continue;
-      }
-    }
+    if (flow.kind === 'loan-draw' || s.defaulted[x.payer] || flow.amountUsd <= 0) continue;
     if (flow.kind === 'principal') repayLoan(l, flow, x.debtId!); else post(l, flow);
     record(flow);
   }
