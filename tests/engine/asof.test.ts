@@ -1,3 +1,6 @@
+import { mkdtempSync, writeFileSync, copyFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { asOfView, loadBuild } from '../../src/engine/asof'
 
@@ -32,7 +35,41 @@ describe('asOfView', () => {
     expect(first > '1991-01-01').toBe(true)
     expect(v.deals[0].statusAsOf).toBe('announced')
   })
-  it('throws naming the file on invalid data', () => {
-    expect(() => loadBuild('tests/fixtures')).toThrow()
+  it('throws naming the file on schema failure', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'asof-'))
+    copyFileSync('data/build/entities.json', join(dir, 'entities.json'))
+    writeFileSync(join(dir, 'financials.json'), JSON.stringify([{ entityId: 1 }]))
+    expect(() => loadBuild(dir)).toThrow(/financials\.json: schema validation failed/)
+  })
+  it('throws naming the file when missing or unparseable', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'asof-'))
+    expect(() => loadBuild(dir)).toThrow(/entities\.json: cannot read\/parse/)
+    writeFileSync(join(dir, 'entities.json'), '{not json')
+    expect(() => loadBuild(dir)).toThrow(/entities\.json: cannot read\/parse/)
+  })
+  it('hides terms not yet public at asOf', () => {
+    const id = 'coreweave-ddtl-2-1'
+    const early = asOfView(build, '2026-01-01').deals.find(d => d.id === id)!
+    expect(early.termsHidden).toBe(true)
+    expect(early.terms).toEqual({ recourse: 'unknown', takeOrPay: 'unknown', hellOrHighWater: 'unknown' })
+    const late = asOfView(build, '2026-11-13').deals.find(d => d.id === id)!
+    expect(late.termsHidden).toBeUndefined()
+    expect(late.terms).toEqual(build.deals.find(d => d.id === id)!.terms)
+  })
+  it('picks status by latest event date, ties by later asKnownAt', () => {
+    const base = build.deals[0]
+    const mk = (statusHistory: any[]) => ({ ...base, announced: '2020-01-01', statusHistory })
+    // known order differs from event-date order: 'completed' (date 03-01) learned before 'signed' (date 02-01)
+    const d1 = mk([
+      { date: '2020-03-01', asKnownAt: '2020-03-02', status: 'completed' },
+      { date: '2020-02-01', asKnownAt: '2020-04-01', status: 'signed' },
+    ])
+    expect(asOfView({ ...build, deals: [d1] }, '2020-12-31').deals[0].statusAsOf).toBe('completed')
+    const d2 = mk([
+      { date: '2020-03-01', asKnownAt: '2020-03-05', status: 'signed' },
+      { date: '2020-03-01', asKnownAt: '2020-03-09', status: 'completed' },
+    ])
+    expect(asOfView({ ...build, deals: [d2] }, '2020-12-31').deals[0].statusAsOf).toBe('completed')
+    expect(asOfView({ ...build, deals: [d2] }, '2020-03-06').deals[0].statusAsOf).toBe('signed')
   })
 })

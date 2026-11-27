@@ -10,15 +10,16 @@ import {
 
 export interface BuildData { entities: Entity[]; facts: FinancialFact[]; series: Series[]; deals: Deal[] }
 
-export type DealView = Deal & { statusAsOf: DealStatus };
+/** `termsHidden`: terms were not yet public at asOf, so `terms` is reduced to unknowns (no look-ahead). */
+export type DealView = Deal & { statusAsOf: DealStatus; termsHidden?: true };
 
 export interface AsOfData {
   asOf: string;
-  entities: Entity[];
+  entities: readonly Entity[];
   fact(entityId: string, metric: Metric, quarter: QuarterKey, segment?: string): FinancialFact | undefined;
   /** Points of the series known by asOf; [] for an unknown series id. */
-  series(id: string): SeriesPoint[];
-  deals: DealView[];
+  series(id: string): readonly SeriesPoint[];
+  deals: readonly DealView[];
 }
 
 function readValidated<T>(dir: string, file: string, schema: z.ZodType<T>): T {
@@ -55,14 +56,22 @@ export function asOfView(build: BuildData, asOf: string): AsOfData {
   const seriesById = new Map<string, SeriesPoint[]>();
   for (const s of build.series) seriesById.set(s.id, s.points.filter(p => p.asKnownAt <= asOf));
 
-  // terms.asKnownAt is informational in this phase: terms are exposed as written.
+  // Terms known only after asOf (terms.asKnownAt > asOf) are hidden: reduced to unknowns.
   const deals: DealView[] = build.deals
     .filter(d => d.announced <= asOf)
     .map(d => {
       const statusHistory = d.statusHistory.filter(s => s.asKnownAt <= asOf);
+      // Latest event date wins; ties go to the later asKnownAt, then the later array position.
       let latest: (typeof statusHistory)[number] | undefined;
-      for (const s of statusHistory) if (!latest || s.date >= latest.date) latest = s;
-      return { ...d, statusHistory, statusAsOf: latest ? latest.status : 'announced' };
+      for (const s of statusHistory) {
+        if (!latest || s.date > latest.date || (s.date === latest.date && s.asKnownAt >= latest.asKnownAt)) latest = s;
+      }
+      const statusAsOf: DealStatus = latest ? latest.status : 'announced';
+      if (d.terms.asKnownAt !== undefined && d.terms.asKnownAt > asOf) {
+        return { ...d, statusHistory, statusAsOf, termsHidden: true as const,
+          terms: { recourse: 'unknown' as const, takeOrPay: 'unknown' as const, hellOrHighWater: 'unknown' as const } };
+      }
+      return { ...d, statusHistory, statusAsOf };
     });
 
   return {
