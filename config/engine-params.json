@@ -135,6 +135,14 @@
     "min": 4,
     "max": 40
   },
+  "defaultLoanTermQuarters": {
+    "value": 20,
+    "unit": "quarters",
+    "description": "Length of a loan or bond taken from a deal record that states neither an end date nor a term; the principal is repaid in full in its last quarter.",
+    "source": "assumption — five years, a common corporate term-loan and bond tenor; no committed source",
+    "min": 4,
+    "max": 120
+  },
   "aiAddressableWageBillUsd": {
     "value": 4000000000000.0,
     "unit": "USD per year",
