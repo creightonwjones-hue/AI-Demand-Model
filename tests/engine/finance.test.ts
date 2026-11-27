@@ -81,3 +81,14 @@ describe('stepFinance', () => {
     expect(out.entityQuarters['ai-customers-enterprise']?.defaulted ?? false).toBe(false)
   })
 })
+
+describe('core business cash in finance', () => {
+  it('adds to operating cash flow without counting as AI revenue', () => {
+    const { s, flows } = stateWith({ microsoft: { cash: 50e9, ocf: 0, due: { interest: 0, principal: 0 } } })
+    flows.push({ quarter: Q, from: 'rest-of-economy', to: 'microsoft', amountUsd: 20e9, kind: 'core-business-cash', label: 'Core business cash' })
+    const out = stepFinance(s, flows, params, { creditSpread: 1.5 })
+    expect(out.entityQuarters.microsoft.revenue).toBe(0)
+    expect(out.entityQuarters.microsoft.operatingCashFlow).toBeCloseTo(20e9, -3)
+    expect(out.invariantErrors).toEqual([])
+  })
+})

@@ -47,8 +47,8 @@ export function stepFinance(s: EngineState, flows: Flow[], p: EngineParams, ctx:
   const creditOpen = (ctx.creditSpread ?? 0) <= param(p, 'maxLendingCreditSpread');
   const emergencyRate = ((ctx.riskFree ?? 0) + (ctx.creditSpread ?? 0) + param(p, 'newLoanRateSpreadOverRiskFree')) / PCT / QUARTERS_PER_YEAR;
 
-  const per: Record<string, { revenue: number; purchased: number; capex: number; interest: number; principal: number; equity: number }> = {};
-  const acc = (id: string) => (per[id] ??= { revenue: 0, purchased: 0, capex: 0, interest: 0, principal: 0, equity: 0 });
+  const per: Record<string, { revenue: number; core: number; purchased: number; capex: number; interest: number; principal: number; equity: number }> = {};
+  const acc = (id: string) => (per[id] ??= { revenue: 0, core: 0, purchased: 0, capex: 0, interest: 0, principal: 0, equity: 0 });
   const record = (f: Flow) => {
     out.push(f);
     if (REVENUE_KINDS.has(f.kind)) acc(f.to).revenue += f.amountUsd;
@@ -57,6 +57,7 @@ export function stepFinance(s: EngineState, flows: Flow[], p: EngineParams, ctx:
     if (f.kind === 'interest') acc(f.from).interest += f.amountUsd;
     if (f.kind === 'principal') acc(f.from).principal += f.amountUsd;
     if (f.kind === 'equity') acc(f.to).equity += f.amountUsd;
+    if (f.kind === 'core-business-cash') acc(f.to).core += f.amountUsd;
   };
 
   // 1. The layers' flows (already funded by their rules) and new loans.
@@ -150,7 +151,7 @@ export function stepFinance(s: EngineState, flows: Flow[], p: EngineParams, ctx:
       const age = s.q - s.grid.quarters.indexOf(v.quarter);
       return t + (v.quarter <= quarter && age < param(p, 'gpuAccountingLifeQuarters') ? v.costUsd / param(p, 'gpuAccountingLifeQuarters') : 0);
     }, 0);
-    const ocf = a.revenue - opex - a.purchased;
+    const ocf = a.revenue + a.core - opex - a.purchased;
     const netIncome = ocf - a.interest - depreciation;
     sheet.retainedEarnings += netIncome;
     sheet.equityRaised += a.equity;

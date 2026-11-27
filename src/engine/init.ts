@@ -212,6 +212,10 @@ export function initState(data: AsOfData, params: EngineParams, grid: Grid, star
     if (e.layer !== 'cloud') continue;
     const f = opening(e.id, 'capex');
     if (f) memory[`capex:${e.id}`] = f.value;
+    // Non-AI operating cash flow available to fund AI capex: reported operating cash flow less the non-AI share of
+    // reported capex (memory key `corecash:<id>`), held flat. Only the cash-funded clouds get it (clouds layer).
+    const ocf = opening(e.id, 'operatingCashFlow');
+    if (ocf) memory[`corecash:${e.id}`] = Math.max(0, ocf.value - (f?.value ?? 0) * (1 - param(params, 'hyperscalerAiCapexShare')));
   }
 
   return {

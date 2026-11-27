@@ -94,7 +94,7 @@ function modelled(r: RunResult, t: BacktestTarget, i: number, p: EngineParams): 
 }
 
 /** Latest date anything in the build became public. */
-function latestBuildDate(b: BuildData): string {
+export function latestBuildDate(b: BuildData): string {
   let d = '0000-00-00';
   for (const f of b.facts) if (f.asKnownAt > d) d = f.asKnownAt;
   for (const s of b.series) for (const p of s.points) if (p.asKnownAt > d) d = p.asKnownAt;

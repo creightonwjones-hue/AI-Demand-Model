@@ -30,6 +30,7 @@ jobs:
       # Rebuild data/build from the committed inputs and fail if it differs from the committed output
       # (manifest.json builtAt ignored).
       - run: npm run data:build
+      - run: npm run engine:baseline
       - run: npm run data:check-fresh
       - run: npm run build
       - uses: actions/configure-pages@v5

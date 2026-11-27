@@ -24,34 +24,34 @@
     "max": 1.5
   },
   "overExtrapolation": {
-    "value": 1.0,
+    "value": 1.1,
     "unit": "multiplier",
     "description": "How strongly buyers extend recent spending growth into their plans (1 means they simply continue the latest growth rate).",
-    "source": "assumption \u2014 calibrated in Task 12",
+    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 1; prior: assumption \u2014 calibrated in Task 12)",
     "min": 0,
     "max": 3
   },
   "expectationGain": {
-    "value": 0.3,
+    "value": 0.1,
     "unit": "per quarter",
     "description": "How fast buyers update their expectations towards what they just saw each quarter (0 means never, 1 means fully).",
-    "source": "assumption \u2014 calibrated in Task 12",
+    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.3; prior: assumption \u2014 calibrated in Task 12)",
     "min": 0,
     "max": 1
   },
   "hyperscalerAiCapexShare": {
-    "value": 0.6,
+    "value": 0.8,
     "unit": "share of capex",
     "description": "Share of hyperscaler capital spending that goes to AI infrastructure rather than other uses.",
-    "source": "assumption \u2014 calibrated in Task 12",
+    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.6; prior: assumption \u2014 calibrated in Task 12)",
     "min": 0.2,
     "max": 0.95
   },
   "chipShareOfAiCapex": {
-    "value": 0.5,
+    "value": 0.7,
     "unit": "share of AI capex",
     "description": "Share of AI infrastructure capital spending that buys accelerator chips (the rest is buildings, power and networking).",
-    "source": "assumption \u2014 calibrated in Task 12",
+    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.5; prior: assumption \u2014 calibrated in Task 12)",
     "min": 0.2,
     "max": 0.8
   },
@@ -144,31 +144,31 @@
     "max": 120
   },
   "aiAddressableWageBillUsd": {
-    "value": 4000000000000.0,
+    "value": 4000000000000,
     "unit": "USD per year",
     "description": "Yearly wage bill of the work that AI could plausibly take over, the ceiling for labour-substitution spending. Rough placeholder, no committed source yet; refine from BLS or OECD figures.",
     "source": "assumption \u2014 rough placeholder; no BLS/OECD figure committed yet",
-    "min": 500000000000.0,
-    "max": 20000000000000.0
+    "min": 500000000000,
+    "max": 20000000000000
   },
   "cowosUnitsPerQuarter": {
-    "value": 3000000.0,
+    "value": 3000000,
     "unit": "accelerators per quarter",
     "description": "Most accelerators that advanced chip packaging (CoWoS) can produce in a quarter. About 120k wafers a month at end-2026 x 3 months x ~12 packages per wafer x ~0.7 yield and mix.",
     "source": "secondary \u2014 research_notes existing_ai_models_data.md section 2 (JPM, TrendForce, EffectStory CoWoS estimates 105k\u2013140k wpm); analyst estimates, conversion is a heuristic not verified",
-    "min": 500000.0,
-    "max": 20000000.0
+    "min": 500000,
+    "max": 20000000
   },
   "hbmUnitsPerQuarter": {
-    "value": 3500000.0,
+    "value": 3500000,
     "unit": "accelerators per quarter",
     "description": "Most accelerators that high-bandwidth memory supply can feed in a quarter. No HBM bit-supply figure was retrieved in the research notes, so this is a placeholder set slightly above the packaging ceiling.",
     "source": "assumption \u2014 research notes found no 2026 HBM bit-supply figure (existing_ai_models_data.md section 2); placeholder",
-    "min": 500000.0,
-    "max": 20000000.0
+    "min": 500000,
+    "max": 20000000
   },
   "kwPerAccelerator": {
-    "value": 2.0,
+    "value": 2,
     "unit": "kW per accelerator",
     "description": "All-in facility power per installed accelerator, including cooling and networking. Public builds: xAI Colossus about 150 MW for 100k H100s (1.5 kW); a GB200 NVL72 rack draws about 120-132 kW for 72 GPUs (about 1.8 kW) before cooling. The Epoch figure (9 GW / 2M, 4.5 kW) is planned cluster capacity, not load per installed chip.",
     "source": "assumption \u2014 rounded from public build figures (xAI Colossus, GB200 NVL72 rack power); Epoch 4.5 kW kept as the upper cross-check",
@@ -454,103 +454,103 @@
   "segmentShareConsumer": {
     "value": 0.35,
     "unit": "fraction of AI spend",
-    "min": 0,
-    "max": 1,
     "description": "Share of end-customer AI spending that comes from consumers (subscriptions and apps).",
-    "source": "assumption \u2014 calibrated in Task 12"
+    "source": "assumption \u2014 calibrated in Task 12",
+    "min": 0,
+    "max": 1
   },
   "segmentShareEnterprise": {
     "value": 0.45,
     "unit": "fraction of AI spend",
-    "min": 0,
-    "max": 1,
     "description": "Share of end-customer AI spending that comes from businesses (enterprise seats and API usage).",
-    "source": "assumption \u2014 calibrated in Task 12"
+    "source": "assumption \u2014 calibrated in Task 12",
+    "min": 0,
+    "max": 1
   },
   "segmentShareSovereign": {
     "value": 0.08,
     "unit": "fraction of AI spend",
-    "min": 0,
-    "max": 1,
     "description": "Share of AI spending from governments and sovereign AI programmes outside the US and China.",
-    "source": "assumption \u2014 calibrated in Task 12"
+    "source": "assumption \u2014 calibrated in Task 12",
+    "min": 0,
+    "max": 1
   },
   "segmentShareChina": {
     "value": 0.07,
     "unit": "fraction of AI spend",
-    "min": 0,
-    "max": 1,
     "description": "Share of AI spending from China when exports are fully open; scaled by the export-policy condition.",
-    "source": "assumption \u2014 calibrated in Task 12"
+    "source": "assumption \u2014 calibrated in Task 12",
+    "min": 0,
+    "max": 1
   },
   "segmentSharePhysicalAi": {
     "value": 0.05,
     "unit": "fraction of AI spend",
-    "min": 0,
-    "max": 1,
     "description": "Share of AI spending on physical AI (cars, robots) at a physical-AI index of 1; this spend buys chips directly rather than lab services.",
-    "source": "assumption \u2014 calibrated in Task 12"
+    "source": "assumption \u2014 calibrated in Task 12",
+    "min": 0,
+    "max": 1
   },
   "tokenPriceBase": {
     "value": 1,
     "unit": "index",
-    "min": 1e-06,
     "description": "Token price index level at which the AI-spend condition applies unchanged; elasticity scales spend relative to it.",
-    "source": "assumption \u2014 conditions express token price as an index of 1 at the as-of quarter"
+    "source": "assumption \u2014 conditions express token price as an index of 1 at the as-of quarter",
+    "min": 0.000001
   },
   "capexPerQuarterlyRentUsd": {
     "value": 10,
     "unit": "USD of capex per USD of quarterly rent",
-    "min": 2,
-    "max": 30,
     "description": "How much a cloud invests to add capacity that earns one dollar of AI rent per quarter (roughly the payback period in quarters).",
-    "source": "assumption \u2014 calibrated in Task 12"
+    "source": "assumption \u2014 calibrated in Task 12",
+    "min": 2,
+    "max": 30
   },
   "customChipShareOfBudget": {
     "value": 0.3,
     "unit": "fraction",
-    "min": 0,
-    "max": 1,
     "description": "Share of Alphabet's and Amazon's chip budget spent on their own designs (Google TPU with Broadcom, Amazon Trainium with Marvell) rather than NVIDIA or AMD.",
-    "source": "assumption \u2014 calibrated in Task 12"
+    "source": "assumption \u2014 calibrated in Task 12",
+    "min": 0,
+    "max": 1
   },
   "maxLendingCreditSpread": {
     "value": 6,
     "unit": "percentage points (Baa minus 10-year Treasury)",
-    "min": 2,
-    "max": 15,
     "description": "Credit spread above which lenders stop extending new credit to debt-funded clouds in this simple phase-2 rule.",
-    "source": "assumption \u2014 Baa spread peaked near 6 points in 2008-09 (FRED BAA10Y)"
+    "source": "assumption \u2014 Baa spread peaked near 6 points in 2008-09 (FRED BAA10Y)",
+    "min": 2,
+    "max": 15
   },
   "creditCapacityMultipleOfRent": {
     "value": 4,
     "unit": "USD of new credit per USD of quarterly rent",
-    "min": 0,
-    "max": 20,
     "description": "How much new debt a debt-funded cloud can raise in a quarter, as a multiple of its quarterly rent revenue, when credit is open.",
-    "source": "assumption \u2014 calibrated in Task 12"
+    "source": "assumption \u2014 calibrated in Task 12",
+    "min": 0,
+    "max": 20
   },
   "edgeNonAiQuarterlyUsd": {
-    "value": 8200000000.0,
+    "value": 8200000000,
     "unit": "USD per quarter",
-    "min": 0,
     "description": "NVIDIA Edge Computing revenue (PCs, gaming, cars, robots) held flat as a simple trend; physical-AI spend from the demand layer is added separately.",
-    "source": "NVIDIA 8-K 2026-11-17 CFO commentary: Edge Computing $8.2B in Q3 FY27 (includes some physical AI; overlap noted)"
+    "source": "NVIDIA 8-K 2026-11-17 CFO commentary: Edge Computing $8.2B in Q3 FY27 (includes some physical AI; overlap noted)",
+    "min": 0
   },
   "newLoanRateSpreadOverRiskFree": {
     "value": 4,
     "unit": "percentage points",
-    "min": 0,
-    "max": 20,
     "description": "Extra interest over the 10-year Treasury plus the credit-spread condition that debt-funded clouds pay on new loans.",
-    "source": "assumption \u2014 CoreWeave DDTL margins of SOFR+2.25% to +13% (data/deals/deals.json)"
+    "source": "assumption \u2014 CoreWeave DDTL margins of SOFR+2.25% to +13% (data/deals/deals.json)",
+    "min": 0,
+    "max": 20
   },
   "supplierOperatingCostRatio": {
     "value": 0.6,
     "unit": "fraction of revenue",
-    "min": 0,
-    "max": 1,
     "description": "Operating costs of chip suppliers (TSMC, SK Hynix, ASML) as a share of their revenue in this simple phase-2 rule.",
-    "source": "assumption \u2014 calibrated in Task 12"
+    "source": "assumption \u2014 calibrated in Task 12",
+    "min": 0,
+    "max": 1
   }
 }

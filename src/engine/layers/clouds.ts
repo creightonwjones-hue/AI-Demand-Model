@@ -7,6 +7,7 @@ import type { DemandOut } from './demand';
 
 export const CASH_FUNDED = ['microsoft', 'alphabet', 'amazon', 'meta'] as const;
 export const DEBT_FUNDED = ['oracle', 'coreweave', 'nebius', 'lambda'] as const;
+const CORE_CASH_PAYER = 'rest-of-economy';
 export const CLOUDS: readonly string[] = [...CASH_FUNDED, ...DEBT_FUNDED];
 const DEFAULT_LENDER = 'private-credit-other';
 const BUILDINGS_PAYEE = 'construction-and-power';
@@ -86,7 +87,9 @@ export function stepClouds(s: EngineState, d: DemandOut, c: Conditions, p: Engin
     // plus new credit only (spec §8.3).
     const isDebtFunded = (DEBT_FUNDED as readonly string[]).includes(cloud);
     const cash = Math.max(0, s.ledger.sheets[cloud]?.cash ?? 0);
-    let funds = cash + (isDebtFunded ? 0 : rent);
+    const core = isDebtFunded ? 0 : s.memory[`corecash:${cloud}`] ?? 0;
+    if (core > 0) flows.push({ quarter, from: CORE_CASH_PAYER, to: cloud, amountUsd: core, kind: 'core-business-cash', label: 'Core business cash' });
+    let funds = cash + core + (isDebtFunded ? 0 : rent);
     let loan = 0;
     if (isDebtFunded && creditOpen && wanted > funds) {
       loan = Math.min(wanted - funds, rent * param(p, 'creditCapacityMultipleOfRent'));

@@ -71,7 +71,7 @@ describe('stepClouds', () => {
     const cl = stepClouds(s, demandOut({ openai: 40e9, anthropic: 30e9 }), conds({}), params)
     for (const c of CLOUDS) {
       expect(cl.chipBudgetByCloud[c] + cl.buildingsCapexByCloud[c]).toBeCloseTo(cl.aiCapexByCloud[c], -3)
-      const funds = Math.max(0, s.ledger.sheets[c].cash) + (CASH_FUNDED_IDS.includes(c) ? cl.rentByCloud[c] : 0) + sum(Object.fromEntries(cl.newLoans.filter(l => l.borrower === c).map((l, i) => [i, l.amountUsd])))
+      const funds = Math.max(0, s.ledger.sheets[c].cash) + (CASH_FUNDED_IDS.includes(c) ? cl.rentByCloud[c] + (s.memory[`corecash:${c}`] ?? 0) : 0) + sum(Object.fromEntries(cl.newLoans.filter(l => l.borrower === c).map((l, i) => [i, l.amountUsd])))
       expect(cl.aiCapexByCloud[c]).toBeLessThanOrEqual(funds + 1)
     }
   })
@@ -126,6 +126,27 @@ describe('capex momentum', () => {
     expect(reported).toBeGreaterThan(10e9)
     const cl = stepClouds(s, demandOut({}), conds({}), params)
     const expected = reported * param(params, 'hyperscalerAiCapexShare') * (1 + s.expectations.microsoft) * param(params, 'overExtrapolation')
-    expect(cl.aiCapexByCloud.microsoft).toBeCloseTo(Math.min(expected, s.ledger.sheets.microsoft.cash), -3)
+    expect(cl.aiCapexByCloud.microsoft).toBeCloseTo(Math.min(expected, s.ledger.sheets.microsoft.cash + s.memory['corecash:microsoft']), -3)
+  })
+})
+
+describe('core business cash', () => {
+  it('funds a cash-funded hyperscaler\'s AI capex from its non-AI operating cash flow when its cash is gone', () => {
+    const s = fresh()
+    s.ledger.sheets.microsoft.cash = 0
+    const core = s.memory['corecash:microsoft']
+    expect(core).toBeGreaterThan(5e9) // reported operating cash flow net of non-AI capex
+    const cl = stepClouds(s, demandOut({}), conds({}), params)
+    const inflow = cl.flows.filter(f => f.to === 'microsoft' && f.kind === 'core-business-cash')
+    expect(inflow).toHaveLength(1)
+    expect(inflow[0].from).toBe('rest-of-economy')
+    expect(inflow[0].amountUsd).toBeCloseTo(core, -3)
+    expect(cl.aiCapexByCloud.microsoft).toBeGreaterThan(0)
+    expect(cl.aiCapexByCloud.microsoft).toBeLessThanOrEqual(core + 1)
+  })
+
+  it('gives debt-funded clouds no core business cash', () => {
+    const cl = stepClouds(fresh(), demandOut({}), conds({}), params)
+    expect(cl.flows.some(f => f.kind === 'core-business-cash' && f.to === 'coreweave')).toBe(false)
   })
 })

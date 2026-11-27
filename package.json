@@ -10,6 +10,8 @@
     "test": "vitest run",
     "data:build": "tsx scripts/data/build-all.ts",
     "data:check-fresh": "tsx scripts/data/check-build-fresh.ts",
+    "engine:calibrate": "tsx scripts/engine/calibrate.ts",
+    "engine:baseline": "tsx scripts/engine/run-baseline.ts",
     "dev": "vite",
     "build": "vite build"
   },

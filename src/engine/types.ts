@@ -46,7 +46,8 @@ export type EngineParams = Record<string, ParamValue>;
 
 export type FlowKind =
   | 'customer-spend' | 'compute-rent' | 'chip-purchase' | 'memory-purchase' | 'foundry' | 'lithography'
-  | 'buildings-capex' | 'equity' | 'loan-draw' | 'interest' | 'principal' | 'guarantee-payment' | 'operating-cost';
+  | 'buildings-capex' | 'equity' | 'loan-draw' | 'interest' | 'principal' | 'guarantee-payment' | 'operating-cost'
+  | 'core-business-cash'; // a hyperscaler's non-AI operating cash flow (net of non-AI capex), from the rest of the economy
 
 /** Money moving between two entities in one quarter. */
 export interface Flow {
