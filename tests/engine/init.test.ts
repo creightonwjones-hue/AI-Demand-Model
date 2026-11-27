@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { aspAt } from '../../src/engine/supply-path'
 import { asOfView, loadBuild, type BuildData } from '../../src/engine/asof'
 import { initState } from '../../src/engine/init'
 import { makeGrid } from '../../src/engine/grid'
@@ -111,7 +112,8 @@ describe('initState (real data at 2026Q4, asOf 2026-11-26)', () => {
     expect(g.length).toBeGreaterThan(0)
     expect(g.every(x => x.modelled === true && x.quarter < '2026Q4' && x.quarter >= addQuarters('2026Q4', -life))).toBe(true)
     expect(sum(g.map(x => x.costUsd))).toBeCloseTo(revenue, -3)
-    expect(sum(g.map(x => x.units))).toBeCloseTo(revenue / asp, 3)
+    expect(sum(g.map(x => x.units))).toBeCloseTo(sum(g.map(x => x.costUsd / aspAt(params, x.quarter))), 3)
+    expect(asp).toBeGreaterThan(0)
     expect(s.notes.some(n => /installed GPU base/i.test(n))).toBe(true)
   })
 

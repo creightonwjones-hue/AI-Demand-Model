@@ -1,6 +1,7 @@
 // Chips layer (spec §8.2–8.3): GPU retirement and replacement, bullwhip ordering, weakest-link supply cap
 // (CoWoS, HBM, power), chip-maker revenue and supplier payments. Units are accelerator-equivalents priced at the
 // NVIDIA average selling price. Mutates s.market (installed base, backlog), s.pipeline and s.memory.
+import { aspAt, capacityFactorAt } from '../supply-path';
 import type { EngineState } from '../init';
 import { param } from '../params';
 import type { Conditions, EngineEvent, EngineParams, Flow, NvidiaQuarter } from '../types';
@@ -29,10 +30,11 @@ const KW_PER_GW = 1e6;
 /** Shipment ceiling this quarter and which input binds it. Power caps the installed base, so its limit is headroom. */
 export function supplyCapacity(s: EngineState, c: Conditions, p: EngineParams): { units: number; binding: Exclude<Binding, 'none'> } {
   const installed = s.market.installedGpus.reduce((a, v) => a + v.units, 0);
+  const grow = capacityFactorAt(p, s.grid.quarters[s.q]);
   const powerUnits = (c.powerGw.values[s.q] * KW_PER_GW * param(p, 'powerLoadFactor')) / param(p, 'kwPerAccelerator');
   const caps: [Exclude<Binding, 'none'>, number][] = [
-    ['cowos', param(p, 'cowosUnitsPerQuarter')],
-    ['hbm', param(p, 'hbmUnitsPerQuarter')],
+    ['cowos', param(p, 'cowosUnitsPerQuarter') * grow],
+    ['hbm', param(p, 'hbmUnitsPerQuarter') * grow],
     ['power', Math.max(0, powerUnits - installed)],
   ];
   const [binding, units] = caps.reduce((a, b) => (b[1] < a[1] ? b : a));
@@ -42,7 +44,7 @@ export function supplyCapacity(s: EngineState, c: Conditions, p: EngineParams): 
 export function stepChips(s: EngineState, cl: CloudsOut, c: Conditions, p: EngineParams): ChipsOut {
   const qi = s.q;
   const quarter = s.grid.quarters[qi];
-  const asp = param(p, 'nvidiaAspUsd');
+  const asp = aspAt(p, quarter);
   const flows: Flow[] = [];
   const events: EngineEvent[] = [];
 

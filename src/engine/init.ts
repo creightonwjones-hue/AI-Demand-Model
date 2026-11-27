@@ -21,6 +21,7 @@
 //   `nvidiaAspUsd`, one modelled Vintage per quarter with a known fact.
 // - Market prices start at the conditions' no-data placeholders (params); the first step overwrites them from conditions.
 //   Expectations start at the long-run AI spend growth for every cloud. Nothing is in the pipeline and backlog is zero.
+import { aspAt } from './supply-path';
 import { addQuarters } from '../data/quarters';
 import type { Metric, QuarterKey } from '../data/schema';
 import type { AsOfData } from './asof';
@@ -197,16 +198,15 @@ export function initState(data: AsOfData, params: EngineParams, grid: Grid, star
 
   // Installed GPU base.
   const life = param(params, 'gpuEconomicLifeQuarters');
-  const asp = param(params, 'nvidiaAspUsd');
   const installedGpus: Vintage[] = [];
   let missing = 0;
   for (let k = life; k >= 1; k--) {
     const vq = addQuarters(start, -k);
     const f = data.fact(NVIDIA, 'segmentRevenue', vq, DATA_CENTER);
-    if (f) installedGpus.push({ quarter: vq, units: f.value / asp, costUsd: f.value, modelled: true });
+    if (f) installedGpus.push({ quarter: vq, units: f.value / aspAt(params, vq), costUsd: f.value, modelled: true });
     else missing++;
   }
-  notes.push(`Installed GPU base at ${start} is a modelled estimate: NVIDIA Data Center revenue over the previous ${life} quarters ÷ ${asp} USD per accelerator`
+  notes.push(`Installed GPU base at ${start} is a modelled estimate: NVIDIA Data Center revenue over the previous ${life} quarters ÷ the ASP of each vintage quarter`
     + (missing ? ` (${missing} of ${life} quarters had no known Data Center revenue and add nothing).` : '.'));
 
   const expectations: Record<string, number> = {};

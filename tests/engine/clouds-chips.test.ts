@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { aspAt } from '../../src/engine/supply-path'
 import { asOfView, loadBuild } from '../../src/engine/asof'
 import { buildConditions, withUserPath } from '../../src/engine/conditions'
 import { makeGrid } from '../../src/engine/grid'
@@ -156,7 +157,7 @@ describe('final-review fixes', () => {
     const s = fresh()
     s.market.backlogUnits = 2e6
     const out = stepChips(s, cloudsOut(1e9), conds({}), params) // small demand, ample capacity
-    const paidUnits = sum(out.revenueByMaker) / param(params, 'nvidiaAspUsd')
+    const paidUnits = sum(out.revenueByMaker) / aspAt(params, Q)
     const piped = s.pipeline.filter(p => p.kind === 'gpus').reduce((a, p) => a + p.units, 0)
     expect(piped).toBeCloseTo(paidUnits, 0)
     expect(s.market.backlogUnits).toBeGreaterThan(0)

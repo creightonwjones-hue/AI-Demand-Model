@@ -27,7 +27,7 @@
     "value": 1.1,
     "unit": "multiplier",
     "description": "How strongly buyers extend recent spending growth into their plans (1 means they simply continue the latest growth rate).",
-    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 1; prior: assumption \u2014 calibrated in Task 12)",
+    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 1.1; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 1; prior: assumption \u2014 calibrated in Task 12))",
     "min": 0,
     "max": 3
   },
@@ -48,10 +48,10 @@
     "max": 0.95
   },
   "chipShareOfAiCapex": {
-    "value": 0.7,
+    "value": 0.8,
     "unit": "share of AI capex",
     "description": "Share of AI infrastructure capital spending that buys accelerator chips (the rest is buildings, power and networking).",
-    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.5; prior: assumption \u2014 calibrated in Task 12)",
+    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.7; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.5; prior: assumption \u2014 calibrated in Task 12))",
     "min": 0.2,
     "max": 0.8
   },
@@ -64,12 +64,20 @@
     "max": 0.95
   },
   "nvidiaAspUsd": {
-    "value": 30000,
+    "value": 45000,
     "unit": "USD per accelerator",
-    "description": "Average selling price of one Nvidia accelerator-equivalent unit, used to turn dollars into units shipped.",
-    "source": "assumption \u2014 calibrated in Task 12",
+    "description": "Average selling price of one Nvidia accelerator-equivalent unit in 2026Q4 (the anchor quarter), used to turn dollars into units. Other quarters move by nvidiaAspQuarterlyGrowth.",
+    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 45000; prior: assumption \u2014 set so 2026 Data Center revenue implies shipments inside the end-2026 CoWoS ceiling; recalibrated with the backtest)",
     "min": 10000,
-    "max": 80000
+    "max": 150000
+  },
+  "nvidiaAspQuarterlyGrowth": {
+    "value": 0.065,
+    "unit": "per quarter",
+    "description": "Quarterly growth of the Nvidia average selling price per accelerator as each generation (Hopper, Blackwell, Rubin) sells for more per unit. 0.035 is about 15% a year.",
+    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.035; prior: assumption \u2014 recalibrated with the backtest)",
+    "min": 0,
+    "max": 0.15
   },
   "nvidiaGrossMargin": {
     "value": 0.715,
@@ -166,6 +174,14 @@
     "source": "assumption \u2014 research notes found no 2026 HBM bit-supply figure (existing_ai_models_data.md section 2); placeholder",
     "min": 500000,
     "max": 20000000
+  },
+  "supplyCapacityQuarterlyGrowth": {
+    "value": 0.07,
+    "unit": "per quarter",
+    "description": "Quarterly growth of CoWoS packaging and HBM memory capacity around their end-2026 ceilings (applied backwards for earlier quarters). 0.07 is about 31% a year, slower than the 2024-2026 build-out.",
+    "source": "assumption \u2014 capacity growth is not identifiable from the 2023-2025 backtest (the ceiling did not bind); to be checked against TSMC and memory-maker capacity statements",
+    "min": 0,
+    "max": 0.25
   },
   "kwPerAccelerator": {
     "value": 2,
