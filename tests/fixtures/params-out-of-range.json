@@ -1,0 +1,10 @@
+{
+  "gpuLeadQuarters": {
+    "value": 9,
+    "unit": "quarters",
+    "description": "Quarters between a chip order and its installation in a data centre.",
+    "source": "assumption",
+    "min": 2,
+    "max": 4
+  }
+}

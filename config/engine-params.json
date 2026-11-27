@@ -1,0 +1,218 @@
+{
+  "gpuLeadQuarters": {
+    "value": 3,
+    "unit": "quarters",
+    "description": "Quarters from a chip order being placed to the chips running in a data centre.",
+    "source": "assumption — spec range 2 to 4 quarters",
+    "min": 2,
+    "max": 4
+  },
+  "buildingLeadQuarters": {
+    "value": 10,
+    "unit": "quarters",
+    "description": "Quarters from committing to a data-centre building to it being ready for chips.",
+    "source": "assumption — spec range 8 to 16 quarters",
+    "min": 8,
+    "max": 16
+  },
+  "computeCostShare": {
+    "value": 0.6,
+    "unit": "share of lab revenue",
+    "description": "Share of an AI lab's revenue that is spent on renting compute. Starting guess; the Anthropic S-1 compute commitments versus revenue are the intended anchor but are not yet in the committed data.",
+    "source": "assumption — Anthropic S-1 commitments vs revenue, not yet in committed data; calibrated in Task 12",
+    "min": 0.2,
+    "max": 1.5
+  },
+  "overExtrapolation": {
+    "value": 1.0,
+    "unit": "multiplier",
+    "description": "How strongly buyers extend recent spending growth into their plans (1 means they simply continue the latest growth rate).",
+    "source": "assumption — calibrated in Task 12",
+    "min": 0,
+    "max": 3
+  },
+  "expectationGain": {
+    "value": 0.3,
+    "unit": "per quarter",
+    "description": "How fast buyers update their expectations towards what they just saw each quarter (0 means never, 1 means fully).",
+    "source": "assumption — calibrated in Task 12",
+    "min": 0,
+    "max": 1
+  },
+  "hyperscalerAiCapexShare": {
+    "value": 0.6,
+    "unit": "share of capex",
+    "description": "Share of hyperscaler capital spending that goes to AI infrastructure rather than other uses.",
+    "source": "assumption — calibrated in Task 12",
+    "min": 0.2,
+    "max": 0.95
+  },
+  "chipShareOfAiCapex": {
+    "value": 0.5,
+    "unit": "share of AI capex",
+    "description": "Share of AI infrastructure capital spending that buys accelerator chips (the rest is buildings, power and networking).",
+    "source": "assumption — calibrated in Task 12",
+    "min": 0.2,
+    "max": 0.8
+  },
+  "nvidiaShareOfAccelerators": {
+    "value": 0.8,
+    "unit": "share of accelerator spend",
+    "description": "Nvidia's share of accelerator spending, with the rest going to custom chips and other vendors.",
+    "source": "assumption — calibrated in Task 12",
+    "min": 0.4,
+    "max": 0.95
+  },
+  "nvidiaAspUsd": {
+    "value": 30000,
+    "unit": "USD per accelerator",
+    "description": "Average selling price of one Nvidia accelerator-equivalent unit, used to turn dollars into units shipped.",
+    "source": "assumption — calibrated in Task 12",
+    "min": 10000,
+    "max": 80000
+  },
+  "nvidiaGrossMargin": {
+    "value": 0.715,
+    "unit": "fraction of revenue",
+    "description": "Nvidia's gross margin on sales. Starting value is the midpoint of management's 71.0%–72.0% guidance for Q4 FY27 in the 8-K of 2026-11-17.",
+    "source": "NVIDIA 8-K 2026-11-17 Ex 99.1 (Q3 FY27 press release) outlook, midpoint; calibrated in Task 12",
+    "min": 0.5,
+    "max": 0.85
+  },
+  "bullwhipInventoryWeeks": {
+    "value": 8,
+    "unit": "weeks",
+    "description": "Weeks of demand that buyers and suppliers try to hold as inventory; when demand stalls the excess is worked off.",
+    "source": "assumption — typical semiconductor channel inventory",
+    "min": 1,
+    "max": 26
+  },
+  "bullwhipCorrectionRate": {
+    "value": 0.5,
+    "unit": "per quarter",
+    "description": "Share of the gap between actual and target inventory that is corrected each quarter.",
+    "source": "assumption",
+    "min": 0.1,
+    "max": 1
+  },
+  "gpuEconomicLifeQuarters": {
+    "value": 20,
+    "unit": "quarters",
+    "description": "How long an accelerator stays economically useful before newer chips make it uncompetitive.",
+    "source": "assumption",
+    "min": 8,
+    "max": 32
+  },
+  "gpuAccountingLifeQuarters": {
+    "value": 24,
+    "unit": "quarters",
+    "description": "The period over which owners depreciate accelerators in their accounts (six years).",
+    "source": "assumption — hyperscaler depreciation policy of about six years",
+    "min": 12,
+    "max": 40
+  },
+  "labShareDrift": {
+    "value": 0.1,
+    "unit": "share per quarter",
+    "description": "How quickly spending shifts between AI labs towards the ones with better results each quarter.",
+    "source": "assumption",
+    "min": 0,
+    "max": 0.5
+  },
+  "defaultRunwayQuarters": {
+    "value": 0,
+    "unit": "quarters",
+    "description": "Cash runway (in quarters of obligations) below which a lab or cloud provider is treated as defaulting; 0 means cash must stay positive.",
+    "source": "assumption",
+    "min": 0,
+    "max": 4
+  },
+  "defaultContractQuarters": {
+    "value": 20,
+    "unit": "quarters",
+    "description": "Typical length of a compute contract signed by a lab, used when a deal has no stated end date.",
+    "source": "assumption",
+    "min": 4,
+    "max": 40
+  },
+  "aiAddressableWageBillUsd": {
+    "value": 4000000000000.0,
+    "unit": "USD per year",
+    "description": "Yearly wage bill of the work that AI could plausibly take over, the ceiling for labour-substitution spending. Rough placeholder, no committed source yet; refine from BLS or OECD figures.",
+    "source": "assumption — rough placeholder; no BLS/OECD figure committed yet",
+    "min": 500000000000.0,
+    "max": 20000000000000.0
+  },
+  "cowosUnitsPerQuarter": {
+    "value": 3000000.0,
+    "unit": "accelerators per quarter",
+    "description": "Most accelerators that advanced chip packaging (CoWoS) can produce in a quarter. About 120k wafers a month at end-2026 x 3 months x ~12 packages per wafer x ~0.7 yield and mix.",
+    "source": "secondary — research_notes existing_ai_models_data.md section 2 (JPM, TrendForce, EffectStory CoWoS estimates 105k–140k wpm); analyst estimates, conversion is a heuristic not verified",
+    "min": 500000.0,
+    "max": 20000000.0
+  },
+  "hbmUnitsPerQuarter": {
+    "value": 3500000.0,
+    "unit": "accelerators per quarter",
+    "description": "Most accelerators that high-bandwidth memory supply can feed in a quarter. No HBM bit-supply figure was retrieved in the research notes, so this is a placeholder set slightly above the packaging ceiling.",
+    "source": "assumption — research notes found no 2026 HBM bit-supply figure (existing_ai_models_data.md section 2); placeholder",
+    "min": 500000.0,
+    "max": 20000000.0
+  },
+  "kwPerAccelerator": {
+    "value": 4.5,
+    "unit": "kW per accelerator",
+    "description": "All-in facility power drawn per accelerator, including cooling and networking. Implied by Epoch: about 2 million accelerators drawing about 9 GW.",
+    "source": "secondary — Epoch AI supercomputer trends via AI CERTs, in research_notes existing_ai_models_data.md section 1 (9 GW / 2M accelerators)",
+    "min": 1,
+    "max": 15
+  },
+  "powerLoadFactor": {
+    "value": 0.8,
+    "unit": "fraction",
+    "description": "Share of contracted data-centre power that is actually available to run accelerators at any time.",
+    "source": "assumption",
+    "min": 0.3,
+    "max": 1
+  },
+  "tsmcShareOfChipCost": {
+    "value": 0.25,
+    "unit": "share of chip price",
+    "description": "Share of an accelerator's selling price that is paid to TSMC for wafers and packaging.",
+    "source": "assumption",
+    "min": 0.05,
+    "max": 0.6
+  },
+  "skHynixShareOfChipCost": {
+    "value": 0.2,
+    "unit": "share of chip price",
+    "description": "Share of an accelerator's selling price that is paid to SK hynix for high-bandwidth memory.",
+    "source": "assumption",
+    "min": 0.05,
+    "max": 0.5
+  },
+  "asmlShareOfTsmcCapex": {
+    "value": 0.25,
+    "unit": "share of capex",
+    "description": "Share of TSMC's capital spending that goes to ASML lithography tools.",
+    "source": "assumption",
+    "min": 0.05,
+    "max": 0.6
+  },
+  "cloudOperatingCostRatio": {
+    "value": 0.45,
+    "unit": "share of revenue",
+    "description": "Operating costs other than depreciation and interest (power, staff, leases) as a share of cloud-provider revenue.",
+    "source": "assumption",
+    "min": 0.1,
+    "max": 0.9
+  },
+  "labOperatingCostRatio": {
+    "value": 0.3,
+    "unit": "share of revenue",
+    "description": "Operating costs of an AI lab other than compute (staff, sales, research) as a share of its revenue.",
+    "source": "assumption",
+    "min": 0.05,
+    "max": 1.5
+  }
+}
