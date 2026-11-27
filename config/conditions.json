@@ -6,7 +6,7 @@
     "historySeries": [],
     "labs": [
       { "label": "Anthropic", "entityId": "anthropic", "metric": "revenue" },
-      { "label": "OpenAI", "missingReason": "no OpenAI revenue series is committed in data/build (press run-rates in the research notes are not data); when one is added it enters as run-rate / 4 per quarter" }
+      { "label": "OpenAI", "revenueSeries": { "id": "openai-revenue-monthly-company", "unit": "USD per month" }, "missingReason": "OpenAI states its revenue only occasionally (openai-revenue-monthly-company, primary-company: about $2B a month in March 2026), so quarters without a company-stated point lack OpenAI; press run-rates (openai-arr-techcrunch, openai-arr-cryptobriefing, openai-arr-axios) and the reported 2025 total are on other bases and are kept as separate series, never summed in" }
     ],
     "defaultMethod": "trend-decay",
     "rangeMethod": "log-widening",
@@ -17,8 +17,8 @@
       "rangeB": "aiSpendRangeLogB",
       "noDataValue": "aiSpendNoDataUsdPerYear"
     },
-    "rangeSourceLabel": "Anthropic quarterly revenue from its S-1 (primary filing), annualised (x4); OpenAI not yet in the data. Default: latest growth decaying to a long-run rate; range widens ±(a + b × quarters ahead) in log terms (Farmer–Lafond style), a and b in engine params",
-    "notes": "Annualised: each history quarter is that quarter's lab revenue x 4."
+    "rangeSourceLabel": "Assumption: range is an assumed band ±(a + b × quarters ahead) in log terms (Farmer–Lafond style; a, b in engine params) around a default where the latest growth decays to an assumed long-run rate. History: Anthropic quarterly revenue from its S-1 (primary filing) plus OpenAI company-stated monthly revenue where known, annualised",
+    "notes": "Annualised: each history quarter is that quarter's lab revenue x 4 (OpenAI monthly revenue x 3 per quarter). Growth is measured only between quarters with the same labs present."
   },
   "tokenPrice": {
     "name": "Token price index",
@@ -48,14 +48,14 @@
     "name": "Corporate credit spread",
     "unit": "percent",
     "historyKind": "series",
-    "historySeries": ["BAMLH0A0HYM2", "BAA10Y"],
+    "historySeries": ["BAA10Y"],
     "defaultMethod": "hold-last",
     "rangeMethod": "volatility",
     "volMode": "level",
     "bounds": { "min": 0 },
     "params": {},
-    "rangeSourceLabel": "FRED ICE BofA US high-yield option-adjusted spread (BAMLH0A0HYM2) where available, else Moody's Baa minus 10-year Treasury (BAA10Y); quarterly mean of daily values; range ±k × quarterly volatility of the same series × √(quarters ahead)",
-    "notes": "Spliced: FRED serves BAMLH0A0HYM2 only from 2023-11-27, so earlier quarters use BAA10Y. The two measure different spreads (high-yield OAS is about 2 percentage points above Baa-minus-Treasury), so history is not like-for-like across the switch; volatility uses only steps within one series."
+    "rangeSourceLabel": "FRED BAA10Y (Moody's Baa corporate yield minus 10-year Treasury), quarterly mean of daily values; range ±k × the quarterly volatility of its history × √(quarters ahead)",
+    "notes": "One measure for the whole grid. Cross-check only, not used: FRED BAMLH0A0HYM2 (ICE BofA US high-yield OAS) is available only from 2023-11-27 and runs about 2 percentage points above BAA10Y, so it is not spliced in."
   },
   "riskFree": {
     "name": "US 10-year Treasury yield",
@@ -90,7 +90,7 @@
       "rangeB": "gpuResaleRangeLogB",
       "noDataValue": "gpuResaleNoDataFraction"
     },
-    "rangeSourceLabel": "Used H100 PCIe 80GB price over new price (ServerNet low/high quotes, secondary); default starts from the used H100 SXM year-on-year change (AMCompute) and decays to the used A100 rate of decline; range widens ±(a + b × quarters ahead) in log terms",
+    "rangeSourceLabel": "Assumption: range is a band ±(a + b × quarters ahead) in log terms, a from the spread of used H100 PCIe quotes and b assumed (engine params). Path: used H100 PCIe 80GB price over new price (ServerNet low/high quotes, secondary), default starting from the used H100 SXM year-on-year change (AMCompute) and decaying to the used A100 rate of decline",
     "notes": "When only one history quarter is known, the starting growth is the used H100 SXM price change with the new price assumed unchanged (an assumption)."
   },
   "gpuRental": {
@@ -130,7 +130,7 @@
       "rangeB": "powerRangeLogB",
       "noDataValue": "powerGwNoData"
     },
-    "rangeSourceLabel": "IEA data-centre electricity, global (Energy and AI, Apr 2025; World Energy Outlook 2026), TWh/yr converted to GW of capacity (TWh × 1000 / 8760 / powerLoadFactor), linear between published years; range = spread between IEA editions, widened ±(a + b × quarters away) in log terms with b calibrated to the LBNL 2024 US report's 2028 low–high spread (325–580 TWh)",
+    "rangeSourceLabel": "Assumption: range is the spread between IEA editions widened by a band ±(a + b × quarters away) in log terms, a assumed and b calibrated to the LBNL 2024 US report's 2028 low–high spread (325–580 TWh). Path: IEA data-centre electricity, global (Energy and AI, Apr 2025; World Energy Outlook 2026), TWh/yr converted to GW of capacity (TWh × 1000 / 8760 / powerLoadFactor), linear between published years",
     "notes": "Annual figures are placed at mid-year (Q2) and held flat before the first and after the last point. GW is capacity: average load divided by powerLoadFactor. LBNL is US-only, so it sets the range width, not the level."
   },
   "exportRegime": {

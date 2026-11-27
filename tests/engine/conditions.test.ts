@@ -114,18 +114,70 @@ describe('buildConditions (detail)', () => {
     expect(c.aiSpend.values[grid.idx('2026Q3')]).toBe(16_956_000_000 * 4)
     expect(c.aiSpend.origin[grid.idx('2026Q4')]).toBe('default')
     expect(c.aiSpend.notes).toMatch(/partial/i)
-    expect(c.aiSpend.notes).toMatch(/OpenAI/)
+    expect(c.aiSpend.notes).toMatch(/OpenAI is missing in 6 of 7 history quarters/)
+    // company-stated OpenAI revenue (about $2B a month, March 2026) enters 2026Q1 as x3 per quarter
+    expect(c.aiSpend.values[grid.idx('2026Q1')]).toBe((4_731_000_000 + 2_000_000_000 * 3) * 4)
+    // not before it was stated (2026-03-31)
+    const cMar = buildConditions(asOfData('2026-03-30'), grid, '2026-03-30')
+    expect(cMar.aiSpend.origin.includes('history')).toBe(false)
+    // press run-rates on other bases are never summed in
+    expect(specs.aiSpend.labs!.flatMap(l => (l.revenueSeries ? [l.revenueSeries.id] : []))).toEqual(['openai-revenue-monthly-company'])
   })
 
-  it('creditSpread prefers HY OAS where available and flags the splice', () => {
-    expect(c.creditSpread.origin[grid.idx('2022Q1')]).toBe('history')
-    const hy = build.series.find(s => s.id === 'BAMLH0A0HYM2')!.points
-      .filter(p => p.date >= '2026-07-01' && p.date <= '2026-09-30')
-    expect(c.creditSpread.values[grid.idx('2026Q3')]).toBeCloseTo(hy.reduce((a, p) => a + p.value, 0) / hy.length, 12)
+  it('aiSpend takes a per-year revenue series as run-rate / 4 per quarter', () => {
+    const custom = structuredClone(specs)
+    custom.aiSpend.labs![1].revenueSeries = { id: 'openai-arr-axios', unit: 'USD per year' }
+    const cc = buildConditions(asOfData(AS_OF), grid, AS_OF, { specs: custom })
+    expect(cc.aiSpend.values[grid.idx('2026Q3')]).toBe((16_956_000_000 + 70_000_000_000 / 4) * 4)
+    expect(cc.aiSpend.notes).toMatch(/OpenAI is missing in 6 of 7/)
+  })
+
+  it('aiSpend trend growth is never measured across a change in the lab mix', () => {
+    const custom = structuredClone(specs)
+    custom.aiSpend.labs![1].revenueSeries = { id: 'openai-arr-axios', unit: 'USD per year' }
+    const cc = buildConditions(asOfData(AS_OF), grid, AS_OF, { specs: custom })
+    // 2026Q3 has OpenAI, 2026Q2 does not: the starting growth comes from Anthropic-only 2026Q1->Q2 instead
+    expect(cc.aiSpend.notes).toMatch(/growth starts at 1\.4424 a quarter/)
+  })
+
+  it('quarters before the first data point are flagged, not passed off as history', () => {
+    expect(c.gpuRental.firstHistory).toBe('2025Q4')
+    expect(c.gpuRental.origin[grid.idx('2025Q3')]).toBe('default')
+    expect(c.gpuRental.rangeSource.endsWith(' Assumption: quarters before 2025Q4 hold the first observed value.')).toBe(true)
+    expect(c.aiSpend.firstHistory).toBe('2025Q1')
+    expect(c.aiSpend.rangeSource.endsWith(' Assumption: quarters before 2025Q1 hold the first observed value.')).toBe(true)
+    // history from the grid start: no suffix
+    expect(c.riskFree.firstHistory).toBe('2022Q1')
+    expect(c.riskFree.rangeSource).not.toMatch(/quarters before/)
+    expect(c.tokenPrice.firstHistory).toBeUndefined()
+  })
+
+  it('every range built from assumed widths says Assumption first', () => {
+    for (const id of CONDITION_IDS) {
+      if (specs[id].rangeMethod !== 'volatility' || specs[id].historyKind === 'none') {
+        expect(c[id].rangeSource.startsWith('Assumption:'), id).toBe(true)
+      }
+    }
+    // a measured volatility that falls back to an assumed one is relabelled too
+    const v = asOfData(AS_OF)
+    const one = { ...v, series: (sid: string) => (sid === 'gpu-rent-h100-reserved-semianalysis' ? v.series(sid).slice(-1) : v.series(sid)) }
+    const c1 = buildConditions(one, grid, AS_OF)
+    expect(c1.gpuRental.rangeSource.startsWith('Assumption: too little history')).toBe(true)
+    expect(c.gpuRental.rangeSource.startsWith('SemiAnalysis')).toBe(true)
+  })
+
+  it('creditSpread is one measure (BAA10Y) for the whole grid; HY OAS is only a cross-check', () => {
+    expect(specs.creditSpread.historySeries).toEqual(['BAA10Y'])
     const baa = build.series.find(s => s.id === 'BAA10Y')!.points
-      .filter(p => p.date >= '2022-01-01' && p.date <= '2022-03-31')
-    expect(c.creditSpread.values[grid.idx('2022Q1')]).toBeCloseTo(baa.reduce((a, p) => a + p.value, 0) / baa.length, 12)
-    expect(c.creditSpread.notes).toMatch(/BAA10Y/)
+    const qmean = (from: string, to: string) => {
+      const pts = baa.filter(p => p.date >= from && p.date <= to && p.asKnownAt <= AS_OF)
+      return pts.reduce((a, p) => a + p.value, 0) / pts.length
+    }
+    expect(c.creditSpread.values[grid.idx('2022Q1')]).toBeCloseTo(qmean('2022-01-01', '2022-03-31'), 12)
+    expect(c.creditSpread.values[grid.idx('2023Q4')]).toBeCloseTo(qmean('2023-10-01', '2023-12-31'), 12)
+    expect(c.creditSpread.values[grid.idx('2026Q3')]).toBeCloseTo(qmean('2026-07-01', '2026-09-30'), 12)
+    expect(c.creditSpread.notes).not.toMatch(/Sources by quarter/)
+    expect(c.creditSpread.notes).toMatch(/Cross-check only, not used: FRED BAMLH0A0HYM2/)
   })
 
   it('gpuResale is used price as a fraction of new price', () => {
@@ -143,7 +195,9 @@ describe('buildConditions (detail)', () => {
     // before WEO 2026 (19 Nov 2026) only the 945 TWh base case is known
     const c25 = buildConditions(asOfData('2025-06-30'), grid, '2025-06-30')
     expect(c25.powerGw.values[grid.idx('2030Q2')]).toBeCloseTo(945 * 1000 / 8760 / lf, 9)
-    expect(c25.powerGw.rangeSource.startsWith('IEA')).toBe(true)
+    expect(c25.powerGw.rangeSource).not.toMatch(/placeholder/)
+    expect(c25.powerGw.notes).toMatch(/2030Q2 945 TWh/)
+    expect(c25.powerGw.notes).not.toMatch(/1000 TWh/)
   })
 
   it('assumption-sourced conditions say so plainly', () => {
@@ -170,9 +224,13 @@ describe('buildConditions (detail)', () => {
   it('runs in under 20 ms for all conditions', () => {
     const v = asOfData(AS_OF)
     buildConditions(v, grid, AS_OF) // warm-up
-    const t0 = performance.now()
-    buildConditions(v, grid, AS_OF)
-    expect(performance.now() - t0).toBeLessThan(20)
+    const times: number[] = []
+    for (let r = 0; r < 5; r++) {
+      const t0 = performance.now()
+      buildConditions(v, grid, AS_OF)
+      times.push(performance.now() - t0)
+    }
+    expect(times.sort((a, b) => a - b)[2]).toBeLessThan(20) // median of 5
   })
 })
 

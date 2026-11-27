@@ -274,8 +274,8 @@
   "aiSpendNoDataUsdPerYear": {
     "value": 4000000000,
     "unit": "USD per year",
-    "description": "Placeholder aiSpend used only when no lab revenue is public at the as-of date (before the Anthropic S-1 of Oct 2026); the range source then says Assumption.",
-    "source": "assumption — order-of-magnitude placeholder, not data; no lab revenue was filed publicly before Oct 2026",
+    "description": "Placeholder aiSpend used only when no Anthropic or company-stated OpenAI revenue point is known at the as-of date; the range source then says Assumption.",
+    "source": "assumption — order-of-magnitude placeholder, not data; the committed lab revenue data start with the OpenAI 2026-03-31 statement and the Anthropic S-1 (Oct 2026)",
     "min": 0
   },
   "gpuResaleLongRunQuarterlyGrowth": {

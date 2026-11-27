@@ -39,7 +39,8 @@ const ConditionSpecSchema = z.object({
     label: z.string(),
     entityId: z.string().optional(),
     metric: z.literal('revenue').optional(),
-    runRateSeries: z.string().optional(), // USD per year; enters as run-rate / 4 per quarter
+    // A revenue series for a lab without quarterly facts: per month (x3 per quarter) or a per-year run-rate (/4).
+    revenueSeries: z.object({ id: z.string(), unit: z.enum(['USD per month', 'USD per year']) }).optional(),
     missingReason: z.string().optional(),
   })).optional(),
   initialGrowthSeries: z.object({ id: z.string(), unit: z.literal('percent-yoy') }).optional(),
@@ -152,19 +153,23 @@ function readHistory(spec: ConditionSpec, data: AsOfData, grid: Grid, asOf: stri
   } else if (spec.historyKind === 'lab-revenue') {
     const missing = new Map<string, number[]>();
     for (const lab of spec.labs!) missing.set(lab.label, []);
-    const runRates = spec.labs!.map(l => (l.runRateSeries ? quarterMeans(data.series(l.runRateSeries), asOf) : undefined));
+    const revenue = spec.labs!.map(l => (l.revenueSeries ? quarterMeans(data.series(l.revenueSeries.id), asOf) : undefined));
     for (const q of grid.quarters) {
       const n = qNum(q);
       let total = 0;
-      let any = false;
+      const present: string[] = [];
       spec.labs!.forEach((lab, i) => {
         let v: number | undefined;
         if (lab.entityId) v = data.fact(lab.entityId, lab.metric ?? 'revenue', q)?.value;
-        else if (runRates[i]?.has(n)) v = runRates[i]!.get(n)! / 4; // run-rate is USD per year
+        else if (revenue[i]?.has(n)) {
+          const m = revenue[i]!.get(n)!; // mean of the points dated in the quarter
+          v = lab.revenueSeries!.unit === 'USD per month' ? m * 3 : m / 4; // -> USD per quarter
+        }
         if (v === undefined) missing.get(lab.label)!.push(n);
-        else { total += v; any = true; }
+        else { total += v; present.push(lab.label); }
       });
-      if (any) { values.set(n, total * 4); sourceOf.set(n, 'labs'); } // annualised: USD per year
+      // annualised: USD per year. The lab mix is the "source", so growth is never measured across a change in mix.
+      if (present.length) { values.set(n, total * 4); sourceOf.set(n, `labs: ${present.join(' + ')}`); }
     }
     for (const lab of spec.labs!) {
       const gaps = missing.get(lab.label)!.filter(n => values.has(n));
@@ -237,6 +242,7 @@ function buildOne(id: ConditionId, spec: ConditionSpec, data: AsOfData, grid: Gr
   };
   const notes: string[] = [];
   let rangeSource = spec.rangeSourceLabel;
+  let firstHistory: QuarterKey | undefined;
 
   // Distance (quarters, at least 1) from each grid quarter to the nearest anchor quarter.
   const distances = (anchors: number[]) => grid.quarters.map((_, i) => {
@@ -336,6 +342,7 @@ function buildOne(id: ConditionId, spec: ConditionSpec, data: AsOfData, grid: Gr
     } else {
       const first = histIdx[0];
       const last = histIdx[histIdx.length - 1];
+      firstHistory = grid.quarters[first];
       const log = spec.defaultMethod === 'trend-decay' || spec.volMode === 'log';
       // Before the first history quarter: hold the first value. Gaps: interpolate (log-linear for log quantities).
       for (let i = 0; i < first; i++) values[i] = values[first];
@@ -363,6 +370,9 @@ function buildOne(id: ConditionId, spec: ConditionSpec, data: AsOfData, grid: Gr
         if (sigma === undefined || sigma === 0) {
           sigma = p('fallbackVol');
           notes.push(`Too little history for a volatility estimate: the range uses the assumed volatility in engine param ${spec.params.fallbackVol}.`);
+          if (!rangeSource.startsWith('Assumption:')) {
+            rangeSource = `Assumption: too little history to measure volatility, so the range uses an assumed quarterly volatility of ${sigma} (engine param ${spec.params.fallbackVol}). ${rangeSource}`;
+          }
         }
         volBand(distances(histIdx), sigma, spec.volMode!);
         if (last < n - 1) notes.push(`Default from ${grid.quarters[last + 1]}: held at the ${grid.quarters[last]} value.`);
@@ -373,6 +383,7 @@ function buildOne(id: ConditionId, spec: ConditionSpec, data: AsOfData, grid: Gr
         const look = param(P, 'trendDecayGrowthLookbackQuarters');
         const steps: number[] = [];
         for (let k = allQ.length - 1; k > 0 && steps.length < look; k--) {
+          if (hist!.sourceOf.get(allQ[k]) !== hist!.sourceOf.get(allQ[k - 1])) continue; // mix changed: not growth
           steps.push(Math.log(hist!.values.get(allQ[k])! / hist!.values.get(allQ[k - 1])!) / (allQ[k] - allQ[k - 1]));
         }
         let g0: number;
@@ -404,8 +415,15 @@ function buildOne(id: ConditionId, spec: ConditionSpec, data: AsOfData, grid: Gr
       throw new Error(`${id}: non-finite value or range at ${grid.quarters[i]}`);
     }
   }
+  if (firstHistory !== undefined && firstHistory !== grid.quarters[0]) {
+    rangeSource += `${rangeSource.endsWith('.') ? '' : '.'} Assumption: quarters before ${firstHistory} hold the first observed value.`;
+  }
   const allNotes = [spec.notes, ...notes].filter(Boolean).join(' ');
-  return { id, unit: spec.unit, values, origin, low, high, rangeSource, ...(allNotes ? { notes: allNotes } : {}) };
+  return {
+    id, unit: spec.unit, values, origin, low, high, rangeSource,
+    ...(firstHistory !== undefined ? { firstHistory } : {}),
+    ...(allNotes ? { notes: allNotes } : {}),
+  };
 }
 
 /**

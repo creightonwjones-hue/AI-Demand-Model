@@ -21,6 +21,11 @@ export interface ConditionPath {
   low: number[];
   high: number[];
   rangeSource: string;
+  /**
+   * First grid quarter with real data known at asOf; undefined when the condition has no history. Quarters before it
+   * are origin 'default' (they hold the first observed value) and rangeSource then says so as an Assumption.
+   */
+  firstHistory?: QuarterKey;
   /** Plain-language caveats: partial or spliced history, quarters filled by the model, placeholders. */
   notes?: string;
 }
