@@ -45,6 +45,27 @@ describe('ASP and supply capacity over time', () => {
     const r = runOnePath({ build: loadBuild(), params, asOf: '2026-11-27', start: '2026Q3' })
     expect(r.invariantErrors).toEqual([])
     const rev = (q: string) => r.nvidia[grid.idx(q)].revenue
-    expect(rev('2028Q4')).toBeGreaterThan(rev('2026Q4') * 1.2)
+    expect(rev('2028Q4')).toBeGreaterThan(rev('2026Q4')) // grows; from 2028 data-centre power, not packaging, limits it
+    expect(rev('2030Q3')).toBeGreaterThan(rev('2028Q4'))
+  })
+})
+
+describe('next-quarter guidance as a starting fact', () => {
+  it('lets the baseline reach NVIDIA\'s own 2026Q4 revenue guidance (within 10%)', () => {
+    const b = loadBuild()
+    const guide = asOfView(b, '2026-11-27').series('guidance-nvda-rev-q4fy2027').at(-1)!.value
+    const r = runOnePath({ build: b, params, asOf: '2026-11-27', start: '2026Q3' })
+    expect(r.nvidia[grid.idx('2026Q4')].revenue / guide).toBeGreaterThan(0.9)
+    expect(r.nvidia[grid.idx('2026Q4')].revenue / guide).toBeLessThan(1.1)
+  })
+})
+
+describe('capex guidance as a starting fact', () => {
+  it('seeds a cloud\'s capex momentum from its guidance for the start year (range midpoint), else reported capex', () => {
+    const s = initState(view, params, grid, '2026Q4')
+    expect(s.memory['capex:microsoft']).toBeCloseTo(170e9 / 4, -6)
+    expect(s.memory['capex:alphabet']).toBeCloseTo(200e9 / 4, -6)
+    const old = initState(asOfView(loadBuild(), '2025-06-30'), params, grid, '2025Q3')
+    expect(old.memory['capex:microsoft']).toBeLessThan(40e9) // no 2025 guidance in the data: reported quarter
   })
 })

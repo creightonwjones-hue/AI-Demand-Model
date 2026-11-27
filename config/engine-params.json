@@ -27,7 +27,7 @@
     "value": 1.1,
     "unit": "multiplier",
     "description": "How strongly buyers extend recent spending growth into their plans (1 means they simply continue the latest growth rate).",
-    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 1.1; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 1; prior: assumption \u2014 calibrated in Task 12))",
+    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 1.1; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 1.1; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 1.1; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 1; prior: assumption \u2014 calibrated in Task 12))))",
     "min": 0,
     "max": 3
   },
@@ -51,7 +51,7 @@
     "value": 0.8,
     "unit": "share of AI capex",
     "description": "Share of AI infrastructure capital spending that buys accelerator chips (the rest is buildings, power and networking).",
-    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.7; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.5; prior: assumption \u2014 calibrated in Task 12))",
+    "source": "set 2026-11-27 so the baseline reaches NVIDIA\u2019s own 2026Q4 guidance with 2026 capex guidance as input; the 2023-2025 backtest prefers 0.7 (fit 17.0% vs 17.7%) \u2014 guidance chosen over fit. calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.8; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.8; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.7; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.5; prior: assumption \u2014 calibrated in Task 12))))",
     "min": 0.2,
     "max": 0.8
   },
@@ -67,7 +67,7 @@
     "value": 45000,
     "unit": "USD per accelerator",
     "description": "Average selling price of one Nvidia accelerator-equivalent unit in 2026Q4 (the anchor quarter), used to turn dollars into units. Other quarters move by nvidiaAspQuarterlyGrowth.",
-    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 45000; prior: assumption \u2014 set so 2026 Data Center revenue implies shipments inside the end-2026 CoWoS ceiling; recalibrated with the backtest)",
+    "source": "assumption \u2014 2026Q4 level set with the CoWoS ceiling so NVIDIA\u2019s own 2026Q4 guidance (~$130B) is reachable; not calibrated (the 2023-2025 backtest cannot pin the 2026 level)",
     "min": 10000,
     "max": 150000
   },
@@ -75,7 +75,7 @@
     "value": 0.065,
     "unit": "per quarter",
     "description": "Quarterly growth of the Nvidia average selling price per accelerator as each generation (Hopper, Blackwell, Rubin) sells for more per unit. 0.035 is about 15% a year.",
-    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.035; prior: assumption \u2014 recalibrated with the backtest)",
+    "source": "calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.065; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.065; prior: calibrated 2026-11-27, fit 2023Q1\u20132025Q4 (was 0.035; prior: assumption \u2014 recalibrated with the backtest)))",
     "min": 0,
     "max": 0.15
   },
@@ -160,15 +160,15 @@
     "max": 20000000000000
   },
   "cowosUnitsPerQuarter": {
-    "value": 3000000,
+    "value": 4000000,
     "unit": "accelerators per quarter",
-    "description": "Most accelerators that advanced chip packaging (CoWoS) can produce in a quarter. About 120k wafers a month at end-2026 x 3 months x ~12 packages per wafer x ~0.7 yield and mix.",
-    "source": "secondary \u2014 research_notes existing_ai_models_data.md section 2 (JPM, TrendForce, EffectStory CoWoS estimates 105k\u2013140k wpm); analyst estimates, conversion is a heuristic not verified",
+    "description": "Most accelerators that advanced chip packaging (CoWoS) can produce in a quarter at end-2026: about 120k wafers a month x 3 months x ~14 packages per wafer x ~0.8 yield and mix. Cross-check: NVIDIA guided ~$130B for 2026Q4, about 2.7M of its own units at the model ASP, about 3.6M across all makers.",
+    "source": "secondary \u2014 research_notes existing_ai_models_data.md section 2 (JPM, TrendForce, EffectStory CoWoS estimates 105k\u2013140k wpm); analyst estimates, conversion is a heuristic not verified; packages-per-wafer and yield raised from 12 / 0.7 so the ceiling admits NVIDIA\u2019s own 2026Q4 guidance (2026-11-17)",
     "min": 500000,
     "max": 20000000
   },
   "hbmUnitsPerQuarter": {
-    "value": 3500000,
+    "value": 4500000,
     "unit": "accelerators per quarter",
     "description": "Most accelerators that high-bandwidth memory supply can feed in a quarter. No HBM bit-supply figure was retrieved in the research notes, so this is a placeholder set slightly above the packaging ceiling.",
     "source": "assumption \u2014 research notes found no 2026 HBM bit-supply figure (existing_ai_models_data.md section 2); placeholder",
@@ -512,7 +512,7 @@
     "unit": "index",
     "description": "Token price index level at which the AI-spend condition applies unchanged; elasticity scales spend relative to it.",
     "source": "assumption \u2014 conditions express token price as an index of 1 at the as-of quarter",
-    "min": 0.000001
+    "min": 1e-06
   },
   "capexPerQuarterlyRentUsd": {
     "value": 10,

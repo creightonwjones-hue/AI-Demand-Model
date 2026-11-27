@@ -217,6 +217,13 @@ export function initState(data: AsOfData, params: EngineParams, grid: Grid, star
     if (e.layer !== 'cloud') continue;
     const f = opening(e.id, 'capex');
     if (f) memory[`capex:${e.id}`] = f.value;
+    // Company capex guidance for the start year, when published by asOf, replaces the last reported quarter
+    // (a range uses its midpoint): guidance is the firm's own plan, already known at asOf.
+    const g = (id: string) => data.series(id).at(-1)?.value;
+    const year = start.slice(0, 4);
+    const base = `guidance-capex-${e.id}-cy${year}`;
+    const guided = g(base) ?? ((g(`${base}-low`) ?? NaN) + (g(`${base}-high`) ?? NaN)) / 2;
+    if (Number.isFinite(guided)) memory[`capex:${e.id}`] = guided / 4;
     // Non-AI operating cash flow available to fund AI capex: reported operating cash flow less the non-AI share of
     // reported capex (memory key `corecash:<id>`), held flat. Only the cash-funded clouds get it (clouds layer).
     const ocf = opening(e.id, 'operatingCashFlow');

@@ -12,8 +12,6 @@ import { writeJson } from './json';
 const PATH = 'config/engine-params.json';
 export const CALIBRATION_GRID: Record<string, number[]> = {
   overExtrapolation: [1.0, 1.1, 1.2],
-  chipShareOfAiCapex: [0.6, 0.7, 0.8, 0.9],
-  nvidiaAspUsd: [35000, 40000, 45000, 50000],
   nvidiaAspQuarterlyGrowth: [0.02, 0.035, 0.05, 0.065],
 };
 const LABEL = 'calibrated 2026-11-27, fit 2023Q1–2025Q4';
