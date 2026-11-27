@@ -28,15 +28,18 @@
     "statusHistory": [
       {
         "date": "2025-01-21",
+        "asKnownAt": "2025-01-21",
         "status": "announced"
       },
       {
         "date": "2026-03-31",
+        "asKnownAt": "2026-03-31",
         "status": "active",
         "note": "600 MW Abilene expansion dropped after financing talks failed (Mar 2026; month only in capture; last day of month used)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active, project by project"
       }
@@ -84,10 +87,12 @@
     "statusHistory": [
       {
         "date": "2025-09-10",
+        "asKnownAt": "2025-09-10",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): 4.5 GW plan on track"
       }
@@ -134,12 +139,14 @@
     "statusHistory": [
       {
         "date": "2025-03-31",
+        "asKnownAt": "2025-03-31",
         "status": "announced"
       },
       {
         "date": "2025-12-26",
+        "asKnownAt": "2026-11-25",
         "status": "completed",
-        "note": "Closed; last $22.5B paid"
+        "note": "Closed; last $22.5B paid; report date not in the capture or any filing found, so known from the capture date (2026-11-25)"
       }
     ],
     "sources": [
@@ -183,10 +190,12 @@
     "statusHistory": [
       {
         "date": "2026-02-27",
+        "asKnownAt": "2026-02-27",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -237,15 +246,18 @@
     "statusHistory": [
       {
         "date": "2026-03-27",
+        "asKnownAt": "2026-03-27",
         "status": "announced"
       },
       {
         "date": "2026-09-15",
+        "asKnownAt": "2026-11-25",
         "status": "active",
-        "note": "$25.9B of the bridge prepaid"
+        "note": "$25.9B of the bridge prepaid; report date not in the capture or any filing found, so known from the capture date (2026-11-25)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): bridge largely prepaid"
       }
@@ -292,10 +304,12 @@
     "statusHistory": [
       {
         "date": "2026-03-27",
+        "asKnownAt": "2026-03-27",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -334,10 +348,12 @@
     "statusHistory": [
       {
         "date": "2025-10-28",
+        "asKnownAt": "2025-10-28",
         "status": "announced"
       },
       {
         "date": "2026-04-27",
+        "asKnownAt": "2026-04-27",
         "status": "renegotiated",
         "note": "See openai-microsoft-amendment-2026"
       }
@@ -390,10 +406,12 @@
     "statusHistory": [
       {
         "date": "2025-10-28",
+        "asKnownAt": "2025-10-28",
         "status": "announced"
       },
       {
         "date": "2026-04-27",
+        "asKnownAt": "2026-04-27",
         "status": "renegotiated",
         "note": "Amendment; effect on the $250B commitment unknown"
       }
@@ -447,6 +465,7 @@
     "statusHistory": [
       {
         "date": "2026-04-27",
+        "asKnownAt": "2026-04-27",
         "status": "renegotiated"
       }
     ],
@@ -497,21 +516,25 @@
     "statusHistory": [
       {
         "date": "2025-03-31",
+        "asKnownAt": "2025-03-31",
         "status": "announced",
         "note": "Mar 2025; month only in capture; last day of month used"
       },
       {
         "date": "2025-05-31",
+        "asKnownAt": "2025-05-31",
         "status": "expanded",
         "note": "$4B add-on; see openai-coreweave-2025-05"
       },
       {
         "date": "2025-09-25",
+        "asKnownAt": "2025-09-25",
         "status": "expanded",
         "note": "Up to $6.5B more; see openai-coreweave-2025-09"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active; no expansion after Sep 2025"
       }
@@ -559,11 +582,13 @@
     "statusHistory": [
       {
         "date": "2025-05-31",
+        "asKnownAt": "2025-05-31",
         "status": "announced",
         "note": "May 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active; no expansion after Sep 2025"
       }
@@ -609,10 +634,12 @@
     "statusHistory": [
       {
         "date": "2025-09-25",
+        "asKnownAt": "2025-09-25",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active; no expansion after Sep 2025"
       }
@@ -662,10 +689,12 @@
     "statusHistory": [
       {
         "date": "2025-10-06",
+        "asKnownAt": "2025-10-06",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active; MI450 shipping"
       }
@@ -715,10 +744,12 @@
     "statusHistory": [
       {
         "date": "2025-10-06",
+        "asKnownAt": "2025-10-06",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active; AMD $1.1B non-cash warrant charge Q3 2026 (OpenAI + Meta); first-tranche vesting unknown"
       }
@@ -770,10 +801,12 @@
     "statusHistory": [
       {
         "date": "2025-09-22",
+        "asKnownAt": "2025-09-22",
         "status": "announced"
       },
       {
         "date": "2026-03-31",
+        "asKnownAt": "2026-03-31",
         "status": "replaced",
         "note": "Never definitive; NVIDIA instead put $30B into OpenAI's $110B -> $122B round (Feb-Mar 2026; range only in capture; latest date the range allows used). See nvidia-openai-equity-2026"
       }
@@ -831,10 +864,12 @@
     "statusHistory": [
       {
         "date": "2026-08-17",
+        "asKnownAt": "2026-08-17",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active (earlier ~$250B reports not what was signed)"
       }
@@ -909,15 +944,18 @@
     "statusHistory": [
       {
         "date": "2025-10-13",
+        "asKnownAt": "2025-10-13",
         "status": "announced"
       },
       {
         "date": "2026-06-24",
+        "asKnownAt": "2026-09-02",
         "status": "active",
-        "note": "First chip \"Jalapeño\" unveiled; shipped in Broadcom FQ3"
+        "note": "First chip \"Jalapeño\" unveiled; shipped in Broadcom FQ3 (shipment reported on the Broadcom FQ3 FY26 results call; Broadcom 8-K Item 2.02 filed 2026-09-02, so the entry is known from then)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -976,11 +1014,13 @@
     "statusHistory": [
       {
         "date": "2025-11-30",
+        "asKnownAt": "2025-11-30",
         "status": "announced",
         "note": "Nov 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-02-27",
+        "asKnownAt": "2026-02-27",
         "status": "expanded",
         "note": "+$100B; see openai-aws-compute-2026"
       }
@@ -1027,10 +1067,12 @@
     "statusHistory": [
       {
         "date": "2026-02-27",
+        "asKnownAt": "2026-02-27",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "expanded",
         "note": "Status at capture (late 2026): expanded"
       }
@@ -1077,10 +1119,12 @@
     "statusHistory": [
       {
         "date": "2026-02-27",
+        "asKnownAt": "2026-02-27",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): partly funded; conditional balance outstanding"
       }
@@ -1128,10 +1172,12 @@
     "statusHistory": [
       {
         "date": "2026-01-14",
+        "asKnownAt": "2026-01-14",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -1176,11 +1222,13 @@
     "statusHistory": [
       {
         "date": "2025-10-31",
+        "asKnownAt": "2025-10-31",
         "status": "announced",
         "note": "Oct 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-04-06",
+        "asKnownAt": "2026-04-06",
         "status": "expanded",
         "note": "~3.5 GW; see anthropic-google-tpu-2026"
       }
@@ -1232,10 +1280,12 @@
     "statusHistory": [
       {
         "date": "2026-04-06",
+        "asKnownAt": "2026-04-06",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "expanded",
         "note": "Status at capture (late 2026): expanded"
       }
@@ -1296,7 +1346,14 @@
     },
     "statusHistory": [
       {
+        "date": "2026-10-26",
+        "asKnownAt": "2026-10-26",
+        "status": "announced",
+        "note": "Agreement first disclosed in the Anthropic S-1 (filed 2026-10-26): entered March 2026, amended May - August 2026, at least approximately $114.5B committed April 2026 - July 2033 regardless of usage. Not a value field: this record carries the S-1/A No. 1 figure ($121.3B) and is used only from 2026-11-02."
+      },
+      {
         "date": "2026-11-02",
+        "asKnownAt": "2026-11-02",
         "status": "announced",
         "note": "First public in Anthropic S-1/A No. 1 (filed 2026-11-02)"
       }
@@ -1312,6 +1369,12 @@
         "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm",
         "title": "Anthropic 424B4 (filed 2026-11-19), MD&A Contractual Obligations (p. 179): same figure",
         "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm",
+        "title": "Anthropic S-1 (filed 2026-10-26), MD&A Contractual Obligations (p. 171): Google agreement at least approximately $114.5B",
+        "retrieved": "2026-11-27",
         "status": "primary-filing"
       }
     ]
@@ -1342,11 +1405,13 @@
     "statusHistory": [
       {
         "date": "2024-12-31",
+        "asKnownAt": "2024-12-31",
         "status": "announced",
         "note": "Dated 2023-24 in capture; range only in capture; latest date the range allows used"
       },
       {
         "date": "2026-04-20",
+        "asKnownAt": "2026-04-20",
         "status": "expanded",
         "note": "Follow-on; see amazon-anthropic-equity-2026"
       }
@@ -1393,10 +1458,12 @@
     "statusHistory": [
       {
         "date": "2026-04-20",
+        "asKnownAt": "2026-04-20",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "expanded",
         "note": "Status at capture (late 2026): expanded"
       }
@@ -1443,15 +1510,18 @@
     "statusHistory": [
       {
         "date": "2026-04-20",
+        "asKnownAt": "2026-04-20",
         "status": "announced"
       },
       {
         "date": "2026-10-26",
+        "asKnownAt": "2026-10-26",
         "status": "active",
         "note": "Anthropic S-1: April 2026 agreement, at least $110.0B committed May 2026 - April 2036, regardless of actual usage; non-cancelable except uncured Amazon breach"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "expanded",
         "note": "Status at capture (late 2026): expanded"
       }
@@ -1503,20 +1573,24 @@
     "statusHistory": [
       {
         "date": "2025-11-18",
+        "asKnownAt": "2025-11-18",
         "status": "announced"
       },
       {
         "date": "2026-10-26",
+        "asKnownAt": "2026-10-26",
         "status": "expanded",
         "note": "Anthropic S-1: agreement amended Feb and Oct 2026; at least $44.9B committed Nov 2026 - May 2033, regardless of actual usage"
       },
       {
         "date": "2026-11-10",
+        "asKnownAt": "2026-11-10",
         "status": "expanded",
         "note": "Anthropic S-1/A No. 2 (and 424B4): amended Feb - Nov 2026; at least $47.2B and up to $49.2B Nov 2026 - Jun 2033, regardless of actual usage; non-cancelable except uncured Microsoft breach or undelivered tranches"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "expanded",
         "note": "Status at capture (late 2026): expanded; S-1/A added >$10B minimum commitments to Microsoft + Google combined"
       }
@@ -1580,10 +1654,12 @@
     "statusHistory": [
       {
         "date": "2025-11-18",
+        "asKnownAt": "2025-11-18",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): listed under NVIDIA strategic investments as \"Anthropic (above)\""
       }
@@ -1635,11 +1711,13 @@
     "statusHistory": [
       {
         "date": "2026-11-17",
+        "asKnownAt": "2026-11-17",
         "status": "announced",
         "note": "Disclosed in Anthropic S-1/A No. 3 (filed 2026-11-17), contingent on the IPO"
       },
       {
         "date": "2026-11-20",
+        "asKnownAt": "2026-11-25",
         "status": "completed",
         "note": "Concurrent private placement completed (Anthropic 8-K filed 2026-11-25)"
       }
@@ -1691,6 +1769,7 @@
     "statusHistory": [
       {
         "date": "2025-11-18",
+        "asKnownAt": "2025-11-18",
         "status": "announced"
       }
     ],
@@ -1735,11 +1814,13 @@
     "statusHistory": [
       {
         "date": "2026-05-31",
+        "asKnownAt": "2026-05-31",
         "status": "announced",
         "note": "May 2026; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "expanded",
         "note": "Status at capture (late 2026): expanded to GB200 at Colossus 2 (date not in capture)"
       }
@@ -1791,11 +1872,13 @@
     "statusHistory": [
       {
         "date": "2025-10-16",
+        "asKnownAt": "2025-10-16",
         "status": "announced",
         "note": "Bonds"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -1855,11 +1938,13 @@
     "statusHistory": [
       {
         "date": "2025-10-21",
+        "asKnownAt": "2025-10-21",
         "status": "announced",
         "note": "Meta release"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -1915,16 +2000,19 @@
       "recourse": "unknown",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "Meta 10-Q Q3 2026 (Note 5, Data Center Ventures) describes the \"Louisiana Venture\" entered October 2025 (identified with Hyperion/Beignet by location and date; the filing does not use those names): Meta holds 20%; parties fund pro rata ~$27B estimated development cost; lease commences 2029 with an initial four-year term and renewals up to 20 years in total; Meta gives a residual value guarantee paying the shortfall between fair value and the RVG threshold if Meta terminates or does not renew. Maximum RVG $28,091M at 2025-12-31 (Louisiana only) and $41,493M at 2026-09-30 (Louisiana plus the July 2026 Texas Venture combined). The capture's 16-year RVG length and the >105% cost-overrun cover are not stated in the filing. Lease payment amounts not in filing."
+      "notes": "Meta 10-Q Q3 2026 (Note 5, Data Center Ventures) describes the \"Louisiana Venture\" entered October 2025 (identified with Hyperion/Beignet by location and date; the filing does not use those names): Meta holds 20%; parties fund pro rata ~$27B estimated development cost; lease commences 2029 with an initial four-year term and renewals up to 20 years in total; Meta gives a residual value guarantee paying the shortfall between fair value and the RVG threshold if Meta terminates or does not renew. Maximum RVG $28,091M at 2025-12-31 (Louisiana only) and $41,493M at 2026-09-30 (Louisiana plus the July 2026 Texas Venture combined). The capture's 16-year RVG length and the >105% cost-overrun cover are not stated in the filing. Lease payment amounts not in filing.",
+      "asKnownAt": "2026-10-22"
     },
     "statusHistory": [
       {
         "date": "2025-10-21",
+        "asKnownAt": "2025-10-21",
         "status": "announced",
         "note": "Meta release"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -1990,11 +2078,13 @@
     "statusHistory": [
       {
         "date": "2025-10-31",
+        "asKnownAt": "2025-10-31",
         "status": "announced",
         "note": "Reported Oct 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "announced",
         "note": "Status at capture (late 2026): closing as described unknown. xAI $20B Series E 2026-01-06 (NVIDIA invested); xAI merged with SpaceX about a month later"
       }
@@ -2056,11 +2146,13 @@
     "statusHistory": [
       {
         "date": "2025-10-31",
+        "asKnownAt": "2025-10-31",
         "status": "announced",
         "note": "Reported Oct 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "announced",
         "note": "Status at capture (late 2026): closing as described unknown. xAI $20B Series E 2026-01-06 (NVIDIA invested); xAI merged with SpaceX about a month later"
       }
@@ -2120,11 +2212,13 @@
     "statusHistory": [
       {
         "date": "2025-10-31",
+        "asKnownAt": "2025-10-31",
         "status": "announced",
         "note": "Reported Oct 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "announced",
         "note": "Status at capture (late 2026): closing as described unknown. xAI $20B Series E 2026-01-06 (NVIDIA invested); xAI merged with SpaceX about a month later"
       }
@@ -2183,11 +2277,13 @@
     "statusHistory": [
       {
         "date": "2025-10-31",
+        "asKnownAt": "2025-10-31",
         "status": "announced",
         "note": "Reported Oct 2025; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "announced",
         "note": "Status at capture (late 2026): closing as described unknown. xAI $20B Series E 2026-01-06 (NVIDIA invested); xAI merged with SpaceX about a month later"
       }
@@ -2248,16 +2344,19 @@
     "statusHistory": [
       {
         "date": "2026-11-16",
+        "asKnownAt": "2026-11-16",
         "status": "announced",
         "note": "KBRA preliminary rating"
       },
       {
         "date": "2026-11-20",
+        "asKnownAt": "2026-11-20",
         "status": "announced",
         "note": "Notes priced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "announced",
         "note": "Status at capture (late 2026): priced; lease has closing conditions; schedules start 1H 2027"
       }
@@ -2315,11 +2414,13 @@
     "statusHistory": [
       {
         "date": "2026-11-16",
+        "asKnownAt": "2026-11-16",
         "status": "announced",
         "note": "KBRA preliminary rating of the notes"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "announced",
         "note": "Status at capture (late 2026): priced 2026-11-20; lease has closing conditions; schedules start 1H 2027"
       }
@@ -2380,11 +2481,13 @@
     "statusHistory": [
       {
         "date": "2024-12-31",
+        "asKnownAt": "2024-12-31",
         "status": "announced",
         "note": "Reported 2024; year only in capture; Dec 31 used"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active; Microsoft 62% of CoreWeave 2024 revenue"
       }
@@ -2431,10 +2534,12 @@
     "statusHistory": [
       {
         "date": "2025-09-30",
+        "asKnownAt": "2025-09-30",
         "status": "announced"
       },
       {
         "date": "2026-04-09",
+        "asKnownAt": "2026-04-09",
         "status": "expanded",
         "note": "+$21B; see meta-coreweave-2026"
       }
@@ -2476,10 +2581,12 @@
     "statusHistory": [
       {
         "date": "2026-04-09",
+        "asKnownAt": "2026-04-09",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "expanded",
         "note": "Status at capture (late 2026): expanded"
       }
@@ -2524,11 +2631,13 @@
     "statusHistory": [
       {
         "date": "2025-09-15",
+        "asKnownAt": "2025-09-15",
         "status": "announced",
         "note": "Disclosed; order dated 2025-09-09"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active; NVIDIA invested +$2B in CoreWeave at $87.20 (Jan 2026), see nvidia-coreweave-equity-2026"
       }
@@ -2587,16 +2696,19 @@
       "collateral": "GPUs (secured)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.3B GPU-backed delayed-draw term loan entered July 2023 (10-K: \"up to $2.3 billion\"; final payment due March 28, 2028). Recourse: listed under recourse debt in the Q3 2026 10-Q; 15% effective rate there. SOFR + 9.62% not found in the filings read (aggregator figure). Facility size; $1,139M outstanding at 2026-09-30. Announced: month only; last day of month used."
+      "notes": "$2.3B GPU-backed delayed-draw term loan entered July 2023 (10-K: \"up to $2.3 billion\"; final payment due March 28, 2028). Recourse: listed under recourse debt in the Q3 2026 10-Q; 15% effective rate there. SOFR + 9.62% not found in the filings read (aggregator figure). Facility size; $1,139M outstanding at 2026-09-30. Announced: month only; last day of month used. Recourse first stated in the CoreWeave 10-K 2025 (filed 2026-03-02): \"All obligations under the DDTL Facilities are unconditionally guaranteed by us\"; terms.asKnownAt is that filing date.",
+      "asKnownAt": "2026-03-02"
     },
     "statusHistory": [
       {
         "date": "2023-07-31",
+        "asKnownAt": "2023-07-31",
         "status": "announced",
         "note": "Jul 2023; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active (~15% effective at 2026-06-30)"
       }
@@ -2655,15 +2767,18 @@
       "collateral": "GPUs",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$7.6B GPU-backed delayed-draw term loan entered May 2024 (10-K: \"up to $7.6 billion\"; each loan repaid quarterly from January 2026, final payment five years after funding; 10-Q maturity column Aug 2030). Recourse: listed under recourse debt in the Q3 2026 10-Q. SOFR + 6.00-13.00% not found in the filings read (aggregator). A September 2025 $3.0B DDTL 2.1 tranche (SOFR + 4.25%) is not entered as a separate record. End: month only; last day of month used."
+      "notes": "$7.6B GPU-backed delayed-draw term loan entered May 2024 (10-K: \"up to $7.6 billion\"; each loan repaid quarterly from January 2026, final payment five years after funding; 10-Q maturity column Aug 2030). Recourse: listed under recourse debt in the Q3 2026 10-Q. SOFR + 6.00-13.00% not found in the filings read (aggregator). The September 2025 $3.0B DDTL 2.1 tranche (SOFR + 4.25%) is recorded as coreweave-ddtl-2-1. End: month only; last day of month used. Recourse first stated in the CoreWeave 10-K 2025 (filed 2026-03-02): \"All obligations under the DDTL Facilities are unconditionally guaranteed by us\"; terms.asKnownAt is that filing date.",
+      "asKnownAt": "2026-03-02"
     },
     "statusHistory": [
       {
         "date": "2024-05-16",
+        "asKnownAt": "2024-05-16",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -2685,6 +2800,83 @@
         "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/crwv-20260930.htm",
         "title": "CoreWeave 10-Q Q3 2026 (filed 2026-11-12), Note 10 Debt: recourse/non-recourse table, maturities, terms",
         "retrieved": "2026-11-26",
+        "status": "primary-filing"
+      }
+    ]
+  },
+  {
+    "id": "coreweave-ddtl-2-1",
+    "name": "CoreWeave DDTL 2.1",
+    "payers": [
+      "banks"
+    ],
+    "payees": [
+      "coreweave"
+    ],
+    "guarantors": [],
+    "vehicle": "spv-coreweave-ddtl",
+    "types": [
+      "loan"
+    ],
+    "announced": "2025-10-02",
+    "signed": "2025-09-29",
+    "end": "2031-03-31",
+    "values": {
+      "hardMinimumUsd": 3000000000
+    },
+    "terms": {
+      "rate": "Term SOFR + 4.25% (base rate + 3.25%)",
+      "maturity": "Mar 2031 (10-Q Q3 2026 maturity column); each draw matures five years after funding, draws allowed to March 2026",
+      "recourse": "recourse",
+      "collateral": "GPU servers and related infrastructure: substantially all assets of the borrowing subsidiary and a pledge of 100% of its equity",
+      "takeOrPay": "unknown",
+      "hellOrHighWater": "unknown",
+      "notes": "Incremental $3.0B delayed-draw term loan tranche added to the DDTL 2.0 credit agreement by the Fifth Amendment dated 2025-09-29 (CoreWeave 8-K filed 2025-10-02, Item 1.01): borrower CoreWeave Compute Acquisition Co. IV; U.S. Bank Trust Company administrative agent; available in draws to March 2026; each draw matures five years after it is drawn; term SOFR + 4.25% or base rate + 3.25%; 1.50% upfront fee on each draw; 3.00% commitment fee on any shortfall of draws below $2.4B. Recourse: \"All obligations under the DDTL 2.1 Facility are unconditionally guaranteed by us\" (10-Q Q3 2025, filed 2025-11-13), and listed under recourse debt in the 10-Q Q3 2026 (maturity Mar 2031, 9% effective rate, $2,494M outstanding at 2026-09-30; the 10-K 2025 maturity column said December 2030). Repaid quarterly from July 2026. Value field: the tranche size (borrowing capacity), as for the other DDTL records. Payers: the lenders are not named in the filings (\"banks\" = unnamed lenders party to the DDTL 2.0 credit agreement). End: month only in filing; last day of month used.",
+      "asKnownAt": "2025-11-13"
+    },
+    "statusHistory": [
+      {
+        "date": "2025-10-02",
+        "asKnownAt": "2025-10-02",
+        "status": "announced",
+        "note": "CoreWeave 8-K filed 2025-10-02 (Fifth Amendment dated 2025-09-29)"
+      },
+      {
+        "date": "2025-11-13",
+        "asKnownAt": "2025-11-13",
+        "status": "active",
+        "note": "10-Q Q3 2025: $1.2B borrowed and $1.8B available at 2025-09-30; unconditionally guaranteed by CoreWeave"
+      },
+      {
+        "date": "2026-11-12",
+        "asKnownAt": "2026-11-12",
+        "status": "active",
+        "note": "10-Q Q3 2026: $2,494M outstanding at 2026-09-30, listed under recourse debt, maturity Mar 2031"
+      }
+    ],
+    "sources": [
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525227562/d910811d8k.htm",
+        "title": "CoreWeave 8-K filed 2025-10-02, Item 1.01 (Fifth Amendment to the DDTL 2.0 credit agreement: $3.0B tranche, SOFR + 4.25%)",
+        "retrieved": "2026-11-27",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000062/crwv-20250930.htm",
+        "title": "CoreWeave 10-Q Q3 2025 (filed 2025-11-13), Debt note and MD&A: DDTL 2.1 terms, parent guarantee, $1.2B drawn",
+        "retrieved": "2026-11-27",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+        "title": "CoreWeave 10-K 2025 (filed 2026-03-02), Note 10 Debt: DDTL 2.1 issuance table ($3,000M, SOFR + 4.25%)",
+        "retrieved": "2026-11-27",
+        "status": "primary-filing"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000465/crwv-20260930.htm",
+        "title": "CoreWeave 10-Q Q3 2026 (filed 2026-11-12), Note 10 Debt: recourse debt table, DDTL 2.1 maturity Mar 2031",
+        "retrieved": "2026-11-27",
         "status": "primary-filing"
       }
     ]
@@ -2717,15 +2909,18 @@
       "collateral": "Secured by a Compute Acquisition Co. subsidiary (GPUs)",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$2.6B GPU-backed delayed-draw term loan entered July 2025, SOFR + 4.00%, drawable through July 2026, monthly repayment from April 2026, final payment August 2030 (10-K). Recourse: listed under recourse debt in the Q3 2026 10-Q. From Morgan Stanley, MUFG and a syndicate (\"banks\" = unnamed syndicate members; lenders not named in the filings read). Funds the OpenAI contract (openai-coreweave-* records; tranche not stated)."
+      "notes": "$2.6B GPU-backed delayed-draw term loan entered July 2025, SOFR + 4.00%, drawable through July 2026, monthly repayment from April 2026, final payment August 2030 (10-K). Recourse: listed under recourse debt in the Q3 2026 10-Q. From Morgan Stanley, MUFG and a syndicate (\"banks\" = unnamed syndicate members; lenders not named in the filings read). Funds the OpenAI contract (openai-coreweave-* records; tranche not stated). Recourse first stated in the CoreWeave 10-K 2025 (filed 2026-03-02): \"All obligations under the DDTL Facilities are unconditionally guaranteed by us\"; terms.asKnownAt is that filing date.",
+      "asKnownAt": "2026-03-02"
     },
     "statusHistory": [
       {
         "date": "2025-07-31",
+        "asKnownAt": "2025-07-31",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -2794,10 +2989,12 @@
     "statusHistory": [
       {
         "date": "2026-03-31",
+        "asKnownAt": "2026-03-31",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -2862,10 +3059,12 @@
     "statusHistory": [
       {
         "date": "2026-05-18",
+        "asKnownAt": "2026-05-18",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active; average effective rate on non-convertible debt ~9.9% at 2026-06-30"
       }
@@ -2937,11 +3136,13 @@
     "statusHistory": [
       {
         "date": "2026-08-10",
+        "asKnownAt": "2026-08-10",
         "status": "announced",
         "note": "CoreWeave 8-K filed 2026-08-10 (credit agreement dated 2026-08-07)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active; average effective rate on non-convertible debt ~9.9% at 2026-06-30"
       }
@@ -3011,10 +3212,12 @@
     "statusHistory": [
       {
         "date": "2025-09-08",
+        "asKnownAt": "2025-09-08",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3061,10 +3264,12 @@
     "statusHistory": [
       {
         "date": "2025-11-11",
+        "asKnownAt": "2025-11-11",
         "status": "announced"
       },
       {
         "date": "2026-03-16",
+        "asKnownAt": "2026-03-16",
         "status": "expanded",
         "note": "Up to $27B more; see meta-nebius-2026"
       }
@@ -3120,10 +3325,12 @@
     "statusHistory": [
       {
         "date": "2026-03-16",
+        "asKnownAt": "2026-03-16",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "expanded",
         "note": "Status at capture (late 2026): expanded"
       }
@@ -3170,20 +3377,24 @@
       "recourse": "recourse",
       "takeOrPay": "unknown",
       "hellOrHighWater": "unknown",
-      "notes": "$25.0B of senior notes in 8 series (floating 2029; 4.550% 2029; 4.950% 2031; 5.350% 2033; 5.700% 2036; 6.550% 2046; 6.700% 2056; 6.850% 2066), priced 2026-02-02 (FWP) and issued 2026-02-04 (8-K), offered concurrently with a depositary shares offering. Value corrected from a ceiling (\"up to $25B\") to the issued principal. >$129B of orders and \"no more bonds expected in 2026\": capture only. Part of a 2026 plan of $45-50B including ~$25B equity (oracle-equity-2026)."
+      "notes": "$25.0B of senior notes in 8 series (floating 2029; 4.550% 2029; 4.950% 2031; 5.350% 2033; 5.700% 2036; 6.550% 2046; 6.700% 2056; 6.850% 2066), priced 2026-02-02 (FWP) and issued 2026-02-04 (8-K), offered concurrently with a depositary shares offering. Value corrected from a ceiling (\"up to $25B\") to the issued principal. >$129B of orders and \"no more bonds expected in 2026\": capture only. Part of a 2026 plan of $45-50B including ~$25B equity (oracle-equity-2026).",
+      "asKnownAt": "2026-02-04"
     },
     "statusHistory": [
       {
         "date": "2026-02-02",
+        "asKnownAt": "2026-02-02",
         "status": "announced"
       },
       {
         "date": "2026-02-04",
+        "asKnownAt": "2026-02-04",
         "status": "completed",
         "note": "Notes issued (Oracle 8-K filed 2026-02-04)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "completed",
         "note": "Status at capture (late 2026): completed (row-level status in capture); S&P downgrade Jul 2026, near junk"
       }
@@ -3247,10 +3458,12 @@
     "statusHistory": [
       {
         "date": "2026-02-02",
+        "asKnownAt": "2026-02-02",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "completed",
         "note": "Status at capture (late 2026): completed (row-level status in capture); S&P downgrade Jul 2026, near junk"
       }
@@ -3304,11 +3517,13 @@
     "statusHistory": [
       {
         "date": "2026-04-30",
+        "asKnownAt": "2026-04-30",
         "status": "announced",
         "note": "capture dates the group \"late 2025 - Apr 2026\"; latest date the range allows (2026-04-30) used; exact date not in capture"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3352,11 +3567,13 @@
     "statusHistory": [
       {
         "date": "2026-04-30",
+        "asKnownAt": "2026-04-30",
         "status": "announced",
         "note": "capture dates the group \"late 2025 - Apr 2026\"; latest date the range allows (2026-04-30) used; exact date not in capture"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3401,11 +3618,13 @@
     "statusHistory": [
       {
         "date": "2026-04-24",
+        "asKnownAt": "2026-04-24",
         "status": "active",
         "note": "Financing closed"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3459,11 +3678,13 @@
     "statusHistory": [
       {
         "date": "2026-04-24",
+        "asKnownAt": "2026-04-24",
         "status": "active",
         "note": "Financing closed"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3510,19 +3731,23 @@
     "statusHistory": [
       {
         "date": "2025-05-13",
+        "asKnownAt": "2025-05-13",
         "status": "announced"
       },
       {
         "date": "2025-11-19",
+        "asKnownAt": "2025-11-19",
         "status": "expanded"
       },
       {
         "date": "2025-12-31",
+        "asKnownAt": "2026-11-25",
         "status": "active",
-        "note": "First latest-generation shipment Dec 2025; month only in capture; last day of month used"
+        "note": "First latest-generation shipment Dec 2025; month only in capture; last day of month used; report date not in the capture, so known from the capture date (2026-11-25)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3576,15 +3801,18 @@
     "statusHistory": [
       {
         "date": "2025-05-22",
+        "asKnownAt": "2025-05-22",
         "status": "announced"
       },
       {
         "date": "2025-11-30",
+        "asKnownAt": "2025-11-30",
         "status": "active",
         "note": "US export licences Nov 2025 with security assurances; month only in capture; last day of month used"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "announced",
         "note": "Status at capture (late 2026): unknown vs plan; 200 MW live not confirmed"
       }
@@ -3636,16 +3864,19 @@
     "statusHistory": [
       {
         "date": "2025-09-18",
+        "asKnownAt": "2025-09-18",
         "status": "announced",
         "note": "Intel 8-K filed 2025-09-18 (purchase agreement dated 2025-09-15)"
       },
       {
         "date": "2025-12-26",
+        "asKnownAt": "2025-12-29",
         "status": "completed",
         "note": "Shares issued to NVIDIA (Intel 8-K filed 2025-12-29)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3710,11 +3941,13 @@
     "statusHistory": [
       {
         "date": "2025-10-28",
+        "asKnownAt": "2025-10-28",
         "status": "announced",
         "note": "Nokia stock exchange release 2025-10-28 (6-K filed 2025-10-28)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3772,11 +4005,13 @@
     "statusHistory": [
       {
         "date": "2025-12-01",
+        "asKnownAt": "2025-12-01",
         "status": "announced",
         "note": "Synopsys 8-K filed 2025-12-01 (purchase agreement and joint release dated 2025-12-01)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3834,11 +4069,13 @@
     "statusHistory": [
       {
         "date": "2026-03-02",
+        "asKnownAt": "2026-03-02",
         "status": "announced",
         "note": "Lumentum 8-K filed 2026-03-02 (agreement and closing 2026-03-02)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3896,11 +4133,13 @@
     "statusHistory": [
       {
         "date": "2026-03-02",
+        "asKnownAt": "2026-03-02",
         "status": "announced",
         "note": "Coherent 8-K filed 2026-03-02 (agreement and closing 2026-03-02)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -3958,11 +4197,13 @@
     "statusHistory": [
       {
         "date": "2026-03-11",
+        "asKnownAt": "2026-03-11",
         "status": "announced",
         "note": "NVIDIA-Nebius joint release 2026-03-11 (Nebius 6-K Ex 99.1)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -4026,11 +4267,13 @@
     "statusHistory": [
       {
         "date": "2026-01-26",
+        "asKnownAt": "2026-01-26",
         "status": "announced",
         "note": "CoreWeave 8-K and joint release 2026-01-26 (agreement and closing 2026-01-23)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -4095,11 +4338,13 @@
     "statusHistory": [
       {
         "date": "2026-08-17",
+        "asKnownAt": "2026-08-17",
         "status": "announced",
         "note": "Announced with the Ohio campus deal"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -4163,11 +4408,13 @@
     "statusHistory": [
       {
         "date": "2026-03-31",
+        "asKnownAt": "2026-03-31",
         "status": "announced",
         "note": "Feb-Mar 2026; range only in capture; latest date the range allows used"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -4231,11 +4478,13 @@
     "statusHistory": [
       {
         "date": "2026-08-31",
+        "asKnownAt": "2026-08-31",
         "status": "announced",
         "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -4285,11 +4534,13 @@
     "statusHistory": [
       {
         "date": "2026-08-31",
+        "asKnownAt": "2026-08-31",
         "status": "announced",
         "note": "Capture lists this under NVIDIA strategic investments dated only \"Sep 2025 - Aug 2026\"; announced uses the latest date that range allows (2026-08-31); exact date not in capture."
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -4341,11 +4592,13 @@
     "statusHistory": [
       {
         "date": "2026-08-26",
+        "asKnownAt": "2026-08-26",
         "status": "announced",
         "note": "First shown in NVIDIA 10-Q Q2 FY27 cash-flow statement (filed 2026-08-26)"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "active",
         "note": "Status at capture (late 2026): active"
       }
@@ -4415,10 +4668,12 @@
     "statusHistory": [
       {
         "date": "2026-08-10",
+        "asKnownAt": "2026-08-10",
         "status": "announced"
       },
       {
         "date": "2026-11-25",
+        "asKnownAt": "2026-11-25",
         "status": "announced",
         "note": "Status at capture (late 2026): announced; deployment unknown"
       }

@@ -112,6 +112,39 @@ describe('balance-sheet quarters align with flow quarters (off-calendar filer)',
   });
 });
 
+describe('share counts and remaining performance obligations', () => {
+  const f = (start: string | undefined, end: string, val: number, filed: string, accn = '0001234567-26-000010') =>
+    ({ ...(start ? { start } : {}), end, val, accn, form: '10-Q', filed });
+  const doc = {
+    facts: { 'us-gaap': {
+      WeightedAverageNumberOfDilutedSharesOutstanding: { units: { shares: [
+        f('2026-01-01', '2026-03-31', 1000, '2026-04-30', '0001234567-26-000001'),
+        f('2026-01-01', '2026-06-30', 1010, '2026-07-30'), // six-month weighted average: never de-cumulated
+        f('2026-04-01', '2026-06-30', 1020, '2026-07-30'),
+        // Stable share count: the Q3 average equals the nine-month average in the same filing. That is not a
+        // mis-tagged year-to-date total (as it would be for revenue), so the quarter is kept.
+        f('2026-01-01', '2026-09-30', 1030, '2026-10-30', '0001234567-26-000020'),
+        f('2026-07-01', '2026-09-30', 1030, '2026-10-30', '0001234567-26-000020'),
+      ] } },
+      RevenueRemainingPerformanceObligation: { units: { USD: [f(undefined, '2026-06-30', 5e9, '2026-07-30')] } },
+    } },
+  };
+  const facts = extractQuarterly(doc, entity, metricMap);
+  it('reads diluted shares in shares, quarter facts only', () => {
+    const sh = facts.filter(x => x.metric === 'dilutedShares');
+    expect(sh.map(x => [x.quarter, x.value, x.derived]))
+      .toEqual([['2026Q1', 1000, false], ['2026Q2', 1020, false], ['2026Q3', 1030, false]]);
+    expect(sh[0].tag).toBe('WeightedAverageNumberOfDilutedSharesOutstanding');
+  });
+  it('reads remaining performance obligations as an instant', () => {
+    expect(facts.find(x => x.metric === 'remainingPerformanceObligations'))
+      .toMatchObject({ quarter: '2026Q2', value: 5e9, weeks: 0, periodStart: '2026-06-30', asKnownAt: '2026-07-30' });
+  });
+  it('does not read a share count as a USD metric', () => {
+    expect(facts.filter(x => x.metric !== 'dilutedShares').every(x => x.value !== 1000 && x.value !== 1020)).toBe(true);
+  });
+});
+
 describe('extractQuarterly (real Alphabet data)', () => {
   it('keeps the original 10-Q vintage filed under a fallback tag', () => {
     const alphabet = loadEntities().find(e => e.id === 'alphabet')!;

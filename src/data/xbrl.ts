@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 import { MetricSchema, type Entity, type FinancialFact, type Metric, type QuarterKey } from './schema';
-import { calendarQuarterFor, weeksBetween } from './quarters';
+import { addDays, calendarQuarterFor, instantQuarter, weeksBetween } from './quarters';
 
 /** metric -> taxonomy -> tags in priority order (config/sec-metrics.json). */
 export type MetricMap = Partial<Record<Metric, Record<string, string[]>>>;
@@ -13,9 +13,14 @@ export function loadMetricMap(path = 'config/sec-metrics.json'): MetricMap {
 }
 
 const ALLOWED_FORMS = new Set(['10-Q', '10-K', '10-Q/A', '10-K/A']);
-const ALLOWED_UNITS = ['USD', 'USD/shares'];
-const STOCK_METRICS = new Set<Metric>(['cash', 'longTermDebt', 'accountsReceivable']);
-const NO_DECUMULATION = new Set<Metric>(['epsDiluted']);
+const MONEY_UNITS = ['USD', 'USD/shares'];
+/** XBRL units read per metric (all other metrics: MONEY_UNITS). */
+const METRIC_UNITS: Partial<Record<Metric, string[]>> = { dilutedShares: ['shares'] };
+const STOCK_METRICS = new Set<Metric>(['cash', 'longTermDebt', 'accountsReceivable', 'remainingPerformanceObligations']);
+// Per-share values and weighted-average share counts are not additive over time: quarter facts only.
+const NO_DECUMULATION = new Set<Metric>(['epsDiluted', 'dilutedShares']);
+// Averages: a quarter equal to the year-to-date figure is normal (stable share count), not a mis-tagged total.
+const NO_MISTAG_FILTER = new Set<Metric>(['dilutedShares']);
 
 const RawFactSchema = z.object({
   start: z.string().optional(),
@@ -39,22 +44,17 @@ const isHalf = (w: number) => w >= 25 && w <= 27;
 const isNineMonth = (w: number) => w >= 38 && w <= 40;
 const isAnnual = (w: number) => w >= 51 && w <= 53;
 
-function addDays(d: string, n: number): string {
-  const [y, m, day] = d.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, day + n)).toISOString().slice(0, 10);
-}
 const nextDay = (d: string) => addDays(d, 1);
 
-/** Quarter of a balance-sheet instant: the ~3-month period ending on it, so it lines up with flow quarters. */
-const instantQuarter = (instant: string) => calendarQuarterFor(addDays(instant, -90), instant);
-
 /** Raw facts for one tag: allowed forms and units only, exact repeats (period, value, filed) removed. */
-function rawFactsFor(companyFacts: z.infer<typeof CompanyFactsSchema>, taxonomy: string, tag: string): RawFact[] {
+function rawFactsFor(
+  companyFacts: z.infer<typeof CompanyFactsSchema>, taxonomy: string, tag: string, allowedUnits: string[],
+): RawFact[] {
   const units = companyFacts.facts[taxonomy]?.[tag]?.units;
   if (!units) return [];
   const seen = new Set<string>();
   const out: RawFact[] = [];
-  for (const unit of ALLOWED_UNITS) {
+  for (const unit of allowedUnits) {
     for (const item of units[unit] ?? []) {
       const parsed = RawFactSchema.safeParse(item);
       if (!parsed.success || !ALLOWED_FORMS.has(parsed.data.form)) continue;
@@ -200,13 +200,13 @@ export function extractQuarterly(companyFacts: unknown, entity: Entity, metricMa
     // The source URL identifies the filing (one URL per accession number).
     const chosen = new Map<string, FinancialFact[]>();
     const tagged = Object.entries(taxonomies).flatMap(([taxonomy, tags]) =>
-      tags.map(tag => ({ tag, raw: rawFactsFor(doc, taxonomy, tag) })));
+      tags.map(tag => ({ tag, raw: rawFactsFor(doc, taxonomy, tag, METRIC_UNITS[metric] ?? MONEY_UNITS) })));
     const longKeys = longDurationKeys(tagged.flatMap(t => t.raw));
     for (const { tag, raw } of tagged) {
       if (!raw.length) continue;
       const perQuarter = STOCK_METRICS.has(metric)
         ? stockFacts(raw, entity, metric, tag)
-        : flowFacts(raw, entity, metric, tag, longKeys);
+        : flowFacts(raw, entity, metric, tag, NO_MISTAG_FILTER.has(metric) ? new Set() : longKeys);
       const perFiling = groupBy([...perQuarter.values()].flat(), f => `${f.quarter}|${f.source.url}`);
       for (const [k, fs] of perFiling) {
         const prev = chosen.get(k);

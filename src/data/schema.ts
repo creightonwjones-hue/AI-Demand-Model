@@ -42,6 +42,10 @@ export type QuarterKey = z.infer<typeof QuarterKeySchema>;
 export const MetricSchema = z.enum([
   'revenue', 'capex', 'operatingCashFlow', 'cash', 'longTermDebt', 'netIncome',
   'epsDiluted', 'accountsReceivable', 'grossProfit', 'segmentRevenue',
+  // Weighted-average diluted shares for the quarter (unit: shares, not USD; not split-adjusted across filings).
+  'dilutedShares',
+  // Contracted revenue not yet recognised, at the balance-sheet date (an instant, USD).
+  'remainingPerformanceObligations',
 ]);
 export type Metric = z.infer<typeof MetricSchema>;
 
@@ -57,7 +61,7 @@ export const FinancialFactSchema = z.object({
   periodStart: isoDate,
   periodEnd: isoDate,
   weeks: z.number(),
-  value: z.number(), // USD, or USD/share for epsDiluted
+  value: z.number(), // USD; USD/share for epsDiluted; shares for dilutedShares
   originalCurrency: z.string().optional(),
   originalValue: z.number().optional(),
   fxRate: z.number().optional(),
@@ -104,6 +108,16 @@ export type DealStatus = z.infer<typeof DealStatusSchema>;
 
 const triState = z.enum(['yes', 'no', 'unknown']);
 
+// One dated step in a deal's life. `date` is when it happened; `asKnownAt` is when it became public (the date of the
+// first source that reported it), never before `date`. A backtest applies the entry only from `asKnownAt`.
+export const DealStatusEntrySchema = z.object({
+  date: isoDate,
+  asKnownAt: isoDate,
+  status: DealStatusSchema,
+  note: z.string().optional(),
+}).refine(s => s.asKnownAt >= s.date, { message: 'asKnownAt is before date (known before it happened)', path: ['asKnownAt'] });
+export type DealStatusEntry = z.infer<typeof DealStatusEntrySchema>;
+
 export const DealSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -135,10 +149,13 @@ export const DealSchema = z.object({
     terminationRights: z.string().optional(),
     exclusivity: z.string().optional(),
     notes: z.string().optional(),
+    // When the terms as written became public (date of the source they came from). Absent: the `announced` date.
+    asKnownAt: isoDate.optional(),
   }).strict(),
-  statusHistory: z.array(z.object({ date: isoDate, status: DealStatusSchema, note: z.string().optional() })),
+  statusHistory: z.array(DealStatusEntrySchema),
   sources: z.array(SourceRefSchema),
-}).strict();
+}).strict().refine(d => d.terms.asKnownAt === undefined || d.terms.asKnownAt >= d.announced,
+  { message: 'terms.asKnownAt is before announced', path: ['terms', 'asKnownAt'] });
 export type Deal = z.infer<typeof DealSchema>;
 
 // ---- Entity registry loader ----

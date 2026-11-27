@@ -22,6 +22,7 @@
     "statusHistory": [
       {
         "date": "2026-01-01",
+        "asKnownAt": "2026-01-01",
         "status": "announced"
       }
     ],

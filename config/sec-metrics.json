@@ -8,5 +8,7 @@
   "epsDiluted": { "us-gaap": ["EarningsPerShareDiluted"] },
   "accountsReceivable": { "us-gaap": ["AccountsReceivableNetCurrent"] },
   "grossProfit": { "us-gaap": ["GrossProfit"] },
-  "segmentRevenue": {}
+  "segmentRevenue": {},
+  "dilutedShares": { "us-gaap": ["WeightedAverageNumberOfDilutedSharesOutstanding"] },
+  "remainingPerformanceObligations": { "us-gaap": ["RevenueRemainingPerformanceObligation"] }
 }

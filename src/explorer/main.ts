@@ -29,7 +29,8 @@ const METRIC_LABEL: Record<TableMetric, string> = {
 const COVERAGE_METRIC_LABEL: Record<string, string> = {
   revenue: 'revenue', capex: 'capex', operatingCashFlow: 'operating cash flow', cash: 'cash', longTermDebt: 'long-term debt',
   netIncome: 'net income', epsDiluted: 'diluted EPS', accountsReceivable: 'receivables', grossProfit: 'gross profit',
-  segmentRevenue: 'segment revenue',
+  segmentRevenue: 'segment revenue', dilutedShares: 'diluted shares',
+  remainingPerformanceObligations: 'remaining performance obligations',
 };
 
 const nf = new Intl.NumberFormat('en-US');

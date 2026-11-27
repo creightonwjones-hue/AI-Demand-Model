@@ -20,6 +20,19 @@ export function calendarQuarterFor(periodStart: string, periodEnd: string): Quar
   return `${mid.getUTCFullYear()}Q${Math.floor(mid.getUTCMonth() / 3) + 1}`;
 }
 
+/** ISO date `n` calendar days after `iso` (negative `n` goes back). */
+export function addDays(iso: string, n: number): string {
+  return new Date(parseDate(iso) + n * MS_DAY).toISOString().slice(0, 10);
+}
+
+/**
+ * Quarter of a balance-sheet instant: the quarter of the ~3-month period ending on it (midpoint rule), so instants
+ * line up with flow quarters (e.g. NVIDIA's 2026-07-26 balance sheet is 2026Q2, like its Q2 FY27 revenue).
+ */
+export function instantQuarter(instant: string): QuarterKey {
+  return calendarQuarterFor(addDays(instant, -90), instant);
+}
+
 /** Period length in whole weeks; end date is inclusive (e.g. 2026-10-26..2027-01-31 = 14). */
 export function weeksBetween(periodStart: string, periodEnd: string): number {
   const days = (parseDate(periodEnd) - parseDate(periodStart)) / MS_DAY + 1;

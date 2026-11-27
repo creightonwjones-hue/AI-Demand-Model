@@ -1,5 +1,5 @@
 import { parseCsv } from './csv';
-import { calendarQuarterFor, weeksBetween } from './quarters';
+import { addDays, calendarQuarterFor, instantQuarter, weeksBetween } from './quarters';
 import { parseNumber } from './series';
 import { FinancialFactSchema, MetricSchema, SourceRefSchema, type Entity, type FinancialFact, type Series }
   from './schema';
@@ -26,11 +26,6 @@ export function buildFxTable(dextaus: Series, dexkous: Series, dexuseu: Series):
     KRW: plain(dexkous),
     EUR: dexuseu.points.map(p => ({ date: p.date, value: 1 / p.value })),
   };
-}
-
-function addDays(d: string, n: number): string {
-  const [y, m, day] = d.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, day + n)).toISOString().slice(0, 10);
 }
 
 /** Average of daily rates in [start, end]; for an instant, the last rate on or before it (up to a week back). */
@@ -84,8 +79,7 @@ export function loadManualFinancials(csvText: string, entities: Entity[], fx: Fx
       throw new Error(`${where}: period ${periodStart}..${periodEnd} is ${weeks} weeks, not a quarter or an instant`);
     }
     // Instants use the same rule as XBRL balance sheets: the ~3-month period ending on the instant.
-    const quarter = instant ? calendarQuarterFor(addDays(periodEnd, -90), periodEnd) : calendarQuarterFor(periodStart,
-      periodEnd);
+    const quarter = instant ? instantQuarter(periodEnd) : calendarQuarterFor(periodStart, periodEnd);
     const original = parseNumber(r.value, where);
     const segment = r.segment.trim() || undefined;
     const fact: FinancialFact = {

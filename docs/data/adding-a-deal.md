@@ -38,10 +38,11 @@ Copy this, fill it in, and delete the optional lines you have no source for. Nev
     "hellOrHighWater": "unknown",
     "terminationRights": "optional text",
     "exclusivity": "optional text",
-    "notes": "What the source says, in plain words. Say which figure fills which value field."
+    "notes": "What the source says, in plain words. Say which figure fills which value field.",
+    "asKnownAt": "YYYY-MM-DD (optional: only when the terms came from a later source than the announcement)"
   },
   "statusHistory": [
-    { "date": "YYYY-MM-DD", "status": "announced" }
+    { "date": "YYYY-MM-DD", "asKnownAt": "YYYY-MM-DD", "status": "announced" }
   ],
   "sources": [
     { "url": "https://...", "title": "Publisher: headline", "retrieved": "YYYY-MM-DD", "status": "secondary" }
@@ -58,7 +59,8 @@ Copy this, fill it in, and delete the optional lines you have no source for. Nev
 | `types` | One or more of `compute-lease`, `chip-purchase`, `equity`, `loan`, `spv-financing`, `capacity-guarantee`, `warrants`, `jv`, `buyer-of-last-resort`, `other`. |
 | `terms.recourse` | `recourse`, `non-recourse` or `unknown`. |
 | `terms.takeOrPay`, `terms.hellOrHighWater` | `yes`, `no` or `unknown`. Use `unknown` unless the source says so. |
-| `statusHistory` | Dated steps: `announced`, `active`, `expanded`, `delayed`, `renegotiated`, `cancelled`, `replaced`, `completed`. Start with `announced` on the `announced` date. |
+| `statusHistory` | Dated steps: `announced`, `active`, `expanded`, `delayed`, `renegotiated`, `cancelled`, `replaced`, `completed`. Start with `announced` on the `announced` date. Keep entries in date order. Each entry has a `date` (when it happened) and an `asKnownAt` (when it became public); see Dates. |
+| `terms.asKnownAt` | Optional. The date the terms as written became public: the date of the source they came from (for example a 10-K that first states the loan is recourse). Leave it out when the terms came from the announcement itself; it then means `announced`. Never before `announced`. |
 
 ## Value fields
 
@@ -92,6 +94,14 @@ Rules:
 - **Range** (for example "2023-24" or "Q1-Q2"): use the latest date the range allows (`2024-12-31`), and say so in
   the note.
 - `signed`, `start` and `end` follow the same rules. Leave them out when the source does not give them.
+- **Status `asKnownAt`** is the date of the first source that reported the entry. A backtest applies the entry
+  only from that date, so it is never earlier than `date` (the build rejects that).
+  - Same-day press release, 8-K or article: `asKnownAt` = `date`.
+  - Event confirmed later by a filing: the filing date. Example: Anthropic completed the private placement on
+    2026-11-20 and its 8-K reporting this was filed 2026-11-25, so `"date": "2026-11-20", "asKnownAt": "2026-11-25"`.
+  - Report date unknown (the source is undated and no filing states it): the earliest date you can prove it was
+    public, which for capture items is the capture date (2026-11-25). Say so in the note.
+  - The `announced` entry has `asKnownAt` = `announced`.
 
 ## Source status
 

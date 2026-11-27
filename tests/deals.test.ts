@@ -12,7 +12,7 @@ const dealWith = (values: Deal['values'], over: Partial<Deal> = {}): Deal => ({
   announced: '2026-01-01',
   values,
   terms: { recourse: 'unknown', takeOrPay: 'unknown', hellOrHighWater: 'unknown' },
-  statusHistory: [{ date: '2026-01-01', status: 'announced' }],
+  statusHistory: [{ date: '2026-01-01', asKnownAt: '2026-01-01', status: 'announced' }],
   sources: [{ url: 'https://example.com', retrieved: '2026-11-25', status: 'secondary' }],
   ...over,
 });
@@ -139,10 +139,60 @@ describe('loadDeals', () => {
 
   it('keeps every source dated and labelled, and primary-filing only for SEC URLs', () => {
     for (const d of deals) for (const s of d.sources) {
-      // 2026-11-25: Chrome capture; 2026-11-26: SEC filings read in Task 7.
-      expect(['2026-11-25', '2026-11-26']).toContain(s.retrieved);
+      // 2026-11-25: Chrome capture; 2026-11-26: SEC filings read in Task 7; 2026-11-27: phase 2 Task 1.
+      expect(['2026-11-25', '2026-11-26', '2026-11-27']).toContain(s.retrieved);
       if (s.status === 'primary-filing') expect(s.url).toMatch(/^https:\/\/www\.sec\.gov\//);
     }
+  });
+
+  it('dates every status entry by when it became public (asKnownAt), never before it happened', () => {
+    for (const d of deals) for (const h of d.statusHistory) {
+      expect(h.asKnownAt, `${d.id} ${h.date}`).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(h.asKnownAt >= h.date, `${d.id} ${h.date}`).toBe(true);
+    }
+    // The announcement entry is public on the announced date.
+    for (const d of deals)
+      expect(d.statusHistory.some(h => h.date === d.announced && h.asKnownAt === d.announced), d.id).toBe(true);
+    // Entries are in date order.
+    for (const d of deals)
+      expect(d.statusHistory.map(h => h.date), d.id).toEqual([...d.statusHistory.map(h => h.date)].sort());
+    // Event confirmed later by a filing: known at the filing date.
+    const placement = loadDeals().find(d => d.id === 'nvidia-anthropic-ipo-placement')!
+    expect(placement.statusHistory.find(s => s.status === 'completed')).toMatchObject({ date: '2026-11-20', asKnownAt: '2026-11-25' })
+    expect(byId('nvidia-intel-equity').statusHistory.find(s => s.status === 'completed'))
+      .toMatchObject({ date: '2025-12-26', asKnownAt: '2025-12-29' });
+    // Capture-time status lines were public when captured.
+    for (const d of deals) for (const h of d.statusHistory)
+      if (/^Status at capture/.test(h.note ?? '')) expect(h.asKnownAt, d.id).toBe('2026-11-25');
+  });
+
+  it('dates terms that came from a later source than the announcement (terms.asKnownAt)', () => {
+    // Recourse and final payment dates for DDTL 1.0-3.0 come from the CoreWeave 10-K 2025 (filed 2026-03-02).
+    for (const id of ['coreweave-ddtl-1', 'coreweave-ddtl-2', 'coreweave-ddtl-3'])
+      expect(byId(id).terms.asKnownAt, id).toBe('2026-03-02');
+    expect(byId('meta-hyperion-lease').terms.asKnownAt).toBe('2026-10-22');
+    for (const d of deals) if (d.terms.asKnownAt) expect(d.terms.asKnownAt >= d.announced, d.id).toBe(true);
+  });
+
+  it('records CoreWeave DDTL 2.1 from SEC filings', () => {
+    expect(loadDeals().find(d => d.id === 'coreweave-ddtl-2-1')).toMatchObject({ terms: { recourse: 'recourse' } })
+    const d = byId('coreweave-ddtl-2-1');
+    expect(d).toMatchObject({ payees: ['coreweave'], vehicle: 'spv-coreweave-ddtl', types: ['loan'],
+      announced: '2025-10-02', signed: '2025-09-29', end: '2031-03-31', values: { hardMinimumUsd: 3_000_000_000 } });
+    expect(d.terms.rate).toMatch(/SOFR \+ 4\.25%/);
+    expect(d.terms.maturity).toMatch(/Mar 2031/);
+    expect(d.sources.every(s => s.status === 'primary-filing' && /^https:\/\/www\.sec\.gov\//.test(s.url))).toBe(true);
+  });
+
+  it('adds the original S-1 $114.5B Google figure as a dated status entry', () => {
+    const csp = byId('anthropic-google-csp-hosting-2026');
+    const s1 = csp.statusHistory.find(h => h.date === '2026-10-26');
+    expect(s1).toMatchObject({ asKnownAt: '2026-10-26', status: 'announced' });
+    // The record itself (its $121.3B value) is used only from the S-1/A No. 1 date.
+    expect(csp.announced).toBe('2026-11-02');
+    expect(s1!.note).toMatch(/\$114\.5B/);
+    expect(csp.values).toEqual({ hardMinimumUsd: 121.3e9 }); // the S-1 figure is not a value field
+    expect(csp.sources.some(s => /anthropicpbc-sx1\.htm$/.test(s.url))).toBe(true);
   });
 
   it('throws naming the unknown entity', () => {
