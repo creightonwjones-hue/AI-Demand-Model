@@ -3,7 +3,7 @@
     "value": 3,
     "unit": "quarters",
     "description": "Quarters from a chip order being placed to the chips running in a data centre.",
-    "source": "assumption — spec range 2 to 4 quarters",
+    "source": "assumption \u2014 spec range 2 to 4 quarters",
     "min": 2,
     "max": 4
   },
@@ -11,7 +11,7 @@
     "value": 10,
     "unit": "quarters",
     "description": "Quarters from committing to a data-centre building to it being ready for chips.",
-    "source": "assumption — spec range 8 to 16 quarters",
+    "source": "assumption \u2014 spec range 8 to 16 quarters",
     "min": 8,
     "max": 16
   },
@@ -19,7 +19,7 @@
     "value": 0.6,
     "unit": "share of lab revenue",
     "description": "Share of an AI lab's revenue that is spent on renting compute. Starting guess; the Anthropic S-1 compute commitments versus revenue are the intended anchor but are not yet in the committed data.",
-    "source": "assumption — Anthropic S-1 commitments vs revenue, not yet in committed data; calibrated in Task 12",
+    "source": "assumption \u2014 Anthropic S-1 commitments vs revenue, not yet in committed data; calibrated in Task 12",
     "min": 0.2,
     "max": 1.5
   },
@@ -27,7 +27,7 @@
     "value": 1.0,
     "unit": "multiplier",
     "description": "How strongly buyers extend recent spending growth into their plans (1 means they simply continue the latest growth rate).",
-    "source": "assumption — calibrated in Task 12",
+    "source": "assumption \u2014 calibrated in Task 12",
     "min": 0,
     "max": 3
   },
@@ -35,7 +35,7 @@
     "value": 0.3,
     "unit": "per quarter",
     "description": "How fast buyers update their expectations towards what they just saw each quarter (0 means never, 1 means fully).",
-    "source": "assumption — calibrated in Task 12",
+    "source": "assumption \u2014 calibrated in Task 12",
     "min": 0,
     "max": 1
   },
@@ -43,7 +43,7 @@
     "value": 0.6,
     "unit": "share of capex",
     "description": "Share of hyperscaler capital spending that goes to AI infrastructure rather than other uses.",
-    "source": "assumption — calibrated in Task 12",
+    "source": "assumption \u2014 calibrated in Task 12",
     "min": 0.2,
     "max": 0.95
   },
@@ -51,7 +51,7 @@
     "value": 0.5,
     "unit": "share of AI capex",
     "description": "Share of AI infrastructure capital spending that buys accelerator chips (the rest is buildings, power and networking).",
-    "source": "assumption — calibrated in Task 12",
+    "source": "assumption \u2014 calibrated in Task 12",
     "min": 0.2,
     "max": 0.8
   },
@@ -59,7 +59,7 @@
     "value": 0.8,
     "unit": "share of accelerator spend",
     "description": "Nvidia's share of accelerator spending, with the rest going to custom chips and other vendors.",
-    "source": "assumption — calibrated in Task 12",
+    "source": "assumption \u2014 calibrated in Task 12",
     "min": 0.4,
     "max": 0.95
   },
@@ -67,14 +67,14 @@
     "value": 30000,
     "unit": "USD per accelerator",
     "description": "Average selling price of one Nvidia accelerator-equivalent unit, used to turn dollars into units shipped.",
-    "source": "assumption — calibrated in Task 12",
+    "source": "assumption \u2014 calibrated in Task 12",
     "min": 10000,
     "max": 80000
   },
   "nvidiaGrossMargin": {
     "value": 0.715,
     "unit": "fraction of revenue",
-    "description": "Nvidia's gross margin on sales. Starting value is the midpoint of management's 71.0%–72.0% guidance for Q4 FY27 in the 8-K of 2026-11-17.",
+    "description": "Nvidia's gross margin on sales. Starting value is the midpoint of management's 71.0%\u201372.0% guidance for Q4 FY27 in the 8-K of 2026-11-17.",
     "source": "NVIDIA 8-K 2026-11-17 Ex 99.1 (Q3 FY27 press release) outlook, midpoint; calibrated in Task 12",
     "min": 0.5,
     "max": 0.85
@@ -83,7 +83,7 @@
     "value": 8,
     "unit": "weeks",
     "description": "Weeks of demand that buyers and suppliers try to hold as inventory; when demand stalls the excess is worked off.",
-    "source": "assumption — typical semiconductor channel inventory",
+    "source": "assumption \u2014 typical semiconductor channel inventory",
     "min": 1,
     "max": 26
   },
@@ -107,7 +107,7 @@
     "value": 24,
     "unit": "quarters",
     "description": "The period over which owners depreciate accelerators in their accounts (six years).",
-    "source": "assumption — hyperscaler depreciation policy of about six years",
+    "source": "assumption \u2014 hyperscaler depreciation policy of about six years",
     "min": 12,
     "max": 40
   },
@@ -139,7 +139,7 @@
     "value": 20,
     "unit": "quarters",
     "description": "Length of a loan or bond taken from a deal record that states neither an end date nor a term; the principal is repaid in full in its last quarter.",
-    "source": "assumption — five years, a common corporate term-loan and bond tenor; no committed source",
+    "source": "assumption \u2014 five years, a common corporate term-loan and bond tenor; no committed source",
     "min": 4,
     "max": 120
   },
@@ -147,7 +147,7 @@
     "value": 4000000000000.0,
     "unit": "USD per year",
     "description": "Yearly wage bill of the work that AI could plausibly take over, the ceiling for labour-substitution spending. Rough placeholder, no committed source yet; refine from BLS or OECD figures.",
-    "source": "assumption — rough placeholder; no BLS/OECD figure committed yet",
+    "source": "assumption \u2014 rough placeholder; no BLS/OECD figure committed yet",
     "min": 500000000000.0,
     "max": 20000000000000.0
   },
@@ -155,7 +155,7 @@
     "value": 3000000.0,
     "unit": "accelerators per quarter",
     "description": "Most accelerators that advanced chip packaging (CoWoS) can produce in a quarter. About 120k wafers a month at end-2026 x 3 months x ~12 packages per wafer x ~0.7 yield and mix.",
-    "source": "secondary — research_notes existing_ai_models_data.md section 2 (JPM, TrendForce, EffectStory CoWoS estimates 105k–140k wpm); analyst estimates, conversion is a heuristic not verified",
+    "source": "secondary \u2014 research_notes existing_ai_models_data.md section 2 (JPM, TrendForce, EffectStory CoWoS estimates 105k\u2013140k wpm); analyst estimates, conversion is a heuristic not verified",
     "min": 500000.0,
     "max": 20000000.0
   },
@@ -163,7 +163,7 @@
     "value": 3500000.0,
     "unit": "accelerators per quarter",
     "description": "Most accelerators that high-bandwidth memory supply can feed in a quarter. No HBM bit-supply figure was retrieved in the research notes, so this is a placeholder set slightly above the packaging ceiling.",
-    "source": "assumption — research notes found no 2026 HBM bit-supply figure (existing_ai_models_data.md section 2); placeholder",
+    "source": "assumption \u2014 research notes found no 2026 HBM bit-supply figure (existing_ai_models_data.md section 2); placeholder",
     "min": 500000.0,
     "max": 20000000.0
   },
@@ -171,7 +171,7 @@
     "value": 4.5,
     "unit": "kW per accelerator",
     "description": "All-in facility power drawn per accelerator, including cooling and networking. Implied by Epoch: about 2 million accelerators drawing about 9 GW.",
-    "source": "secondary — Epoch AI supercomputer trends via AI CERTs, in research_notes existing_ai_models_data.md section 1 (9 GW / 2M accelerators)",
+    "source": "secondary \u2014 Epoch AI supercomputer trends via AI CERTs, in research_notes existing_ai_models_data.md section 1 (9 GW / 2M accelerators)",
     "min": 1,
     "max": 15
   },
@@ -227,7 +227,7 @@
     "value": 1.645,
     "unit": "standard deviations",
     "description": "Width of a hold-last condition range in standard deviations of its quarterly changes (1.645 gives a two-sided 90% band under a random walk).",
-    "source": "assumption — 90% two-sided normal band",
+    "source": "assumption \u2014 90% two-sided normal band",
     "min": 0.5,
     "max": 4
   },
@@ -235,7 +235,7 @@
     "value": 20,
     "unit": "quarters",
     "description": "Number of most recent history quarters whose quarter-to-quarter changes set the volatility of a hold-last range.",
-    "source": "assumption — five years of quarterly history",
+    "source": "assumption \u2014 five years of quarterly history",
     "min": 4,
     "max": 120
   },
@@ -251,7 +251,7 @@
     "value": 0.04,
     "unit": "fraction per quarter",
     "description": "Long-run growth rate of frontier-lab revenue that the aiSpend default growth decays towards (0.04 a quarter is about 17% a year).",
-    "source": "assumption — no published long-run lab revenue forecast in the committed data",
+    "source": "assumption \u2014 no published long-run lab revenue forecast in the committed data",
     "min": -0.1,
     "max": 0.2
   },
@@ -267,7 +267,7 @@
     "value": 0.1,
     "unit": "log points",
     "description": "Base half-width (log terms) of the aiSpend forecast range one quarter ahead; covers the missing OpenAI component and revenue-recognition differences.",
-    "source": "assumption — Farmer–Lafond-style widening band (research_notes statistical_judgmental.md)",
+    "source": "assumption \u2014 Farmer\u2013Lafond-style widening band (research_notes statistical_judgmental.md)",
     "min": 0,
     "max": 1
   },
@@ -275,7 +275,7 @@
     "value": 0.05,
     "unit": "log points per quarter",
     "description": "Extra half-width (log terms) of the aiSpend forecast range for each further quarter ahead.",
-    "source": "assumption — Farmer–Lafond-style widening band (research_notes statistical_judgmental.md)",
+    "source": "assumption \u2014 Farmer\u2013Lafond-style widening band (research_notes statistical_judgmental.md)",
     "min": 0,
     "max": 0.5
   },
@@ -283,7 +283,7 @@
     "value": 4000000000,
     "unit": "USD per year",
     "description": "Placeholder aiSpend used only when no Anthropic or company-stated OpenAI revenue point is known at the as-of date; the range source then says Assumption.",
-    "source": "assumption — order-of-magnitude placeholder, not data; the committed lab revenue data start with the OpenAI 2026-03-31 statement and the Anthropic S-1 (Oct 2026)",
+    "source": "assumption \u2014 order-of-magnitude placeholder, not data; the committed lab revenue data start with the OpenAI 2026-03-31 statement and the Anthropic S-1 (Oct 2026)",
     "min": 0
   },
   "gpuResaleLongRunQuarterlyGrowth": {
@@ -314,7 +314,7 @@
     "value": 0.03,
     "unit": "log points per quarter",
     "description": "Extra half-width (log terms) of the gpuResale forecast range for each further quarter ahead.",
-    "source": "assumption — Farmer–Lafond-style widening band",
+    "source": "assumption \u2014 Farmer\u2013Lafond-style widening band",
     "min": 0,
     "max": 0.5
   },
@@ -322,7 +322,7 @@
     "value": 0.7,
     "unit": "fraction of new price",
     "description": "Placeholder used-to-new GPU price ratio used only when no used and new GPU prices are public at the as-of date.",
-    "source": "assumption — placeholder, not data",
+    "source": "assumption \u2014 placeholder, not data",
     "min": 0,
     "max": 2
   },
@@ -330,7 +330,7 @@
     "value": 2,
     "unit": "USD per GPU-hour",
     "description": "Placeholder H100 reserved rental price used only when no SemiAnalysis reserved price is public at the as-of date.",
-    "source": "assumption — placeholder, not data",
+    "source": "assumption \u2014 placeholder, not data",
     "min": 0
   },
   "gpuRentalFallbackQuarterlyLogVol": {
@@ -345,7 +345,7 @@
     "value": 5,
     "unit": "percent of US businesses",
     "description": "Placeholder for the Ramp AI Index used only when no RAMPAIALL point is public at the as-of date (before Feb 2023).",
-    "source": "assumption — placeholder, not data",
+    "source": "assumption \u2014 placeholder, not data",
     "min": 0,
     "max": 100
   },
@@ -361,7 +361,7 @@
     "value": 50,
     "unit": "GW",
     "description": "Placeholder global data-centre capacity used only when no IEA data-centre electricity figure is public at the as-of date (before Apr 2025).",
-    "source": "assumption — placeholder, not data",
+    "source": "assumption \u2014 placeholder, not data",
     "min": 0
   },
   "powerRangeLogA": {
@@ -376,7 +376,7 @@
     "value": 0.017,
     "unit": "log points per quarter",
     "description": "Extra half-width (log terms) of the powerGw range per quarter away from the as-of date, calibrated to the LBNL 2024 report spread.",
-    "source": "derived from LBNL 2024 US Data Center Energy Usage Report: 2028 range 325–580 TWh is about ±0.29 log around its midpoint, 14 quarters after publication (Dec 2024): (0.29 - 0.05) / 14 = 0.017; secondary",
+    "source": "derived from LBNL 2024 US Data Center Energy Usage Report: 2028 range 325\u2013580 TWh is about \u00b10.29 log around its midpoint, 14 quarters after publication (Dec 2024): (0.29 - 0.05) / 14 = 0.017; secondary",
     "min": 0,
     "max": 0.5
   },
@@ -384,7 +384,7 @@
     "value": 1,
     "unit": "index",
     "description": "Token price index level at the as-of quarter; the tokenPrice condition is an index with no committed price history.",
-    "source": "definition — index base",
+    "source": "definition \u2014 index base",
     "min": 1,
     "max": 1
   },
@@ -392,7 +392,7 @@
     "value": 0.3,
     "unit": "log points per quarter",
     "description": "Quarterly volatility of the token price index used for its range; wide because published declines span 9x to 900x a year.",
-    "source": "assumption — informed by the Epoch-based 9x–900x a year decline range (research_notes existing_ai_models_data.md section 4)",
+    "source": "assumption \u2014 informed by the Epoch-based 9x\u2013900x a year decline range (research_notes existing_ai_models_data.md section 4)",
     "min": 0.01,
     "max": 2
   },
@@ -400,7 +400,7 @@
     "value": 1,
     "unit": "elasticity (magnitude)",
     "description": "Percent rise in AI usage for a 1% fall in token price (1 = unit elastic); no quantitative estimate was found in the research.",
-    "source": "assumption — research_notes historical_analogs.md: no quantitative estimate of the elasticity of AI usage to token price was found",
+    "source": "assumption \u2014 research_notes historical_analogs.md: no quantitative estimate of the elasticity of AI usage to token price was found",
     "min": 0,
     "max": 5
   },
@@ -416,7 +416,7 @@
     "value": 1,
     "unit": "index",
     "description": "Physical-AI demand index level at the as-of quarter; there is no committed physical-AI revenue history to start from.",
-    "source": "definition — index base",
+    "source": "definition \u2014 index base",
     "min": 1,
     "max": 1
   },
@@ -432,7 +432,7 @@
     "value": 0.5,
     "unit": "regime code (1 open, 0.5 licensed with limits, 0 closed)",
     "description": "US export regime for AI chips to China; 0.5 = licensed with limits, the status as of Nov 2026 per the research notes.",
-    "source": "assumption — research_notes existing_ai_models_data.md section 5 (Hopper shipments to China in Q3 FY27, H200 licences reportedly granted)",
+    "source": "assumption \u2014 research_notes existing_ai_models_data.md section 5 (Hopper shipments to China in Q3 FY27, H200 licences reportedly granted)",
     "min": 0,
     "max": 1
   },
@@ -450,5 +450,52 @@
     "description": "Opening balances use the latest reported fact up to this many quarters older than the quarter before the start; an older fact is ignored and the balance is modelled. Covers companies whose latest 10-Q is not yet filed at the as-of date.",
     "source": "assumption",
     "min": 0
+  },
+  "segmentShareConsumer": {
+    "value": 0.35,
+    "unit": "fraction of AI spend",
+    "min": 0,
+    "max": 1,
+    "description": "Share of end-customer AI spending that comes from consumers (subscriptions and apps).",
+    "source": "assumption \u2014 calibrated in Task 12"
+  },
+  "segmentShareEnterprise": {
+    "value": 0.45,
+    "unit": "fraction of AI spend",
+    "min": 0,
+    "max": 1,
+    "description": "Share of end-customer AI spending that comes from businesses (enterprise seats and API usage).",
+    "source": "assumption \u2014 calibrated in Task 12"
+  },
+  "segmentShareSovereign": {
+    "value": 0.08,
+    "unit": "fraction of AI spend",
+    "min": 0,
+    "max": 1,
+    "description": "Share of AI spending from governments and sovereign AI programmes outside the US and China.",
+    "source": "assumption \u2014 calibrated in Task 12"
+  },
+  "segmentShareChina": {
+    "value": 0.07,
+    "unit": "fraction of AI spend",
+    "min": 0,
+    "max": 1,
+    "description": "Share of AI spending from China when exports are fully open; scaled by the export-policy condition.",
+    "source": "assumption \u2014 calibrated in Task 12"
+  },
+  "segmentSharePhysicalAi": {
+    "value": 0.05,
+    "unit": "fraction of AI spend",
+    "min": 0,
+    "max": 1,
+    "description": "Share of AI spending on physical AI (cars, robots) at a physical-AI index of 1; this spend buys chips directly rather than lab services.",
+    "source": "assumption \u2014 calibrated in Task 12"
+  },
+  "tokenPriceBase": {
+    "value": 1,
+    "unit": "index",
+    "min": 1e-06,
+    "description": "Token price index level at which the AI-spend condition applies unchanged; elasticity scales spend relative to it.",
+    "source": "assumption \u2014 conditions express token price as an index of 1 at the as-of quarter"
   }
 }
