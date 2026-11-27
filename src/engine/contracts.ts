@@ -12,7 +12,12 @@
 //   `defaultLoanTermQuarters` (loans) from config/engine-params.json.
 // - Multiple payers and payees: every payer owes every payee an equal share, amount / (payers × payees).
 // - A deal whose status as of the view is cancelled or replaced owes nothing after the quarter of that status entry
-//   (that quarter itself is kept).
+//   (that quarter itself is kept). A loan cut off this way repays its remaining principal in that cutoff quarter; a
+//   loan cut off before its draw quarter is never drawn.
+// - Loan obligations carry the debt id (`<dealId>:<lender>`, one instrument per lender–borrower pair), the quarterly
+//   rate (only for a stated fixed rate), the maturity (the quarter the principal falls due) and the recourse, so the
+//   finance layer can call drawLoan / repayLoan without re-reading deals. The draw is labelled "GPU-backed loan" only
+//   when the collateral, public at asOf, mentions GPUs; otherwise "Borrows".
 // - Quarters outside the grid are dropped; the per-quarter amount is not rescaled.
 import type { DealType, QuarterKey } from '../data/schema';
 import type { DealView } from './asof';
@@ -27,6 +32,30 @@ export interface Obligation {
   quarter: QuarterKey;
   amountUsd: number;
   kind: FlowKind;
+  label: string;
+  /** Loan obligations only (loan-draw, interest, principal): the DebtInstrument id. */
+  debtId?: string;
+  /** Loan obligations only; undefined for a floating or unstated rate (priced by the finance layer). */
+  ratePerQuarter?: number;
+  /** Loan obligations only: the quarter the principal falls due (the cutoff quarter for a cancelled loan). */
+  maturity?: QuarterKey;
+  /** Loan obligations only. */
+  recourse?: 'recourse' | 'non-recourse' | 'unknown';
+}
+
+/** One lender's share of a loan deal, independent of the grid (draws before it and maturities after it included). */
+export interface LoanPosition {
+  dealId: string;
+  debtId: string;
+  lender: string;
+  borrower: string;
+  principal: number;
+  drawQuarter: QuarterKey;
+  /** Quarter the principal is repaid: the end of the term, or the cutoff quarter of a cancelled/replaced loan. */
+  repayQuarter: QuarterKey;
+  ratePerQuarter?: number;
+  recourse: 'recourse' | 'non-recourse' | 'unknown';
+  /** Label of the draw. */
   label: string;
 }
 
@@ -43,7 +72,7 @@ const RULES: Partial<Record<DealType, Rule>> = {
   'spv-financing': { schedule: 'loan', termParam: 'defaultLoanTermQuarters' },
 };
 
-const LOAN_LABELS = { draw: 'GPU-backed loan', interest: 'Interest', principal: 'Repays loan' } as const;
+const LOAN_LABELS = { draw: 'Borrows', gpuDraw: 'GPU-backed loan', interest: 'Interest', principal: 'Repays loan' } as const;
 
 const QUARTERS_PER_YEAR = 4;
 const MONTHS_PER_QUARTER = 3;
@@ -100,6 +129,37 @@ function term(d: DealView, defaultQuarters: number): { first: QuarterKey; last: 
   return { first, last };
 }
 
+/**
+ * Lender–borrower positions of one loan deal. Payers are the lenders, payees the borrowers; each pair holds an equal
+ * share of the hard minimum. Interest is known only for a stated fixed rate.
+ */
+function positionsOf(d: DealView, termParam: string, params: EngineParams, cutoff: QuarterKey | undefined): LoanPosition[] {
+  const total = d.values.hardMinimumUsd;
+  if (total === undefined || d.payers.length === 0 || d.payees.length === 0) return [];
+  const { first, last } = term(d, param(params, termParam));
+  if (cutoff !== undefined && cutoff < first) return [];
+  const repayQuarter = cutoff !== undefined && cutoff < last ? cutoff : last;
+  const annual = d.termsHidden ? undefined : parseFixedAnnualRate(d.terms.rate);
+  const gpuBacked = !d.termsHidden && /gpu/i.test(d.terms.collateral ?? '');
+  const share = total / (d.payers.length * d.payees.length);
+  return d.payers.flatMap(lender => d.payees.map(borrower => {
+    const p: LoanPosition = { dealId: d.id, debtId: `${d.id}:${lender}`, lender, borrower, principal: share, drawQuarter: first,
+      repayQuarter, recourse: d.terms.recourse, label: gpuBacked ? LOAN_LABELS.gpuDraw : LOAN_LABELS.draw };
+    if (annual !== undefined) p.ratePerQuarter = annual / QUARTERS_PER_YEAR;
+    return p;
+  }));
+}
+
+/** Every loan position (loan and spv-financing deals with a hard minimum), on no grid; see the rules above. */
+export function loanPositions(deals: readonly DealView[], params: EngineParams = loadParams()): LoanPosition[] {
+  const out: LoanPosition[] = [];
+  for (const d of deals) {
+    const rule = d.types.length > 0 ? RULES[d.types[0]] : undefined;
+    if (rule?.schedule === 'loan') out.push(...positionsOf(d, rule.termParam, params, cutoffQuarter(d)));
+  }
+  return out;
+}
+
 /** Obligations from each deal's hard minimum over the grid; see the rules at the top of this file. */
 export function scheduleObligations(deals: readonly DealView[], grid: Grid, params: EngineParams = loadParams()): Obligation[] {
   const inGrid = new Set(grid.quarters);
@@ -125,17 +185,21 @@ export function scheduleObligations(deals: readonly DealView[], grid: Grid, para
       const perQuarter = share / quarters.length;
       for (const q of quarters) for (const { payer, payee } of pairs) emit(payer, payee, q, perQuarter, rule.kind, rule.label);
     } else {
-      // Payers are the lenders, payees the borrowers. Interest is scheduled only for a stated fixed rate.
-      const { first, last } = term(d, param(params, rule.termParam));
-      const annual = d.termsHidden ? undefined : parseFixedAnnualRate(d.terms.rate);
-      for (const { payer: lender, payee: borrower } of pairs) {
-        emit(lender, borrower, first, share, 'loan-draw', LOAN_LABELS.draw);
-        if (annual !== undefined) {
-          for (const q of quarterRange(addQuarters(first, 1), last)) {
-            emit(borrower, lender, q, share * annual / QUARTERS_PER_YEAR, 'interest', LOAN_LABELS.interest);
+      for (const p of positionsOf(d, rule.termParam, params, cutoff)) {
+        const emitLoan = (payer: string, payee: string, q: QuarterKey, amountUsd: number, kind: FlowKind, label: string) => {
+          if (!inGrid.has(q)) return;
+          const o: Obligation = { dealId: d.id, payer, payee, quarter: q, amountUsd, kind, label, debtId: p.debtId,
+            maturity: p.repayQuarter, recourse: p.recourse };
+          if (p.ratePerQuarter !== undefined) o.ratePerQuarter = p.ratePerQuarter;
+          out.push(o);
+        };
+        emitLoan(p.lender, p.borrower, p.drawQuarter, p.principal, 'loan-draw', p.label);
+        if (p.ratePerQuarter !== undefined) {
+          for (const q of quarterRange(addQuarters(p.drawQuarter, 1), p.repayQuarter)) {
+            emitLoan(p.borrower, p.lender, q, p.principal * p.ratePerQuarter, 'interest', LOAN_LABELS.interest);
           }
         }
-        emit(borrower, lender, last, share, 'principal', LOAN_LABELS.principal);
+        emitLoan(p.borrower, p.lender, p.repayQuarter, p.principal, 'principal', LOAN_LABELS.principal);
       }
     }
   }

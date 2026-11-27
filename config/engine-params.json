@@ -443,5 +443,12 @@
     "source": "assumption",
     "min": 0.01,
     "max": 1
+  },
+  "openingFactMaxStaleQuarters": {
+    "value": 4,
+    "unit": "quarters",
+    "description": "Opening balances use the latest reported fact up to this many quarters older than the quarter before the start; an older fact is ignored and the balance is modelled. Covers companies whose latest 10-Q is not yet filed at the as-of date.",
+    "source": "assumption",
+    "min": 0
   }
 }

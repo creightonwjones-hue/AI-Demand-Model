@@ -8,7 +8,8 @@ export interface DebtInstrument {
   id: string;
   lenderId: string;
   principal: number;
-  ratePerQuarter: number;
+  /** Undefined for a floating or unstated rate: the finance layer prices it from conditions each quarter. */
+  ratePerQuarter?: number;
   maturity: QuarterKey;
   recourse: 'recourse' | 'non-recourse' | 'unknown';
   dealId?: string;
@@ -20,8 +21,8 @@ export interface DebtInstrument {
  */
 export interface LoanAsset { debtId: string; borrowerId: string; principal: number }
 
-/** GPUs bought in one quarter. */
-export interface Vintage { quarter: QuarterKey; units: number; costUsd: number }
+/** GPUs bought in one quarter. `modelled`: an engine estimate (e.g. the opening installed base), not a reported count. */
+export interface Vintage { quarter: QuarterKey; units: number; costUsd: number; modelled?: true }
 
 export interface BalanceSheet {
   cash: number;

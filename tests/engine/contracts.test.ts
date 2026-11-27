@@ -1,21 +1,22 @@
 import { describe, expect, it } from 'vitest'
 import { asOfView, loadBuild, type DealView } from '../../src/engine/asof'
-import { parseFixedAnnualRate, parseTermQuarters, scheduleObligations, type Obligation } from '../../src/engine/contracts'
+import { loanPositions, parseFixedAnnualRate, parseTermQuarters, scheduleObligations, type Obligation } from '../../src/engine/contracts'
 import { makeGrid } from '../../src/engine/grid'
 import { loadParams, param } from '../../src/engine/params'
 import type { Deal, DealStatus } from '../../src/data/schema'
 
 type Over = Partial<Deal['values']> & Partial<Pick<Deal, 'start' | 'end' | 'announced' | 'payers' | 'payees' | 'types'>>
-  & { maturity?: string; rate?: string }
+  & { maturity?: string; rate?: string; collateral?: string; recourse?: Deal['terms']['recourse'] }
 
 function deal(types: Deal['types'], o: Over = {}): DealView {
-  const { hardMinimumUsd, ceilingUsd, conditionalUsd, estimateUsd, maturity, rate, ...rest } = o
+  const { hardMinimumUsd, ceilingUsd, conditionalUsd, estimateUsd, maturity, rate, collateral, recourse, ...rest } = o
   const values: Deal['values'] = {}
   if (hardMinimumUsd !== undefined) values.hardMinimumUsd = hardMinimumUsd
   if (ceilingUsd !== undefined) values.ceilingUsd = ceilingUsd
   if (conditionalUsd !== undefined) values.conditionalUsd = conditionalUsd
   if (estimateUsd !== undefined) values.estimateUsd = estimateUsd
-  const terms: Deal['terms'] = { recourse: 'unknown', takeOrPay: 'unknown', hellOrHighWater: 'unknown' }
+  const terms: Deal['terms'] = { recourse: recourse ?? 'unknown', takeOrPay: 'unknown', hellOrHighWater: 'unknown' }
+  if (collateral !== undefined) terms.collateral = collateral
   if (maturity !== undefined) terms.maturity = maturity
   if (rate !== undefined) terms.rate = rate
   return {
@@ -112,16 +113,57 @@ describe('scheduleObligations (detail)', () => {
   })
 
   it('schedules a loan as a draw, fixed-rate interest each later quarter, and the principal at maturity', () => {
-    const d = deal(['loan'], { hardMinimumUsd: 1e9, start: '2027-01-01', end: '2028-12-31', rate: '8%', payers: ['bank'], payees: ['cloud'] })
+    const d = deal(['loan'], { hardMinimumUsd: 1e9, start: '2027-01-01', end: '2028-12-31', rate: '8%', payers: ['bank'], payees: ['cloud'],
+      recourse: 'recourse' })
     const obs = scheduleObligations([d], grid)
     const draws = obs.filter(o => o.kind === 'loan-draw')
     const interest = obs.filter(o => o.kind === 'interest')
     const principal = obs.filter(o => o.kind === 'principal')
-    expect(draws).toEqual([{ dealId: 'test-deal', payer: 'bank', payee: 'cloud', quarter: '2027Q1', amountUsd: 1e9, kind: 'loan-draw', label: 'GPU-backed loan' }])
+    const loan = { debtId: 'test-deal:bank', ratePerQuarter: 0.02, maturity: '2028Q4', recourse: 'recourse' }
+    expect(draws).toEqual([{ dealId: 'test-deal', payer: 'bank', payee: 'cloud', quarter: '2027Q1', amountUsd: 1e9, kind: 'loan-draw',
+      label: 'Borrows', ...loan }])
     expect(interest.map(o => o.quarter)).toEqual(['2027Q2', '2027Q3', '2027Q4', '2028Q1', '2028Q2', '2028Q3', '2028Q4'])
-    expect(interest.every(o => o.payer === 'cloud' && o.payee === 'bank' && o.label === 'Interest')).toBe(true)
+    expect(interest.every(o => o.payer === 'cloud' && o.payee === 'bank' && o.label === 'Interest' && o.debtId === loan.debtId)).toBe(true)
     expect(interest[0].amountUsd).toBeCloseTo(1e9 * 0.08 / 4, 0)
-    expect(principal).toEqual([{ dealId: 'test-deal', payer: 'cloud', payee: 'bank', quarter: '2028Q4', amountUsd: 1e9, kind: 'principal', label: 'Repays loan' }])
+    expect(principal).toEqual([{ dealId: 'test-deal', payer: 'cloud', payee: 'bank', quarter: '2028Q4', amountUsd: 1e9, kind: 'principal',
+      label: 'Repays loan', ...loan }])
+  })
+
+  it('labels a draw "GPU-backed loan" only when the visible collateral mentions GPUs', () => {
+    const draw = (o: Over, hidden = false) => {
+      const d = deal(['loan'], { hardMinimumUsd: 1e9, start: '2027-01-01', end: '2027-12-31', ...o })
+      return scheduleObligations([hidden ? { ...d, termsHidden: true } : d], grid).find(x => x.kind === 'loan-draw')!.label
+    }
+    expect(draw({ collateral: 'GPUs (secured)' })).toBe('GPU-backed loan')
+    expect(draw({ collateral: 'Vera Rubin gpu equipment' })).toBe('GPU-backed loan')
+    expect(draw({ collateral: 'None (unsecured)' })).toBe('Borrows')
+    expect(draw({})).toBe('Borrows')
+    expect(draw({ collateral: 'GPUs' }, true)).toBe('Borrows') // terms not public at asOf
+  })
+
+  it('gives each lender of a loan its own debt id, and floating rates no ratePerQuarter', () => {
+    const d = deal(['loan'], { hardMinimumUsd: 2e9, start: '2027-01-01', end: '2027-12-31', rate: 'SOFR + 4.00%', payers: ['a', 'b'] })
+    const draws = scheduleObligations([d], grid).filter(o => o.kind === 'loan-draw')
+    expect(draws.map(o => o.debtId)).toEqual(['test-deal:a', 'test-deal:b'])
+    expect(draws.every(o => o.ratePerQuarter === undefined && o.maturity === '2027Q4' && o.recourse === 'unknown')).toBe(true)
+  })
+
+  it('repays the remaining principal of a cancelled loan in the cutoff quarter', () => {
+    const d = cancelled('2027-08-15', deal(['loan'], { hardMinimumUsd: 1e9, start: '2027-01-01', end: '2028-12-31', rate: '8%' }))
+    const obs = scheduleObligations([d], grid)
+    expect(obs.map(o => `${o.quarter} ${o.kind}`)).toEqual(['2027Q1 loan-draw', '2027Q2 interest', '2027Q3 interest', '2027Q3 principal'])
+    expect(obs.find(o => o.kind === 'principal')!.amountUsd).toBe(1e9)
+    expect(obs.every(o => o.maturity === '2027Q3')).toBe(true)
+    // cancelled before it was drawn: nothing at all
+    expect(scheduleObligations([cancelled('2026-12-01', deal(['loan'], { hardMinimumUsd: 1e9, start: '2027-01-01', end: '2028-12-31' }))], grid))
+      .toEqual([])
+  })
+
+  it('lists loan positions independently of the grid (draws before it, maturities after it)', () => {
+    const d = deal(['spv-financing'], { hardMinimumUsd: 3e9, start: '2021-06-01', end: '2049-05-31', rate: '6%', payers: ['p'], payees: ['spv'] })
+    expect(loanPositions([d], params)).toEqual([{ dealId: 'test-deal', debtId: 'test-deal:p', lender: 'p', borrower: 'spv', principal: 3e9,
+      drawQuarter: '2021Q2', repayQuarter: '2049Q2', ratePerQuarter: 0.015, recourse: 'unknown', label: 'Borrows' }])
+    expect(loanPositions([leaseDeal({ hardMinimumUsd: 1e9 })], params)).toEqual([])
   })
 
   it('leaves floating or unstated loan interest to the finance layer', () => {
