@@ -27,10 +27,15 @@ export interface CloudsOut {
 }
 
 /** Each cloud's share of installed capacity (chip vintages at cost); equal shares when nobody has any yet. */
+/** A cloud that has entered the model and has not defaulted. */
+export const operating = (s: EngineState, c: string) => s.active[c] !== false && !s.defaulted[c];
+
 function capacityShares(s: EngineState): Record<string, number> {
-  const w = Object.fromEntries(CLOUDS.map(c => [c, (s.ledger.sheets[c]?.chipVintages ?? []).reduce((a, v) => a + v.costUsd, 0)]));
+  // Only clouds in the model (active, not defaulted) take uncontracted rent.
+  const open = CLOUDS.filter(c => operating(s, c));
+  const w = Object.fromEntries(open.map(c => [c, (s.ledger.sheets[c]?.chipVintages ?? []).reduce((a, v) => a + v.costUsd, 0)]));
   const tot = Object.values(w).reduce((a, b) => a + b, 0);
-  return Object.fromEntries(CLOUDS.map(c => [c, tot > 0 ? w[c] / tot : 1 / CLOUDS.length]));
+  return Object.fromEntries(CLOUDS.map(c => [c, !open.includes(c) ? 0 : tot > 0 ? w[c] / tot : 1 / open.length]));
 }
 
 export function stepClouds(s: EngineState, d: DemandOut, c: Conditions, p: EngineParams): CloudsOut {
@@ -78,6 +83,7 @@ export function stepClouds(s: EngineState, d: DemandOut, c: Conditions, p: Engin
     // expected growth and the over-extrapolation factor — firms project recent growth forward (spec §8.3) — and never
     // below what new rent needs.
     const capexKey = `capex:${cloud}`;
+    if (!operating(s, cloud)) { aiCapexByCloud[cloud] = 0; chipBudgetByCloud[cloud] = 0; buildingsCapexByCloud[cloud] = 0; continue; }
     const lastCapex = s.memory[`aicapex:${cloud}`] ?? (s.memory[capexKey] ?? 0) * param(p, 'hyperscalerAiCapexShare');
     const momentum = lastCapex * (1 + (s.expectations[cloud] ?? 0)) * param(p, 'overExtrapolation');
     const rentDriven = Math.max(0, (expectedRent - rent) * param(p, 'capexPerQuarterlyRentUsd'));

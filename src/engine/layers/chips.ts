@@ -12,7 +12,7 @@ export interface ChipsOut {
   ordersUnits: number;
   shippedUnits: number;
   replacementUnits: number;
-  shortfallUnits: number; // unfilled units left in backlog after this quarter
+  shortfallUnits: number; // this quarter's paid demand that supply could not ship (backlog holds it, plus unpaid orders)
   bindingConstraint: Binding;
   revenueByMaker: Record<string, number>;
   supplierRevenue: Record<'tsmc' | 'sk-hynix' | 'asml', number>;
@@ -60,7 +60,7 @@ export function stepChips(s: EngineState, cl: CloudsOut, c: Conditions, p: Engin
   const addWant = (maker: string, cloud: string, usd: number) => { (wantUsd[maker] ??= {})[cloud] = (wantUsd[maker][cloud] ?? 0) + usd; };
   const nvShare = param(p, 'nvidiaShareOfAccelerators');
   for (const [cloud, budget] of Object.entries(cl.chipBudgetByCloud)) {
-    if (budget <= 0) continue;
+    if (budget <= 0 || s.defaulted[cloud]) continue;
     const custom = CUSTOM[cloud] ? budget * param(p, 'customChipShareOfBudget') : 0;
     if (custom > 0) addWant(CUSTOM[cloud], cloud, custom);
     addWant('nvidia', cloud, (budget - custom) * nvShare);
@@ -78,7 +78,8 @@ export function stepChips(s: EngineState, cl: CloudsOut, c: Conditions, p: Engin
   // 4. Weakest-link supply cap.
   const cap = supplyCapacity(s, c, p);
   const available = ordersUnits + s.market.backlogUnits;
-  const shippedUnits = Math.min(available, cap.units);
+  // Units ship only against this quarter's paid demand; the rest (bullwhip extra, older backlog) waits in backlog.
+  const shippedUnits = Math.min(available, cap.units, demandUnits);
   const bound = available > cap.units;
   s.market.backlogUnits = available - shippedUnits;
   const fill = demandUnits > 0 ? Math.min(1, shippedUnits / demandUnits) : 0;
@@ -133,7 +134,7 @@ export function stepChips(s: EngineState, cl: CloudsOut, c: Conditions, p: Engin
   const nvRevenue = dataCenter + edge;
   return {
     ordersUnits, shippedUnits, replacementUnits: Math.min(retired, shippedUnits + retired),
-    shortfallUnits: s.market.backlogUnits, bindingConstraint: bound ? cap.binding : 'none',
+    shortfallUnits: Math.max(0, demandUnits - shippedUnits), bindingConstraint: bound ? cap.binding : 'none',
     revenueByMaker, supplierRevenue,
     nvidia: {
       revenue: nvRevenue, dataCenter, hyperscale, aiCloudsEnterprise, edge, physicalAi: 0,

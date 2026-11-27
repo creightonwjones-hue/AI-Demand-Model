@@ -48,3 +48,13 @@ describe('runOnePath', () => {
     expect(late.every(f => f.quarter >= '2026Q1')).toBe(true) // announced 2026-02-27
   })
 })
+
+describe('entities without data at the start', () => {
+  it('keeps a not-yet-reporting cloud out of the run until a deal names it', () => {
+    const r = runOnePath({ build, params: loadParams(), asOf: '2023-05-15', start: '2023Q2' })
+    expect(r.invariantErrors).toEqual([])
+    const uncontracted = r.flows.filter(f => (f.to === 'coreweave' || f.from === 'coreweave') && !f.dealId && f.kind !== 'interest' && f.kind !== 'operating-cost')
+    const named = new Set(r.flows.filter(f => f.dealId && (f.to === 'coreweave' || f.from === 'coreweave')).map(f => f.quarter))
+    expect(uncontracted.every(f => [...named].some(q => q <= f.quarter))).toBe(true)
+  })
+})

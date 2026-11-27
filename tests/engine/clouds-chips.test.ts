@@ -86,7 +86,7 @@ describe('stepChips', () => {
     expect(tight.shortfallUnits).toBeGreaterThan(0)
     expect(tight.bindingConstraint).not.toBe('none')
     expect(s.market.backlogUnits).toBeCloseTo(before + tight.ordersUnits - tight.shippedUnits, 0)
-    expect(tight.shortfallUnits).toBeCloseTo(s.market.backlogUnits, 0)
+    expect(s.market.backlogUnits).toBeGreaterThanOrEqual(tight.shortfallUnits)
     expect(tight.events.some(e => e.kind === 'supply-bound')).toBe(true)
   })
 
@@ -148,5 +148,34 @@ describe('core business cash', () => {
   it('gives debt-funded clouds no core business cash', () => {
     const cl = stepClouds(fresh(), demandOut({}), conds({}), params)
     expect(cl.flows.some(f => f.kind === 'core-business-cash' && f.to === 'coreweave')).toBe(false)
+  })
+})
+
+describe('final-review fixes', () => {
+  it('ships only units someone pays for: backlog beyond this quarter\'s paid demand stays in backlog', () => {
+    const s = fresh()
+    s.market.backlogUnits = 2e6
+    const out = stepChips(s, cloudsOut(1e9), conds({}), params) // small demand, ample capacity
+    const paidUnits = sum(out.revenueByMaker) / param(params, 'nvidiaAspUsd')
+    const piped = s.pipeline.filter(p => p.kind === 'gpus').reduce((a, p) => a + p.units, 0)
+    expect(piped).toBeCloseTo(paidUnits, 0)
+    expect(s.market.backlogUnits).toBeGreaterThan(0)
+  })
+
+  it('a defaulted cloud buys no chips and gets no capex', () => {
+    const s = fresh()
+    s.defaulted.coreweave = true
+    const cl = stepClouds(s, demandOut({ openai: 50e9 }), conds({}), params)
+    expect(cl.aiCapexByCloud.coreweave).toBe(0)
+    const out = stepChips(s, cloudsOut(5e9), conds({}), params)
+    expect(out.flows.some(f => f.from === 'coreweave' && f.kind === 'chip-purchase')).toBe(false)
+  })
+
+  it('an inactive cloud takes no uncontracted rent and builds nothing', () => {
+    const s = fresh()
+    s.active.nebius = false
+    const cl = stepClouds(s, demandOut({ anthropic: 100e9 }), conds({}), params)
+    expect(cl.flows.some(f => f.to === 'nebius' || f.from === 'nebius')).toBe(false)
+    expect(cl.aiCapexByCloud.nebius).toBe(0)
   })
 })

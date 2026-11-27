@@ -82,6 +82,11 @@ function dateQuarter(iso: string): QuarterKey {
   return `${iso.slice(0, 4)}Q${Math.floor((Number(iso.slice(5, 7)) - 1) / MONTHS_PER_QUARTER) + 1}`;
 }
 
+/** Deal parties enter the model once a deal naming them is known (their rows are then flagged modelled). */
+export function activateDealParties(s: Pick<EngineState, 'obligations' | 'active'>): void {
+  for (const o of s.obligations) for (const id of [o.payer, o.payee]) if (s.active[id] === false) s.active[id] = true;
+}
+
 export function initState(data: AsOfData, params: EngineParams, grid: Grid, start: QuarterKey): EngineState {
   const q = grid.idx(start);
   const prev = addQuarters(start, -1);

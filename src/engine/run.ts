@@ -5,7 +5,7 @@ import { asOfView, type AsOfData, type BuildData } from './asof';
 import { buildConditions } from './conditions';
 import { scheduleObligations } from './contracts';
 import { makeGrid } from './grid';
-import { initState, type EngineState } from './init';
+import { activateDealParties, initState, type EngineState } from './init';
 import { stepChips } from './layers/chips';
 import { stepClouds } from './layers/clouds';
 import { stepDemand } from './layers/demand';
@@ -73,6 +73,7 @@ function refreshObligations(s: EngineState, build: BuildData, params: EnginePara
   const pastDraw = new Set(all.filter(o => o.kind === 'loan-draw' && o.quarter < now).map(o => o.dealId));
   const opening = new Set(s.obligations.map(o => o.dealId));
   s.obligations = all.filter(o => o.quarter >= now && !(pastDraw.has(o.dealId) && !opening.has(o.dealId)));
+  activateDealParties(s);
 }
 
 export function runOnePath(input: EngineInput): RunResult {
@@ -84,6 +85,7 @@ export function runOnePath(input: EngineInput): RunResult {
   const conditions = input.conditions ?? buildConditions(data, grid, asOf);
   const knownUntil = input.dealsKnownUntil ?? asOf;
   const s = initState(data, params, grid, start);
+  activateDealParties(s);
 
   const ids = data.entities.map(e => e.id);
   const entities: Record<string, EntityQuarter[]> = Object.fromEntries(ids.map(id => [id, [] as EntityQuarter[]]));
