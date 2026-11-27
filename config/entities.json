@@ -621,5 +621,13 @@
     "kind": "aggregate",
     "xbrl": false,
     "currency": "USD"
+  },
+  {
+    "id": "rest-of-economy",
+    "name": "Rest of the economy (wages, other suppliers)",
+    "layer": "money",
+    "kind": "aggregate",
+    "xbrl": false,
+    "currency": "USD"
   }
 ]

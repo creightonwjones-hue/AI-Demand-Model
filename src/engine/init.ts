@@ -61,6 +61,8 @@ export interface EngineState {
   notes: string[];
   /** Extension: entities NVIDIA has invested in or guarantees (deals known at asOf) — for customerFinancedShare. */
   nvidiaLinked: string[];
+  /** Extension: entity kind by id — aggregates, lenders and governments never default. */
+  kinds: Record<string, string>;
   /** Extension: values carried between quarters by the layers (e.g. last rent per cloud, expected shipments). */
   memory: Record<string, number>;
 }
@@ -215,6 +217,7 @@ export function initState(data: AsOfData, params: EngineParams, grid: Grid, star
     },
     expectations, pipeline: [], active, defaulted, modelled, notes,
     nvidiaLinked: nvidiaLinkedEntities(data),
+    kinds: Object.fromEntries(data.entities.map(e => [e.id, e.kind])),
     memory: {},
   };
 }
