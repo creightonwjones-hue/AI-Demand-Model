@@ -118,3 +118,14 @@ describe('stepChips', () => {
     expect(out.replacementUnits).toBeGreaterThanOrEqual(1000)
   })
 })
+
+describe('capex momentum', () => {
+  it('anchors a hyperscaler\'s AI capex to its last reported capex and extrapolates it', () => {
+    const s = fresh()
+    const reported = s.memory['capex:microsoft']
+    expect(reported).toBeGreaterThan(10e9)
+    const cl = stepClouds(s, demandOut({}), conds({}), params)
+    const expected = reported * param(params, 'hyperscalerAiCapexShare') * (1 + s.expectations.microsoft) * param(params, 'overExtrapolation')
+    expect(cl.aiCapexByCloud.microsoft).toBeCloseTo(Math.min(expected, s.ledger.sheets.microsoft.cash), -3)
+  })
+})

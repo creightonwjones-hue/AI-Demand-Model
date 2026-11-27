@@ -206,6 +206,13 @@ export function initState(data: AsOfData, params: EngineParams, grid: Grid, star
 
   const expectations: Record<string, number> = {};
   for (const e of data.entities) if (e.layer === 'cloud') expectations[e.id] = param(params, 'aiSpendLongRunQuarterlyGrowth');
+  // Each cloud's last reported quarterly capex anchors its capex momentum (memory key `capex:<id>`).
+  const memory: Record<string, number> = {};
+  for (const e of data.entities) {
+    if (e.layer !== 'cloud') continue;
+    const f = opening(e.id, 'capex');
+    if (f) memory[`capex:${e.id}`] = f.value;
+  }
 
   return {
     grid, q, ledger, obligations,
@@ -218,7 +225,7 @@ export function initState(data: AsOfData, params: EngineParams, grid: Grid, star
     expectations, pipeline: [], active, defaulted, modelled, notes,
     nvidiaLinked: nvidiaLinkedEntities(data),
     kinds: Object.fromEntries(data.entities.map(e => [e.id, e.kind])),
-    memory: {},
+    memory,
   };
 }
 

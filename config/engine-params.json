@@ -168,10 +168,10 @@
     "max": 20000000.0
   },
   "kwPerAccelerator": {
-    "value": 4.5,
+    "value": 2.0,
     "unit": "kW per accelerator",
-    "description": "All-in facility power drawn per accelerator, including cooling and networking. Implied by Epoch: about 2 million accelerators drawing about 9 GW.",
-    "source": "secondary \u2014 Epoch AI supercomputer trends via AI CERTs, in research_notes existing_ai_models_data.md section 1 (9 GW / 2M accelerators)",
+    "description": "All-in facility power per installed accelerator, including cooling and networking. Public builds: xAI Colossus about 150 MW for 100k H100s (1.5 kW); a GB200 NVL72 rack draws about 120-132 kW for 72 GPUs (about 1.8 kW) before cooling. The Epoch figure (9 GW / 2M, 4.5 kW) is planned cluster capacity, not load per installed chip.",
+    "source": "assumption \u2014 rounded from public build figures (xAI Colossus, GB200 NVL72 rack power); Epoch 4.5 kW kept as the upper cross-check",
     "min": 1,
     "max": 15
   },

@@ -73,8 +73,14 @@ export function stepClouds(s: EngineState, d: DemandOut, c: Conditions, p: Engin
     if (last !== undefined && last > 0) s.expectations[cloud] += gain * (rent / last - 1 - s.expectations[cloud]);
     s.memory[lastKey] = rent;
     const expectedRent = rent * (1 + (s.expectations[cloud] ?? 0));
-    const wanted = Math.max(0, expectedRent * param(p, 'capexPerQuarterlyRentUsd') * param(p, 'overExtrapolation')
-      - rent * param(p, 'capexPerQuarterlyRentUsd'));
+    // Capex momentum: last quarter's AI capex (opening: last reported capex × hyperscalerAiCapexShare) extrapolated with
+    // expected growth and the over-extrapolation factor — firms project recent growth forward (spec §8.3) — and never
+    // below what new rent needs.
+    const capexKey = `capex:${cloud}`;
+    const lastCapex = s.memory[`aicapex:${cloud}`] ?? (s.memory[capexKey] ?? 0) * param(p, 'hyperscalerAiCapexShare');
+    const momentum = lastCapex * (1 + (s.expectations[cloud] ?? 0)) * param(p, 'overExtrapolation');
+    const rentDriven = Math.max(0, (expectedRent - rent) * param(p, 'capexPerQuarterlyRentUsd'));
+    const wanted = Math.max(momentum, rentDriven);
 
     // Cash-funded clouds spend from cash plus this quarter's rent (operating cash); debt-funded clouds from cash
     // plus new credit only (spec §8.3).
@@ -88,6 +94,7 @@ export function stepClouds(s: EngineState, d: DemandOut, c: Conditions, p: Engin
       funds += loan;
     }
     const capex = Math.min(wanted, funds);
+    s.memory[`aicapex:${cloud}`] = capex;
     aiCapexByCloud[cloud] = capex;
     chipBudgetByCloud[cloud] = capex * param(p, 'chipShareOfAiCapex');
     buildingsCapexByCloud[cloud] = capex - chipBudgetByCloud[cloud];
