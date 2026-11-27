@@ -1,6 +1,9 @@
 // Build-time reduction of data/build/*.json into the small payload the explorer page ships.
 // Runs in Node (via the Vite plugin in vite.config.ts); nothing here touches the DOM.
 import type { Deal, Entity, FinancialFact, Layer, Series, VerificationStatus } from '../data/schema';
+import type { BacktestReport } from '../engine/backtest';
+import type { EngineBaseline } from '../engine/types';
+import { engineSummary, type EngineSummary } from './engine-section';
 
 export const TABLE_METRICS = ['revenue', 'capex', 'operatingCashFlow', 'cash', 'longTermDebt'] as const;
 export type TableMetric = (typeof TABLE_METRICS)[number];
@@ -62,6 +65,8 @@ export interface ExplorerData {
   series: SeriesCard[];
   deals: Deal[];
   coverage: CoverageRowLite[];
+  /** Baseline engine run and backtest, reduced to what the Engine check section shows; absent before the first run. */
+  engine?: EngineSummary;
 }
 
 /** One fact per (entity, metric, quarter): the vintage with the latest asKnownAt (later input wins ties). */
@@ -89,6 +94,8 @@ export function prepare(input: {
   deals: Deal[];
   coverage: CoverageRowLite[];
   manifest: Manifest;
+  'engine-baseline'?: EngineBaseline;
+  backtest?: BacktestReport;
 }): ExplorerData {
   const sources: SourceInfo[] = [];
   const srcIndex = new Map<string, number>();
@@ -129,5 +136,6 @@ export function prepare(input: {
     series,
     deals: input.deals,
     coverage: input.coverage,
+    ...(input['engine-baseline'] && input.backtest ? { engine: engineSummary(input['engine-baseline'], input.backtest) } : {}),
   };
 }

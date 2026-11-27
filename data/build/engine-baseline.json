@@ -63765,5 +63765,24 @@
   "invariantErrors": [],
   "asOf": "2026-11-27",
   "start": "2026Q3",
-  "overfitWarning": false
+  "overfitWarning": false,
+  "comparisons": {
+    "nvidiaRevenueConsensus": [
+      {
+        "fy": 2027,
+        "usd": 423800000000
+      },
+      {
+        "fy": 2028,
+        "usd": 726230000000
+      }
+    ],
+    "capexGuidance": [
+      {
+        "year": 2026,
+        "usd": 730000000000
+      }
+    ],
+    "aiCapexShare": 0.8
+  }
 }

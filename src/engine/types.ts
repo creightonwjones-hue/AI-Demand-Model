@@ -101,6 +101,19 @@ export interface EngineEvent {
   reason: string; // one plain-language line
 }
 
+/** Outside figures the baseline is compared with, as known at the baseline's asOf. */
+export interface BaselineComparisons {
+  /** NVIDIA revenue consensus mean (Yahoo) by fiscal year. */
+  nvidiaRevenueConsensus: { fy: number; usd: number }[];
+  /** Sum of the four cash-funded hyperscalers' capex guidance (midpoint of ranges) by calendar year. */
+  capexGuidance: { year: number; usd: number }[];
+  /** Share of hyperscaler capex the model treats as AI (to gross modelled AI capex up to total capex). */
+  aiCapexShare: number;
+}
+
+/** data/build/engine-baseline.json */
+export type EngineBaseline = RunResult & { overfitWarning: boolean; comparisons: BaselineComparisons };
+
 export interface RunResult {
   grid: Grid;
   flows: Flow[];

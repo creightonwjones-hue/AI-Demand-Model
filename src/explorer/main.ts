@@ -3,6 +3,7 @@ import rawData from 'virtual:explorer-data';
 import type { Deal, Layer, VerificationStatus } from '../data/schema';
 import type { ExplorerData, FactCell, SeriesCard, SourceInfo, TableMetric } from './prepare';
 import { TABLE_METRICS } from './prepare';
+import { engineSection } from './engine-section';
 import { STATUS_RANK, escapeHtml as esc, formatSeriesValue, formatUsd, statusBadge } from './format';
 
 // ---------- lookups ----------
@@ -114,7 +115,7 @@ function header(): string {
         <span>${badge('unverified')} not yet confirmed</span>
       </div>
     </div>
-    <nav class="toc"><a href="#companies">Companies</a><a href="#deals">Deals</a><a href="#series">Series</a><a href="#coverage">Coverage</a></nav>
+    <nav class="toc"><a href="#companies">Companies</a><a href="#deals">Deals</a><a href="#series">Series</a><a href="#coverage">Coverage</a>${data.engine ? '<a href="#engine">Engine check</a>' : ''}</nav>
   </header>`;
 }
 
@@ -470,7 +471,7 @@ function footer(): string {
 }
 
 const app = document.querySelector<HTMLElement>('#app')!;
-app.innerHTML = `<div class="wrap">${header()}${companies()}${deals()}${series()}${coverage()}${footer()}</div>`;
+app.innerHTML = `<div class="wrap">${header()}${companies()}${deals()}${series()}${coverage()}${data.engine ? engineSection(data.engine) : ''}${footer()}</div>`;
 wireDeals(app);
 // On phones, start the two long single-reading groups folded so the page stays scannable.
 if (window.matchMedia('(max-width: 640px)').matches) {

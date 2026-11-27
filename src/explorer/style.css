@@ -266,3 +266,33 @@ h2 { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; margin: 0; }
 @media (max-width: 380px) {
   .grid { grid-template-columns: 1fr; }
 }
+
+/* ---------- engine check ---------- */
+#engine h3 { font-size: 14px; font-weight: 600; margin: 26px 0 10px; }
+#engine .egrid h3 { margin-top: 4px; }
+#engine .sh .early { align-self: center; }
+#engine b.warn { color: var(--warn); font-weight: 600; }
+.egrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+.foot.lead { margin: 0 0 12px; max-width: 860px; }
+.echart { margin: 0 0 12px; }
+.echart svg { width: 100%; height: auto; display: block; }
+.echart .grid { stroke: var(--line-soft); }
+.echart text { font: 400 10.5px var(--sans); fill: var(--muted); }
+.echart .yt { text-anchor: end; }
+.echart .xt { text-anchor: middle; }
+.echart path { fill: none; stroke-width: 1.6; stroke-linejoin: round; }
+.echart path.ref { stroke: var(--faint); }
+.echart path.mod { stroke: var(--chips); stroke-dasharray: 5 3; }
+.echart circle.mod { fill: var(--chips); }
+.echart figcaption { display: flex; align-items: center; gap: 6px 8px; flex-wrap: wrap; font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+.echart .k { display: inline-block; width: 16px; height: 0; border-top: 2px solid var(--faint); margin-left: 8px; }
+.echart .k:first-child { margin-left: 0; }
+.echart .k.mod { border-top: 2px dashed var(--chips); }
+.covnotes.ev { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 12px; }
+ul.events { list-style: none; padding: 0; }
+ul.events .q { color: var(--muted); margin-right: 4px; }
+@media (max-width: 900px) {
+  .egrid, .covnotes.ev { grid-template-columns: 1fr; }
+}
+.echart-wide { max-width: 760px; margin-top: 16px; }
+.echart .xt.end { text-anchor: end; }

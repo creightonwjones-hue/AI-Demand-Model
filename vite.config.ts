@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, type Plugin } from 'vite';
 import { prepare } from './src/explorer/prepare';
@@ -6,6 +6,8 @@ import { prepare } from './src/explorer/prepare';
 const VIRTUAL_ID = 'virtual:explorer-data';
 const RESOLVED_ID = '\0' + VIRTUAL_ID;
 const FILES = ['entities', 'financials', 'series', 'deals', 'coverage', 'manifest'] as const;
+/** Engine outputs: optional, so the page still builds before the first engine run. */
+const OPTIONAL = ['engine-baseline', 'backtest'] as const;
 
 /**
  * Serves `virtual:explorer-data`: the committed data/build/*.json reduced at build time to what the page shows
@@ -22,6 +24,11 @@ function explorerData(): Plugin {
         this.addWatchFile(path(f));
         return [f, JSON.parse(readFileSync(path(f), 'utf8'))];
       }));
+      for (const f of OPTIONAL) {
+        if (!existsSync(path(f))) continue;
+        this.addWatchFile(path(f));
+        raw[f] = JSON.parse(readFileSync(path(f), 'utf8'));
+      }
       const data = prepare(raw as Parameters<typeof prepare>[0]);
       return `export default JSON.parse(${JSON.stringify(JSON.stringify(data))});`;
     },
