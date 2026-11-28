@@ -32,8 +32,10 @@ export function mountCanvas(host: HTMLElement, onZoom: (k: number) => void): Can
       if (!scene) return;
       const r = size();
       // Leave room for the floating controls: top bar, right card, bottom timeline.
+      // Fit in the area left of the results card, never above 110% (cards stay readable, not oversized).
       v = fit({ x: 0, y: 10, w: scene.width, h: scene.height }, r.width - 300, r.height - 120, 20);
-      v = { ...v, x: v.x + 10, y: v.y + 60 };
+      if (v.k > 1.1) v = fit({ x: 0, y: 10, w: scene.width, h: scene.height }, (r.width - 300) * (1.1 / v.k) + 40, (r.height - 120) * (1.1 / v.k) + 40, 20) && { k: 1.1, x: (r.width - 300) / 2 - (scene.width / 2) * 1.1, y: (r.height - 120) / 2 + 60 - (10 + scene.height / 2) * 1.1 };
+      else v = { ...v, x: v.x + 10, y: v.y + 60 };
       apply();
     },
     zoomBy(f) { const r = size(); v = zoomAt(v, r.width / 2, r.height / 2, f); apply(); },

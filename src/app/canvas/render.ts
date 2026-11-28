@@ -88,10 +88,11 @@ function pointAt(g: Geo, t: number): [number, number] {
     u ** 3 * g.y1 + 3 * u * u * t * my + 3 * u * t * t * my + t ** 3 * g.y2];
 }
 
-function edgeSvg(e: SceneEdge, g: Geo, payer: SceneBlock, i: number, motion: boolean): string {
+function edgeSvg(e: SceneEdge, g: Geo, payer: SceneBlock, i: number, motion: boolean, skip: boolean): string {
   const id = `e${i}`;
   const broken = e.status === 'broken';
-  const out = [`<path class="edge ${e.status}" id="${id}" d="${g.d}" stroke-width="${e.width.toFixed(2)}"><title>${esc(`${e.label} ${formatAmount(e.usdPerYear)} a year`)}</title></path>`];
+  const out = [`<path class="halo" d="${g.d}" stroke-width="${(e.width + 3).toFixed(2)}"/>`,
+    `<path class="edge ${e.status}${skip ? ' skip' : ''}" id="${id}" d="${g.d}" stroke-width="${e.width.toFixed(2)}"><title>${esc(`${e.label} ${formatAmount(e.usdPerYear)} a year`)}</title></path>`];
   if (motion) {
     const usdB = e.usdPerYear / 1e9;
     const n = broken ? 1 : Math.max(1, Math.min(7, Math.round(Math.sqrt(usdB) / 2)));
@@ -120,9 +121,9 @@ function chips(scene: Scene, geo: Map<string, Geo>, taken: Box[]): string {
       const [px, py] = pointAt(g, t);
       const box: Box = [px - w / 2, py - h / 2, w, h];
       if (!taken.some(b => overlaps(b, box))) { best = box; break; }
-      best ??= box;
     }
-    taken.push(best!);
+    if (!best) continue; // no free spot on its line: the hover title still names it
+    taken.push(best);
     const [x, y] = best!;
     const bad = e.status === 'broken';
     out.push(`<g class="chip${bad ? ' bad' : ''}" data-edge="${esc(e.id)}" data-box="${x.toFixed(1)},${y.toFixed(1)},${w.toFixed(1)},${h}" tabindex="-1">`
@@ -203,7 +204,11 @@ export function renderScene(scene: Scene, opts: RenderOptions): string {
   const rows = scene.rows.filter(r => scene.blocks.some(b => b.layer === r.layer))
     .map(r => `<circle cx="34" cy="${r.y - 4}" r="4" fill="${LAYER_COLOUR[r.layer]}"/><text x="46" y="${r.y}" class="ll">${esc(r.label)}</text>`).join('');
   const groups = scene.blocks.filter(b => b.group).map(groupFrame).join('');
-  const edges = scene.edges.map((e, i) => edgeSvg(e, geo.get(e.id)!, block.get(e.from)!, i, opts.motion)).join('');
+  // Lines that skip a row are drawn first (behind) and lighter.
+  const rowOf = new Map(scene.rows.map((r, i) => [r.layer, i]));
+  const skips = (e: SceneEdge) => Math.abs(rowOf.get(block.get(e.from)!.layer)! - rowOf.get(block.get(e.to)!.layer)!) > 1;
+  const order = scene.edges.map((e, i) => ({ e, i })).sort((a, b) => Number(skips(b.e)) - Number(skips(a.e)));
+  const edges = order.map(({ e, i }) => edgeSvg(e, geo.get(e.id)!, block.get(e.from)!, i, opts.motion, skips(e))).join('');
   const cards = scene.blocks.map(b => blockCards(b, b.id === 'nvidia' ? opts.nvidiaSub : undefined)).join('');
   const taken: Box[] = scene.blocks.map(b => [b.x, b.y - (b.group ? 22 : 16), b.w, b.h + (b.group ? 22 : 16)]);
   const chipSvg = chips(scene, geo, taken);

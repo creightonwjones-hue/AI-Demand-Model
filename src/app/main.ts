@@ -44,8 +44,8 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 app.insertAdjacentHTML('beforeend', `
   <div class="fl tl"><span class="logo" aria-hidden="true"></span><div><b>AI capital flows</b> <span class="sep">·</span>
-    <span class="setup-name"></span></div><span class="early-tag">Early version: simple rules, not yet validated</span>
-    <a href="./data.html">Data</a></div>
+    <span class="setup-name"></span></div><a href="./data.html">Data</a></div>
+  <div class="foot-note">Early version: simple rules, not yet validated</div>
   <button class="fl cond" type="button" disabled title="Drag-the-line conditions arrive with the conditions panel"><span class="dot2"></span>Conditions <b>0</b><span class="car">▾</span></button>
   <div class="fl seg" role="group" aria-label="View"><button class="on" type="button" aria-pressed="true">One path</button>
     <button type="button" disabled title="Range of outcomes arrives in phase 6">Range of outcomes</button></div>

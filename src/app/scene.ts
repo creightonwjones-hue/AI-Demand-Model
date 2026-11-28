@@ -13,6 +13,8 @@ export interface CanvasLayout {
   hiddenKinds: FlowKind[];
   alwaysShown: string[];
   minUsdPerYear: number;
+  /** Overview shows the largest line from each block plus every line at or above this; problems always show. */
+  alwaysShowUsdPerYear?: number;
   /** Canvas label for a flow label (merges, e.g. Interest and Repays loan → Debt service). */
   labels?: Record<string, string>;
 }
@@ -88,7 +90,17 @@ export function buildScene(run: RunResult, entities: readonly EntityLite[], quar
     acc.set(key, a);
   }
 
-  const kept = [...acc.values()].map(a => ({ ...a, usd: a.usd * scale })).filter(a => a.usd >= layout.minUsdPerYear);
+  const above = [...acc.values()].map(a => ({ ...a, usd: a.usd * scale })).filter(a => a.usd >= layout.minUsdPerYear);
+  // Overview cap: per source block its largest line, every line >= alwaysShowUsdPerYear, and every line whose payer
+  // is stressed or in default. The rest are reachable by zooming into a block or deal.
+  const big = layout.alwaysShowUsdPerYear ?? 0;
+  const largest = new Map<string, number>();
+  for (const a of above) largest.set(a.from, Math.max(largest.get(a.from) ?? 0, a.usd));
+  const troubled = (a: typeof above[number]) => {
+    const st = [...a.payers].map(p => memberStatus(run, p, qi));
+    return st.length > 0 && (st.every(x => x === 'default') || (a.usd >= 10e9 && st.some(x => x !== 'ok')));
+  };
+  const kept = above.filter(a => a.usd >= big || a.usd === largest.get(a.from) || troubled(a));
   for (const a of kept) for (const [f, t] of a.pairs.values()) { active.add(f); active.add(t); }
   const maxUsd = Math.max(1, ...kept.map(a => a.usd));
 
@@ -99,9 +111,12 @@ export function buildScene(run: RunResult, entities: readonly EntityLite[], quar
     ...[...shownIds].filter(id => !layout.blocks.some(b => b.id === id) && byId.has(id))
       .map(id => ({ id, label: byId.get(id)!.name, layer: byId.get(id)!.layer, members: [id], group: false, big: false })),
   ];
-  const blocks: SceneBlock[] = defs.map(d => {
-    const group = !!d.group;
-    const memberIds = group ? d.members.filter(m => active.has(m) || layout.alwaysShown.includes(m)) : d.members;
+  const blocks: SceneBlock[] = defs.map(def => {
+    let d = def;
+    const memberIds = d.group ? d.members.filter(m => active.has(m) || layout.alwaysShown.includes(m)) : d.members;
+    // A group with a single company shown is drawn as that company's card, not an almost-empty container.
+    const group = !!d.group && memberIds.length > 1;
+    if (d.group && memberIds.length === 1) d = { ...d, label: byId.get(memberIds[0])?.name ?? d.label };
     const members: SceneMember[] = memberIds.map(id => ({ id, name: byId.get(id)?.name ?? id, status: memberStatus(run, id, qi), x: 0, w: 0 }));
     const status = members.reduce<Status>((w, m) => (RANK[m.status] > RANK[w] ? m.status : w), 'ok');
     let w: number;
@@ -159,7 +174,7 @@ export function buildScene(run: RunResult, entities: readonly EntityLite[], quar
     return {
       id: `${a.from}|${a.to}|${a.label}`, from: a.from, to: a.to, label: a.label, usdPerYear: a.usd, kind: a.kind,
       dealIds: [...a.deals].sort(), pairs: [...a.pairs.values()],
-      status: broken ? 'broken' : stressed ? 'stressed' : 'ok', width: 1 + 7 * Math.sqrt(a.usd / maxUsd),
+      status: broken ? 'broken' : stressed ? 'stressed' : 'ok', width: 1 + 3 * Math.sqrt(a.usd / maxUsd),
     };
   });
 

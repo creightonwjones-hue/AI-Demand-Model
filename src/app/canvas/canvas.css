@@ -1,16 +1,18 @@
 .cv { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; display: block; }
 .cv.dragging { cursor: grabbing; }
+.halo { fill: none; stroke: #fff; stroke-linecap: round; }
 .edge { fill: none; stroke: #cdd3da; stroke-linecap: round; }
-.edge.stressed { stroke: #d8cfbf; }
+.edge.skip { stroke: #e1e5ea; }
+.edge.stressed { stroke: #e3c98f; }
 .edge.broken { stroke: #d23b3b; stroke-dasharray: 4 5; }
 .nl { font: 600 13px var(--sans); fill: #fff; pointer-events: none; }
 .nl.big { font: 700 20px var(--sans); letter-spacing: -.01em; }
 .nsub { font: 500 11.5px var(--sans); fill: #e8f3ec; pointer-events: none; }
-.flag { font: 600 11px var(--sans); }
+.flag { font: 600 11px var(--sans); paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; }
 .ring { fill: none; stroke-width: 2; }
 .ll { font: 500 12.5px var(--sans); fill: #6b7280; }
 .grp { fill: #f7f8fa; stroke: #e4e7eb; }
-.gl { font: 600 10.5px var(--sans); letter-spacing: .06em; fill: #8a93a0; }
+.gl { font: 600 10.5px var(--sans); letter-spacing: .06em; fill: #8a93a0; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; }
 .chip rect { fill: #fff; stroke: #cfd5dc; stroke-width: 1; }
 .chip.bad rect { stroke: #d23b3b; }
 .chip { cursor: pointer; }
@@ -46,3 +48,4 @@
 .zoom button:hover { background: #f1f3f5; }
 .zoom .fit { width: auto; padding: 0 10px; font-size: 12.5px; border-left: 1px solid #eef0f3; border-radius: 0; }
 .zoom span { font: 500 11.5px var(--sans); color: #6b7280; width: 44px; text-align: center; }
+.foot-note { position: absolute; left: 18px; bottom: 22px; z-index: 5; font: 500 11.5px var(--sans); color: var(--warn); background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 6px; padding: 3px 8px; }

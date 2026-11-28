@@ -264,5 +264,6 @@
     "Interest": "Debt service",
     "Repays loan": "Debt service",
     "Core business cash": "Reinvested profits"
-  }
+  },
+  "alwaysShowUsdPerYear": 30000000000
 }

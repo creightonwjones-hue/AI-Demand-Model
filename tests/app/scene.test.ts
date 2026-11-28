@@ -27,7 +27,7 @@ describe('buildScene', () => {
 
   it('labels every edge with a title and a positive finite yearly amount above the threshold', () => {
     expect(sc.edges.length).toBeGreaterThan(5)
-    expect(sc.edges.every(e => e.label && Number.isFinite(e.usdPerYear) && e.usdPerYear >= 3e9 && e.width >= 1 && e.width <= 8)).toBe(true)
+    expect(sc.edges.every(e => e.label && Number.isFinite(e.usdPerYear) && e.usdPerYear >= 3e9 && e.width >= 1 && e.width <= 4)).toBe(true)
     expect(sc.edges.some(e => e.from === 'cash-clouds' && e.to === 'nvidia' && e.label === 'Buys GPUs')).toBe(true)
   })
 
@@ -36,7 +36,7 @@ describe('buildScene', () => {
     expect(sc.edges.some(e => e.kind === 'operating-cost')).toBe(false)
     expect(sc.edges.find(e => e.from === 'big-tech-profits')!.label).toBe('Reinvested profits')
     expect(sc.edges.some(e => e.label === 'Interest' || e.label === 'Repays loan')).toBe(false)
-    expect(sc.edges.length).toBeLessThanOrEqual(40)
+    expect(sc.edges.length).toBeLessThanOrEqual(24)
     expect(sc.edges.some(e => e.from === e.to)).toBe(false)
   })
 
@@ -56,6 +56,16 @@ describe('buildScene', () => {
     expect(debt.members.find(m => m.id === 'coreweave')!.status).toBe('default')
     expect(debt.status).toBe('default')
     expect(s.edges.filter(e => e.from === 'debt-clouds').every(e => e.status !== 'ok')).toBe(true)
+  })
+
+  it('caps the overview: each block keeps its largest line, big lines always show', () => {
+    const froms = new Set(sc.edges.map(e => e.from))
+    for (const f of froms) expect(sc.edges.some(e => e.from === f)).toBe(true)
+    expect(sc.edges.some(e => e.from === 'cash-clouds' && e.to === 'nvidia')).toBe(true)
+  })
+
+  it('draws a group with one company as a plain card', () => {
+    for (const b of sc.blocks) if (b.group) expect(b.members.length).toBeGreaterThan(1)
   })
 
   it('never overlaps blocks in a row', () => {

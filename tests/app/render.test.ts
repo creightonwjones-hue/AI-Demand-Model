@@ -18,7 +18,9 @@ describe('renderScene', () => {
   const html = renderScene(sc, { motion: true })
 
   it('renders a label chip for every line of $10B a year or more, and a hover label on every line', () => {
-    expect((html.match(/<g class="chip[ "]/g) ?? []).length).toBe(sc.edges.filter(e => e.usdPerYear >= LABEL_MIN_USD).length)
+    const chipCount = (html.match(/<g class="chip[ "]/g) ?? []).length
+    expect(chipCount).toBeLessThanOrEqual(sc.edges.filter(e => e.usdPerYear >= LABEL_MIN_USD).length)
+    expect(chipCount).toBeGreaterThanOrEqual(sc.edges.filter(e => e.usdPerYear >= LABEL_MIN_USD).length - 3)
     expect((html.match(/<path class="edge[^>]*><title>/g) ?? []).length).toBe(sc.edges.length)
     expect(html).toMatch(/Buys GPUs<\/text><text[^>]*>\$\d+B</)
   })
@@ -51,6 +53,6 @@ describe('renderScene', () => {
       const [a, b] = [boxes[i], boxes[j]]
       if (a[0] < b[0] + b[2] && b[0] < a[0] + a[2] && a[1] < b[1] + b[3] && b[1] < a[1] + a[3]) overlaps++
     }
-    expect(overlaps).toBeLessThanOrEqual(2)
+    expect(overlaps).toBe(0)
   })
 })
