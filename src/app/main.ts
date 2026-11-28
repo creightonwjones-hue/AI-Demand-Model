@@ -3,6 +3,9 @@ import meta from 'virtual:engine-meta';
 import layoutJson from '../../config/canvas-layout.json';
 import { mountCanvas } from './canvas/canvas';
 import { buildScene, type CanvasLayout } from './scene';
+import { nvidiaCard, nvidiaCardHtml } from './nvidia-card';
+import { mountTimeline, timelineTicks } from './timeline';
+import { formatAmount } from './canvas/render';
 import type { RunReply } from './run-client';
 import { createRunClient } from './run-client';
 import { decodeState, encodeState, type AppState } from './url-state';
@@ -51,19 +54,25 @@ app.insertAdjacentHTML('beforeend', `
     <button type="button" disabled title="Range of outcomes arrives in phase 6">Range of outcomes</button></div>
   <div class="fl zoom"><button type="button" class="zin" aria-label="Zoom in">+</button><span class="pct">100%</span>
     <button type="button" class="zout" aria-label="Zoom out">−</button><button type="button" class="fit">Fit</button></div>
+  <aside class="fl nv" aria-live="polite"></aside>
   <div class="loading">Running the model…</div>`);
 const pct = app.querySelector<HTMLElement>('.zoom .pct')!;
 const canvas = mountCanvas(app, k => { pct.textContent = `${Math.round(k * 100)}%`; });
 app.querySelector<HTMLButtonElement>('.zin')!.onclick = () => canvas.zoomBy(1.25);
 app.querySelector<HTMLButtonElement>('.zout')!.onclick = () => canvas.zoomBy(0.8);
 app.querySelector<HTMLButtonElement>('.fit')!.onclick = () => canvas.fitAll();
+const timeline = mountTimeline(app, q => { setState({ quarter: q }); render(); });
 
 function render(): void {
   app.querySelector<HTMLElement>('.setup-name')!.textContent = state.name ?? 'Baseline';
   if (!latest) return;
   const nv = latest.run.nvidia.find(n => n.quarter === state.quarter);
   const scene = buildScene(latest.run, meta.entities, state.quarter, layout);
-  canvas.draw(scene, { motion: !reducedMotion.matches });
+  const card = nvidiaCard(latest.run, meta.comparisons, state.quarter);
+  const gap = card.fyConsensus ? ` · ${card.fyModel >= card.fyConsensus ? '+' : '−'}${Math.abs((card.fyModel / card.fyConsensus - 1) * 100).toFixed(0)}%` : '';
+  canvas.draw(scene, { motion: !reducedMotion.matches, nvidiaSub: `FY${card.fy} revenue ${formatAmount(card.fyModel)}${gap}` });
+  app.querySelector<HTMLElement>('.nv')!.innerHTML = nvidiaCardHtml(card);
+  timeline.update(timelineTicks(latest.run.grid, latest.run.start, latest.run.events), state.quarter);
   app.querySelector('.loading')?.remove();
   app.dataset.ready = 'true';
   app.dataset.nvidiaRevenue = String(nv?.revenue ?? 0);
