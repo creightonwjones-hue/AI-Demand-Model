@@ -19,6 +19,10 @@ export function runRequest(req: RunRequest): RunReply {
 
 // The grid carries a function (idx), which cannot cross to the page; the page rebuilds it (run-client.ts).
 self.onmessage = (e: MessageEvent<RunRequest>) => {
-  const reply = runRequest(e.data);
-  self.postMessage({ ...reply, run: { ...reply.run, grid: undefined } });
+  try {
+    const reply = runRequest(e.data);
+    self.postMessage({ ...reply, run: { ...reply.run, grid: undefined } });
+  } catch (err) {
+    self.postMessage({ id: e.data.id, error: (err as Error).message || 'the model could not run' });
+  }
 };

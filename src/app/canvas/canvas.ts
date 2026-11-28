@@ -15,6 +15,10 @@ export interface CanvasHandle {
   /** Screen position of a world point. */
   toScreen(x: number, y: number): [number, number];
   world: SVGGElement;
+  /** True when the last pointer gesture moved the view (a pan), so its click is not a selection. */
+  dragged(): boolean;
+  /** While locked (e.g. zoomed into a deal), window resizes do not refit the view. */
+  lockFit(on: boolean): void;
   view(): Viewport;
   svg: SVGSVGElement;
 }
@@ -26,6 +30,8 @@ export function mountCanvas(host: HTMLElement, onZoom: (k: number) => void): Can
   const svg = host.querySelector<SVGSVGElement>('svg.cv')!;
   const world = svg.querySelector<SVGGElement>('g.world')!;
   let v: Viewport = { x: 0, y: 0, k: 1 };
+  let moved = false;
+  let locked = false;
   let scene: Scene | undefined;
   const apply = () => { world.setAttribute('transform', `translate(${v.x.toFixed(1)},${v.y.toFixed(1)}) scale(${v.k.toFixed(4)})`); onZoom(v.k); };
   const size = () => svg.getBoundingClientRect();
@@ -46,6 +52,8 @@ export function mountCanvas(host: HTMLElement, onZoom: (k: number) => void): Can
     zoomBy(f) { const r = size(); v = zoomAt(v, r.width / 2, r.height / 2, f); apply(); },
     setView(nv) { v = nv; apply(); },
     world,
+    dragged: () => moved,
+    lockFit(on) { locked = on; },
     toScreen: (x, y) => [x * v.k + v.x, y * v.k + v.y],
     animateTo(target) {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { v = target; apply(); return; }
@@ -66,6 +74,7 @@ export function mountCanvas(host: HTMLElement, onZoom: (k: number) => void): Can
   let pinch: number | undefined;
   svg.addEventListener('pointerdown', e => {
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    moved = false;
     if ((e.target as Element).closest('.card, .chip, .halo')) return;
     svg.setPointerCapture(e.pointerId);
     drag = { x: e.clientX, y: e.clientY, vx: v.x, vy: v.y };
@@ -81,6 +90,7 @@ export function mountCanvas(host: HTMLElement, onZoom: (k: number) => void): Can
       return;
     }
     if (!drag) return;
+    if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 4) moved = true;
     v = { ...v, x: drag.vx + e.clientX - drag.x, y: drag.vy + e.clientY - drag.y };
     apply();
   });
@@ -101,6 +111,6 @@ export function mountCanvas(host: HTMLElement, onZoom: (k: number) => void): Can
     else if (e.key === '-') handle.zoomBy(0.8);
     else if (e.key === '0') handle.fitAll();
   });
-  window.addEventListener('resize', () => handle.fitAll());
+  window.addEventListener('resize', () => { if (!locked) handle.fitAll(); });
   return handle;
 }

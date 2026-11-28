@@ -30,10 +30,11 @@ export function mountTimeline(host: HTMLElement, onQuarter: (q: QuarterKey) => v
   let i = 0;
   let timer: number | undefined;
   const pos = (k: number) => `${(k / Math.max(1, ticks.length - 1)) * 100}%`;
-  const go = (k: number) => { i = Math.max(0, Math.min(ticks.length - 1, k)); onQuarter(ticks[i].quarter); };
+  const go = (k: number) => { if (!ticks.length) return; i = Math.max(0, Math.min(ticks.length - 1, k)); onQuarter(ticks[i].quarter); };
   const stop = () => { clearInterval(timer); timer = undefined; play.textContent = '▶'; play.setAttribute('aria-label', 'Play'); };
   play.onclick = () => {
     if (timer) return stop();
+    if (!ticks.length) return;
     if (i >= ticks.length - 1) go(ticks.findIndex(t => !t.history));
     play.textContent = '❚❚';
     play.setAttribute('aria-label', 'Pause');
@@ -47,7 +48,7 @@ export function mountTimeline(host: HTMLElement, onQuarter: (q: QuarterKey) => v
     if (d !== undefined) { stop(); go(i + d); e.preventDefault(); }
   });
   window.addEventListener('keydown', e => {
-    if (e.key === ' ' && !(e.target as Element).closest('input, button, [role=slider], textarea')) { play.click(); e.preventDefault(); }
+    if (e.key === ' ' && !e.defaultPrevented && !(e.target as Element).closest('input, button, [role=slider], textarea, .card')) { play.click(); e.preventDefault(); }
   });
 
   return {

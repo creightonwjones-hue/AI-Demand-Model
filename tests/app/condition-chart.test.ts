@@ -55,3 +55,13 @@ describe('condition chart', () => {
     expect(r0.nvidia.every(n => Number.isFinite(n.revenue) && n.revenue >= 0)).toBe(true)
   })
 })
+
+describe('final review: drag neighbours stay in bounds', () => {
+  it('clamps every quarter a drag moves, not only the dragged one', () => {
+    const vals = g.quarters.map(() => 0.9)
+    const o = dragPath(vals, g, g.idx('2028Q1'), 1, '2026Q4', v => clampValue('gpuResale', v, bounds))
+    expect(Object.values(o).every(v => v! <= 1 && v! >= 0)).toBe(true)
+    const up = dragPath(g.quarters.map((_, i) => (i === g.idx('2028Q2') ? 1 : 0.2)), g, g.idx('2028Q1'), 1, '2026Q4', v => clampValue('gpuResale', v, bounds))
+    expect(up['2028Q2']).toBeLessThanOrEqual(1)
+  })
+})

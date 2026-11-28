@@ -105,7 +105,10 @@ export function buildScene(run: RunResult, entities: readonly EntityLite[], quar
   const maxUsd = Math.max(1, ...kept.map(a => a.usd));
 
   // Blocks: configured blocks with a line or always shown, then any other entity with a line gets its own card.
-  const shownIds = new Set([...kept.flatMap(a => [a.from, a.to]), ...layout.alwaysShown.map(id => blockOf.get(id) ?? id)]);
+  // A company in default stays on the canvas (with its Default tag) after its flows stop.
+  const defaulted = Object.keys(run.entities).filter(id => memberStatus(run, id, qi) === 'default' && byId.has(id));
+  const shownIds = new Set([...kept.flatMap(a => [a.from, a.to]), ...layout.alwaysShown.map(id => blockOf.get(id) ?? id),
+    ...defaulted.map(id => blockOf.get(id) ?? id)]);
   const defs = [
     ...layout.blocks.filter(b => shownIds.has(b.id)),
     ...[...shownIds].filter(id => !layout.blocks.some(b => b.id === id) && byId.has(id))
@@ -113,7 +116,7 @@ export function buildScene(run: RunResult, entities: readonly EntityLite[], quar
   ];
   const blocks: SceneBlock[] = defs.map(def => {
     let d = def;
-    const memberIds = d.group ? d.members.filter(m => active.has(m) || layout.alwaysShown.includes(m)) : d.members;
+    const memberIds = d.group ? d.members.filter(m => active.has(m) || layout.alwaysShown.includes(m) || defaulted.includes(m)) : d.members;
     // A group with a single company shown is drawn as that company's card, not an almost-empty container.
     const group = !!d.group && memberIds.length > 1;
     if (d.group && memberIds.length === 1) d = { ...d, label: byId.get(memberIds[0])?.name ?? d.label };

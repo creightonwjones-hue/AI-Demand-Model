@@ -68,13 +68,14 @@ export function chartModel(p: ConditionPath, grid: Grid, asOf: string, w: number
  * Overrides for dragging quarter i to v: the quarter moves fully, its neighbours by 50% and 25% of the change (two each
  * side), so the line stays smooth. Quarters before `firstEditable` never move.
  */
-export function dragPath(values: readonly number[], grid: Grid, i: number, v: number, firstEditable: QuarterKey): Partial<Record<QuarterKey, number>> {
+export function dragPath(values: readonly number[], grid: Grid, i: number, v: number, firstEditable: QuarterKey,
+  clamp: (v: number) => number = x => x): Partial<Record<QuarterKey, number>> {
   const delta = v - values[i];
   const out: Partial<Record<QuarterKey, number>> = {};
   for (const [k, w] of [[0, 1], [-1, 0.5], [1, 0.5], [-2, 0.25], [2, 0.25]] as const) {
     const j = i + k;
     if (j < 0 || j >= grid.quarters.length || grid.quarters[j] < firstEditable) continue;
-    out[grid.quarters[j]] = values[j] + delta * w;
+    out[grid.quarters[j]] = clamp(values[j] + delta * w);
   }
   return out;
 }

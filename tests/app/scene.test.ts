@@ -87,3 +87,13 @@ describe('buildScene', () => {
     expect(e.usdPerYear).toBeCloseTo(q.reduce((t, f) => t + f.amountUsd, 0) * 4, -3)
   })
 })
+
+describe('final review: defaulted companies stay visible', () => {
+  it('keeps a defaulted company on the canvas with its Default tag after its flows stop', () => {
+    const r = withDefault(run, 'coreweave', '2027Q1')
+    const stopped = { ...r, flows: r.flows.filter(f => !(f.quarter >= '2027Q1' && (f.from === 'coreweave' || f.to === 'coreweave'))) }
+    const s = buildScene(stopped, entities, '2028Q2', layout)
+    const m = s.blocks.flatMap(b => b.members).find(x => x.id === 'coreweave')
+    expect(m?.status).toBe('default')
+  })
+})

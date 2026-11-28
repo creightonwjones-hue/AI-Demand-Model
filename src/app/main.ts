@@ -23,6 +23,8 @@ const app = document.querySelector<HTMLElement>('#app')!;
 const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
 const client = createRunClient(req => worker.postMessage(req));
 worker.onmessage = (e: MessageEvent<RunReply>) => client.onReply(e.data);
+worker.onerror = () => client.fail('the model could not load');
+worker.onmessageerror = () => client.fail('the model sent a reply the page could not read');
 
 const decoded = decodeState(location.hash, meta);
 export let state: AppState = decoded.state;
@@ -45,10 +47,17 @@ export function setState(next: Partial<AppState>): void {
   hashTimer = window.setTimeout(() => history.replaceState(null, '', encodeState(state)), 300);
 }
 
-export async function rerun(): Promise<RunReply> {
-  latest = await client.request(state.overrides);
+export async function rerun(): Promise<void> {
+  try {
+    latest = await client.request(state.overrides);
+  } catch (err) {
+    // Keep the previous run on screen; on the very first run, say the model could not run.
+    const loading = app.querySelector<HTMLElement>('.loading');
+    if (!latest && loading) loading.textContent = `The model could not run (${(err as Error).message}). Try reloading the page.`;
+    else showNote(`This change could not be run (${(err as Error).message}); the previous result is still shown.`);
+    return;
+  }
   render();
-  return latest;
 }
 
 const layout = layoutJson as unknown as CanvasLayout;
@@ -78,6 +87,7 @@ const panel = mountConditions(app, {
   onChange(o) { setState({ overrides: o }); void rerun(); },
   onName(name) { setState({ name: name.trim() || undefined }); app.querySelector<HTMLElement>('.setup-name')!.textContent = state.name ?? 'Baseline'; },
   onClose() { panel.toggle(false); condBtn.setAttribute('aria-expanded', 'false'); },
+  current: () => state.overrides,
 });
 condBtn.onclick = () => { panel.toggle(); condBtn.setAttribute('aria-expanded', String(!panel.el.hidden)); render(); };
 
@@ -102,6 +112,7 @@ function openZoom(edge: SceneEdge, dealId?: string): void {
   if (!scene) return;
   const deals = relatedDeals(edge.pairs, dealViews);
   zoom = { edge, deals, back: zoom?.back ?? canvas.view() };
+  canvas.lockFit(true);
   const a = scene.blocks.find(b => b.id === edge.from)!, b = scene.blocks.find(b => b.id === edge.to)!;
   const x0 = Math.min(a.x, b.x), y0 = Math.min(a.y, b.y);
   const box = { x: x0 - 30, y: y0 - 40, w: Math.max(a.x + a.w, b.x + b.w) - x0 + 60, h: Math.max(a.y + a.h, b.y + b.h) - y0 + 80 };
@@ -135,6 +146,7 @@ function closeZoom(): void {
   if (!zoom) return;
   canvas.animateTo(zoom.back);
   zoom = undefined;
+  canvas.lockFit(false);
   canvas.world.classList.remove('focus');
   app.querySelector('.dp')?.remove();
   setState({ focus: undefined });
@@ -156,11 +168,12 @@ canvas.svg.addEventListener('keydown', e => {
 });
 
 canvas.svg.addEventListener('click', e => {
+  if (canvas.dragged()) return; // the end of a pan is not a click
   const card = (e.target as Element).closest('.card');
   if (card && !zoom) { companyNote(card); return; }
   const hit = (e.target as Element).closest<SVGElement>('[data-edge]');
   if (hit && scene) { const edge = scene.edges.find(x => x.id === hit.dataset.edge); if (edge) openZoom(edge); return; }
-  if (zoom && !(e.target as Element).closest('.card')) closeZoom();
+  if (zoom && !canvas.dragged() && !(e.target as Element).closest('.card')) closeZoom();
 });
 window.addEventListener('keydown', e => { if (e.key === 'Escape') closeZoom(); });
 

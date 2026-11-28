@@ -23,3 +23,19 @@ describe('run client grid', () => {
     expect((await p).run.grid.idx('2026Q3')).toBe(18)
   })
 })
+
+describe('final review: worker errors', () => {
+  it('rejects the newest request when the worker reports an error', async () => {
+    const sent: RunRequest[] = []
+    const c = createRunClient(req => sent.push(req))
+    const p = c.request({})
+    c.onReply({ id: sent[0].id, error: 'boom' } as never)
+    await expect(p).rejects.toThrow(/boom/)
+  })
+  it('rejects the pending request when the worker itself fails', async () => {
+    const c = createRunClient(() => {})
+    const p = c.request({})
+    c.fail('worker could not load')
+    await expect(p).rejects.toThrow(/could not load/)
+  })
+})

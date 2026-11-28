@@ -15,7 +15,11 @@ export interface PanelInput {
   result?: string;
   names: Partial<Record<ConditionId, string>>; bounds: ConditionBounds;
 }
-export interface PanelCallbacks { onChange(o: Overrides): void; onName(name: string): void; onClose(): void }
+export interface PanelCallbacks {
+  onChange(o: Overrides): void; onName(name: string): void; onClose(): void;
+  /** The live overrides (they change before the engine replies), so quick edits build on each other. */
+  current(): Overrides;
+}
 
 /** Conditions the user moved, and how many of those sit outside the forecast range somewhere. */
 export function conditionCounts(c: Conditions, o: Overrides, grid: Grid): { changed: number; outside: number } {
@@ -74,7 +78,7 @@ export function mountConditions(host: HTMLElement, cb: PanelCallbacks) {
 
   const change = (id: ConditionId, add: Partial<Record<QuarterKey, number>> | undefined) => {
     if (!input) return;
-    const o: Overrides = { ...input.overrides };
+    const o: Overrides = { ...cb.current() };
     if (add) o[id] = { ...(o[id] ?? {}), ...add }; else delete o[id];
     cb.onChange(o);
   };
@@ -88,7 +92,7 @@ export function mountConditions(host: HTMLElement, cb: PanelCallbacks) {
     else if (card && input && t.closest('.cc-step')) {
       const id = card.dataset.id as ConditionId;
       const first = quarterOf(input.asOf);
-      const cur = input.conditions[id].values[input.grid.idx(first)];
+      const cur = cb.current()[id]?.[first] ?? input.conditions[id].values[input.grid.idx(first)];
       const v = clampValue(id, Math.round((cur + Number(t.closest<HTMLElement>('.cc-step')!.dataset.step)) * 100) / 100, input.bounds);
       change(id, Object.fromEntries(input.grid.quarters.filter(q => q >= first).map(q => [q, v])));
     }
@@ -120,9 +124,16 @@ export function mountConditions(host: HTMLElement, cb: PanelCallbacks) {
     const pts = Array.from(drag.svg.querySelectorAll<SVGCircleElement>('.cc-hd')).map(c => `${c.getAttribute('cx')},${c.getAttribute('cy')}`);
     drag.svg.querySelector('.cc-path')!.setAttribute('d', `M${pts.join(' L')}`);
   });
-  const release = () => { if (drag?.pending) change(drag.id, drag.pending); drag = undefined; };
+  let deferred: PanelInput | undefined;
+  const release = () => {
+    const d = drag;
+    drag = undefined;
+    if (d?.pending) change(d.id, d.pending);
+    if (deferred) { const p = deferred; deferred = undefined; api.render(p); }
+  };
   el.addEventListener('pointerup', release);
-  el.addEventListener('pointercancel', () => { drag = undefined; });
+  el.addEventListener('pointercancel', release);
+  el.addEventListener('lostpointercapture', () => { if (drag) release(); });
   el.addEventListener('keydown', e => {
     const hd = (e.target as Element).closest<SVGCircleElement>('.cc-hd');
     if (!hd || !input || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return;
@@ -134,12 +145,19 @@ export function mountConditions(host: HTMLElement, cb: PanelCallbacks) {
     e.preventDefault();
   });
 
-  return {
+  let shown: PanelInput | undefined;
+  const api = {
     el,
-    toggle(open?: boolean) { el.hidden = open === undefined ? !el.hidden : !open; },
+    toggle(open?: boolean) { el.hidden = open === undefined ? !el.hidden : !open; if (!el.hidden) shown = undefined; },
     render(p: PanelInput) {
+      // Never rebuild under a drag (the handle would vanish); rebuild only when what the panel shows changed.
+      if (drag) { deferred = p; return; }
       input = p;
       if (el.hidden) return;
+      if (shown && shown.conditions === p.conditions && shown.overrides === p.overrides && shown.result === p.result) return;
+      shown = p;
+      const act = document.activeElement as Element | null;
+      const keepHandle = act?.classList.contains('cc-hd') ? { id: act.closest<HTMLElement>('.cc')?.dataset.id, q: (act as SVGElement).dataset.q } : undefined;
       const focused = (document.activeElement as HTMLElement | null)?.closest?.('.cpanel') ? document.activeElement : null;
       const keepName = focused?.classList.contains('cp-name');
       el.innerHTML = `<div class="cp-head"><b>Conditions</b><span class="cp-sub">Drag the dots on any line to change what happens. The model re-runs when you let go.</span>
@@ -151,6 +169,8 @@ export function mountConditions(host: HTMLElement, cb: PanelCallbacks) {
       const nameInput = el.querySelector<HTMLInputElement>('.cp-name')!;
       nameInput.addEventListener('input', () => cb.onName(nameInput.value));
       if (keepName) { nameInput.focus(); nameInput.setSelectionRange(nameInput.value.length, nameInput.value.length); }
+      if (keepHandle?.id && keepHandle.q) el.querySelector<SVGCircleElement>(`.cc[data-id="${CSS.escape(keepHandle.id)}"] .cc-hd[data-q="${CSS.escape(keepHandle.q)}"]`)?.focus();
     },
   };
+  return api;
 }
