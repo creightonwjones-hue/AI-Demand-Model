@@ -64,6 +64,7 @@ app.insertAdjacentHTML('beforeend', `
   <div class="fl zoom"><button type="button" class="zin" aria-label="Zoom in">+</button><span class="pct">100%</span>
     <button type="button" class="zout" aria-label="Zoom out">−</button><button type="button" class="fit">Fit</button></div>
   <aside class="fl nv" aria-live="polite"></aside>
+  <div class="toast" role="status" hidden></div>
   <div class="loading">Running the model…</div>`);
 const pct = app.querySelector<HTMLElement>('.zoom .pct')!;
 const canvas = mountCanvas(app, k => { pct.textContent = `${Math.round(k * 100)}%`; });
@@ -140,7 +141,23 @@ function closeZoom(): void {
   render();
 }
 
+// Company decisions (game trees, payoff tables) arrive in phase 4: say so when a company is clicked or activated.
+let toastTimer: number | undefined;
+function companyNote(card: Element): void {
+  const t = app.querySelector<HTMLElement>('.toast')!;
+  t.textContent = `${card.getAttribute('aria-label')}: the decisions behind its moves, with their game tree or payoff table, arrive in phase 4.`;
+  t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => { t.hidden = true; }, 4000);
+}
+canvas.svg.addEventListener('keydown', e => {
+  const card = (e.target as Element).closest('.card');
+  if (card && (e.key === 'Enter' || e.key === ' ')) { companyNote(card); e.preventDefault(); }
+});
+
 canvas.svg.addEventListener('click', e => {
+  const card = (e.target as Element).closest('.card');
+  if (card && !zoom) { companyNote(card); return; }
   const hit = (e.target as Element).closest<SVGElement>('[data-edge]');
   if (hit && scene) { const edge = scene.edges.find(x => x.id === hit.dataset.edge); if (edge) openZoom(edge); return; }
   if (zoom && !(e.target as Element).closest('.card')) closeZoom();
@@ -155,7 +172,8 @@ function render(): void {
   const card = nvidiaCard(latest.run, meta.comparisons, state.quarter);
   const gap = card.fyConsensus ? ` · ${card.fyModel >= card.fyConsensus ? '+' : '−'}${Math.abs((card.fyModel / card.fyConsensus - 1) * 100).toFixed(0)}%` : '';
   canvas.draw(scene, { motion: !reducedMotion.matches, nvidiaSub: `FY${card.fy} revenue ${formatAmount(card.fyModel)}${gap}` });
-  app.querySelector<HTMLElement>('.nv')!.innerHTML = nvidiaCardHtml(card);
+  app.querySelector<HTMLElement>('.nv')!.innerHTML = nvidiaCardHtml(card)
+    + '<button class="ews" type="button" disabled title="The early-warning dashboard arrives in phase 7">Early-warning dashboard · phase 7</button>';
   if (zoom) {
     const still = scene.edges.find(x => x.id === zoom!.edge.id);
     if (still) { zoom.edge = still; showZoom(state.focus?.dealId); } else closeZoom();
