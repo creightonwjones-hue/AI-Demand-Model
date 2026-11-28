@@ -91,8 +91,8 @@ function pointAt(g: Geo, t: number): [number, number] {
 function edgeSvg(e: SceneEdge, g: Geo, payer: SceneBlock, i: number, motion: boolean, skip: boolean): string {
   const id = `e${i}`;
   const broken = e.status === 'broken';
-  const out = [`<path class="halo" d="${g.d}" stroke-width="${(e.width + 3).toFixed(2)}"/>`,
-    `<path class="edge ${e.status}${skip ? ' skip' : ''}" id="${id}" d="${g.d}" stroke-width="${e.width.toFixed(2)}"><title>${esc(`${e.label} ${formatAmount(e.usdPerYear)} a year`)}</title></path>`];
+  const out = [`<path class="halo" data-edge="${esc(e.id)}" d="${g.d}" stroke-width="${Math.max(10, e.width + 3).toFixed(2)}"/>`,
+    `<path class="edge ${e.status}${skip ? ' skip' : ''}" data-edge="${esc(e.id)}" id="${id}" d="${g.d}" stroke-width="${e.width.toFixed(2)}"><title>${esc(`${e.label} ${formatAmount(e.usdPerYear)} a year`)}</title></path>`];
   if (motion) {
     const usdB = e.usdPerYear / 1e9;
     const n = broken ? 1 : Math.max(1, Math.min(7, Math.round(Math.sqrt(usdB) / 2)));
@@ -159,6 +159,9 @@ function groupFrame(b: SceneBlock): string {
 
 /** A block's company cards (drawn over the lines): one card, or the group's pills. */
 function blockCards(b: SceneBlock, sub?: string): string {
+  return `<g class="blk" data-block="${esc(b.id)}">${blockCardsInner(b, sub)}</g>`;
+}
+function blockCardsInner(b: SceneBlock, sub?: string): string {
   if (!b.group) return card(b.members[0]?.id ?? b.id, b.label, b.x, b.y, b.w, b.h, b.layer, b.status, b.big, sub);
   return b.members.map(m => card(m.id, m.name, b.x + m.x, b.y + 18, m.w, PILL_H, b.layer, m.status, false)).join('');
 }

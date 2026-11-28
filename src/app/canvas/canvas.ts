@@ -10,6 +10,11 @@ export interface CanvasHandle {
   fitAll(): void;
   zoomBy(f: number): void;
   setView(v: Viewport): void;
+  /** Animate to `target` (instant when reduced motion is on). */
+  animateTo(target: Viewport): void;
+  /** Screen position of a world point. */
+  toScreen(x: number, y: number): [number, number];
+  world: SVGGElement;
   view(): Viewport;
   svg: SVGSVGElement;
 }
@@ -40,6 +45,19 @@ export function mountCanvas(host: HTMLElement, onZoom: (k: number) => void): Can
     },
     zoomBy(f) { const r = size(); v = zoomAt(v, r.width / 2, r.height / 2, f); apply(); },
     setView(nv) { v = nv; apply(); },
+    world,
+    toScreen: (x, y) => [x * v.k + v.x, y * v.k + v.y],
+    animateTo(target) {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { v = target; apply(); return; }
+      const from = v, t0 = performance.now(), ms = 350;
+      const step = (now: number) => {
+        const t = Math.min(1, (now - t0) / ms), e = t * (2 - t);
+        v = { x: from.x + (target.x - from.x) * e, y: from.y + (target.y - from.y) * e, k: from.k + (target.k - from.k) * e };
+        apply();
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    },
     view: () => v,
   };
 
@@ -48,7 +66,7 @@ export function mountCanvas(host: HTMLElement, onZoom: (k: number) => void): Can
   let pinch: number | undefined;
   svg.addEventListener('pointerdown', e => {
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    if ((e.target as Element).closest('.card, .chip')) return;
+    if ((e.target as Element).closest('.card, .chip, .halo')) return;
     svg.setPointerCapture(e.pointerId);
     drag = { x: e.clientX, y: e.clientY, vx: v.x, vy: v.y };
     svg.classList.add('dragging');
