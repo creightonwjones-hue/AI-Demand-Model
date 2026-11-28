@@ -1,0 +1,268 @@
+{
+  "description": "Canvas blocks: each is a single company card or a group of companies drawn as one container with pills. Money lines join blocks. Order within a row is left to right. Entities in no block get their own card when they have a visible line. 'aliases' route a flow kind from an entity to a block (the model's core-business-cash comes from rest-of-economy; the canvas shows it as Big Tech profits). 'labels' merges flow labels on the canvas (interest and repayments between the same blocks become one Debt service line). Lines under minUsdPerYear are left off the overview.",
+  "rows": [
+    "money",
+    "labs",
+    "financing",
+    "cloud",
+    "chips",
+    "supply"
+  ],
+  "rowLabels": {
+    "money": "Money in",
+    "labs": "AI labs",
+    "financing": "Developers & financing",
+    "cloud": "Clouds",
+    "chips": "Chip makers",
+    "supply": "Supply chain"
+  },
+  "blocks": [
+    {
+      "id": "big-tech-profits",
+      "label": "Big Tech profits",
+      "layer": "money",
+      "members": []
+    },
+    {
+      "id": "ai-customers",
+      "label": "AI customers",
+      "layer": "money",
+      "members": [
+        "ai-customers-consumer",
+        "ai-customers-enterprise"
+      ]
+    },
+    {
+      "id": "physical-ai",
+      "label": "Physical AI & edge",
+      "layer": "money",
+      "members": [
+        "physical-ai-buyers",
+        "non-ai-customers"
+      ]
+    },
+    {
+      "id": "venture-capital",
+      "label": "Venture capital",
+      "layer": "money",
+      "members": [
+        "venture-capital"
+      ]
+    },
+    {
+      "id": "equity-market",
+      "label": "Stock market",
+      "layer": "money",
+      "members": [
+        "equity-market"
+      ]
+    },
+    {
+      "id": "softbank-sovereign",
+      "label": "SoftBank & sovereign funds",
+      "layer": "money",
+      "members": [
+        "softbank",
+        "mgx"
+      ]
+    },
+    {
+      "id": "private-credit",
+      "label": "Private credit",
+      "layer": "money",
+      "members": [
+        "private-credit-other",
+        "blue-owl",
+        "blackstone",
+        "apollo",
+        "pimco",
+        "magnetar",
+        "valor",
+        "diameter",
+        "kkr",
+        "brookfield",
+        "blackrock",
+        "insurers-annuities"
+      ]
+    },
+    {
+      "id": "banks-bonds",
+      "label": "Banks & bonds",
+      "layer": "money",
+      "members": [
+        "banks",
+        "bond-market",
+        "goldman-sachs",
+        "morgan-stanley",
+        "jpmorgan",
+        "mufg",
+        "smbc",
+        "bnp-paribas"
+      ]
+    },
+    {
+      "id": "labs",
+      "label": "AI labs",
+      "layer": "labs",
+      "group": true,
+      "members": [
+        "openai",
+        "anthropic",
+        "spacex",
+        "ai-startups",
+        "cerebras",
+        "mistral"
+      ]
+    },
+    {
+      "id": "financing",
+      "label": "Financing vehicles",
+      "layer": "financing",
+      "group": true,
+      "members": [
+        "spv-coreweave-ddtl",
+        "spv-saturn-funding-trust",
+        "spv-xai-colossus2",
+        "spv-hyperion-beignet",
+        "spv-meta-el-paso",
+        "spv-oracle-new-mexico",
+        "stargate"
+      ]
+    },
+    {
+      "id": "developers",
+      "label": "Data-centre developers",
+      "layer": "financing",
+      "group": true,
+      "members": [
+        "sb-energy",
+        "vantage",
+        "related-digital",
+        "crusoe"
+      ]
+    },
+    {
+      "id": "cash-clouds",
+      "label": "Cash-funded clouds",
+      "layer": "cloud",
+      "group": true,
+      "members": [
+        "microsoft",
+        "alphabet",
+        "amazon",
+        "meta"
+      ]
+    },
+    {
+      "id": "debt-clouds",
+      "label": "Debt-funded clouds",
+      "layer": "cloud",
+      "group": true,
+      "members": [
+        "oracle",
+        "coreweave",
+        "nebius",
+        "lambda"
+      ]
+    },
+    {
+      "id": "sovereign",
+      "label": "Sovereign & international",
+      "layer": "cloud",
+      "group": true,
+      "members": [
+        "sovereign-international",
+        "humain",
+        "g42",
+        "china-market"
+      ]
+    },
+    {
+      "id": "broadcom",
+      "label": "Broadcom (TPU)",
+      "layer": "chips",
+      "members": [
+        "broadcom"
+      ]
+    },
+    {
+      "id": "marvell",
+      "label": "Marvell (Trainium)",
+      "layer": "chips",
+      "members": [
+        "marvell"
+      ]
+    },
+    {
+      "id": "nvidia",
+      "label": "NVIDIA",
+      "layer": "chips",
+      "members": [
+        "nvidia"
+      ],
+      "big": true
+    },
+    {
+      "id": "amd",
+      "label": "AMD",
+      "layer": "chips",
+      "members": [
+        "amd"
+      ]
+    },
+    {
+      "id": "sk-hynix",
+      "label": "SK Hynix",
+      "layer": "supply",
+      "members": [
+        "sk-hynix"
+      ]
+    },
+    {
+      "id": "tsmc",
+      "label": "TSMC",
+      "layer": "supply",
+      "members": [
+        "tsmc"
+      ]
+    },
+    {
+      "id": "asml",
+      "label": "ASML",
+      "layer": "supply",
+      "members": [
+        "asml"
+      ]
+    },
+    {
+      "id": "construction-and-power",
+      "label": "Builders & power",
+      "layer": "supply",
+      "members": [
+        "construction-and-power"
+      ]
+    }
+  ],
+  "aliases": [
+    {
+      "entity": "rest-of-economy",
+      "kind": "core-business-cash",
+      "block": "big-tech-profits"
+    }
+  ],
+  "hiddenKinds": [
+    "operating-cost"
+  ],
+  "alwaysShown": [
+    "nvidia",
+    "tsmc",
+    "sk-hynix",
+    "cash-clouds"
+  ],
+  "minUsdPerYear": 3000000000,
+  "labels": {
+    "Interest": "Debt service",
+    "Repays loan": "Debt service",
+    "Core business cash": "Reinvested profits"
+  }
+}
