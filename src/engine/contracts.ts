@@ -21,7 +21,8 @@
 // - Quarters outside the grid are dropped; the per-quarter amount is not rescaled.
 import type { DealType, QuarterKey } from '../data/schema';
 import type { DealView } from './asof';
-import { loadParams, param } from './params';
+import { param } from './params';
+import { loadParams } from './node-io';
 import type { EngineParams, FlowKind, Grid } from './types';
 import { addQuarters, quarterRange } from '../data/quarters';
 
@@ -151,7 +152,7 @@ function positionsOf(d: DealView, termParam: string, params: EngineParams, cutof
 }
 
 /** Every loan position (loan and spv-financing deals with a hard minimum), on no grid; see the rules above. */
-export function loanPositions(deals: readonly DealView[], params: EngineParams = loadParams()): LoanPosition[] {
+export function loanPositions(deals: readonly DealView[], params: EngineParams): LoanPosition[] {
   const out: LoanPosition[] = [];
   for (const d of deals) {
     const rule = d.types.length > 0 ? RULES[d.types[0]] : undefined;
@@ -161,7 +162,7 @@ export function loanPositions(deals: readonly DealView[], params: EngineParams =
 }
 
 /** Obligations from each deal's hard minimum over the grid; see the rules at the top of this file. */
-export function scheduleObligations(deals: readonly DealView[], grid: Grid, params: EngineParams = loadParams()): Obligation[] {
+export function scheduleObligations(deals: readonly DealView[], grid: Grid, params: EngineParams): Obligation[] {
   const inGrid = new Set(grid.quarters);
   const out: Obligation[] = [];
   for (const d of deals) {

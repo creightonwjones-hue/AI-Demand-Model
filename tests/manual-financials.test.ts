@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { loadManualFinancials, buildFxTable, type FxTable } from '../src/data/manual-financials';
-import { FinancialFactSchema, loadEntities, type Series } from '../src/data/schema';
+import { FinancialFactSchema, type Series } from '../src/data/schema';
+import { loadEntities } from '../src/data/load-entities';
 
 const entities = loadEntities();
 const HEADER = 'entity_id,metric,segment,period_start,period_end,value,currency,as_known_at,source_url,source_title,'

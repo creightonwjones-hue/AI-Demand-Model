@@ -1,9 +1,12 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { asOfView, loadBuild } from '../../src/engine/asof'
-import { CONDITION_IDS, buildConditions, loadConditionSpecs, withUserPath } from '../../src/engine/conditions'
+import { asOfView } from '../../src/engine/asof'
+import { loadBuild } from '../../src/engine/node-io'
+import { CONDITION_IDS, buildConditions, withUserPath } from '../../src/engine/conditions'
+import { loadConditionSpecs } from '../../src/engine/node-io'
 import { makeGrid } from '../../src/engine/grid'
-import { loadParams, param } from '../../src/engine/params'
+import { param } from '../../src/engine/params'
+import { loadParams } from '../../src/engine/node-io'
 import type { ConditionId } from '../../src/engine/types'
 
 const build = loadBuild()

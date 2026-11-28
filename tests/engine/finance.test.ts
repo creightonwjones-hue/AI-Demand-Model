@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { asOfView, loadBuild } from '../../src/engine/asof'
+import { asOfView } from '../../src/engine/asof'
+import { loadBuild } from '../../src/engine/node-io'
 import { makeGrid } from '../../src/engine/grid'
 import { initState, type EngineState } from '../../src/engine/init'
 import { stepFinance, type FinanceOut } from '../../src/engine/layers/finance'
 import { netFinancialAssets } from '../../src/engine/ledger'
-import { loadParams, param } from '../../src/engine/params'
+import { param } from '../../src/engine/params'
+import { loadParams } from '../../src/engine/node-io'
 import type { EngineParams, Flow } from '../../src/engine/types'
 
 const grid = makeGrid()

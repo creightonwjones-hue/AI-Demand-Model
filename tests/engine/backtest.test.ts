@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { asOfView, loadBuild, type BuildData } from '../../src/engine/asof'
+import { asOfView, type BuildData } from '../../src/engine/asof'
+import { loadBuild } from '../../src/engine/node-io'
 import { asOfFor, ets, fiscalYearSum, rollingBacktest } from '../../src/engine/backtest'
-import { loadParams } from '../../src/engine/params'
+import { loadParams } from '../../src/engine/node-io'
 import type { QuarterKey } from '../../src/data/schema'
 import { addQuarters } from '../../src/data/quarters'
 

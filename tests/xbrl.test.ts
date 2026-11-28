@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { extractQuarterly, valueAsOf, loadMetricMap } from '../src/data/xbrl';
-import { FinancialFactSchema, loadEntities, type Entity } from '../src/data/schema';
+import { FinancialFactSchema, type Entity } from '../src/data/schema';
+import { loadEntities } from '../src/data/load-entities';
 
 const readJson = (p: string): unknown => JSON.parse(readFileSync(p, 'utf8'));
 

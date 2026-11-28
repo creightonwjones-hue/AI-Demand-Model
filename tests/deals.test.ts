@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { loadDeals, sumValues, dealsTouching } from '../src/data/deals';
-import { loadEntities, type Deal } from '../src/data/schema';
+import { type Deal } from '../src/data/schema';
+import { loadEntities } from '../src/data/load-entities';
 
 const dealWith = (values: Deal['values'], over: Partial<Deal> = {}): Deal => ({
   id: 'x',

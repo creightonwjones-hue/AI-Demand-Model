@@ -1,6 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { z } from 'zod';
-import { loadEntities, FinancialFactSchema, SeriesSchema, type FinancialFact, type Series, type Entity } from '../../src/data/schema';
+import { FinancialFactSchema, SeriesSchema, type FinancialFact, type Series, type Entity } from '../../src/data/schema';
+import { loadEntities } from '../../src/data/load-entities';
 import { extractQuarterly, loadMetricMap } from '../../src/data/xbrl';
 import { fredToSeries, loadManualSeries } from '../../src/data/series';
 import { buildFxTable, loadManualFinancials } from '../../src/data/manual-financials';

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { loadParams, param } from '../../src/engine/params'
+import { param } from '../../src/engine/params'
+import { loadParams } from '../../src/engine/node-io'
 
 describe('engine params', () => {
   const p = loadParams()

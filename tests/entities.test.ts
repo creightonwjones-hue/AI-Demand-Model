@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { loadEntities } from '../src/data/schema';
+import { loadEntities } from '../src/data/load-entities';
 
 describe('entity registry', () => {
   it('loads a valid registry', () => {

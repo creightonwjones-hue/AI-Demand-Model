@@ -2,7 +2,8 @@ import { mkdtempSync, writeFileSync, copyFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { asOfView, loadBuild } from '../../src/engine/asof'
+import { asOfView } from '../../src/engine/asof'
+import { loadBuild } from '../../src/engine/node-io'
 
 describe('asOfView', () => {
   const build = loadBuild()

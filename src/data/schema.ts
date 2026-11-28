@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
@@ -157,15 +156,3 @@ export const DealSchema = z.object({
 }).strict().refine(d => d.terms.asKnownAt === undefined || d.terms.asKnownAt >= d.announced,
   { message: 'terms.asKnownAt is before announced', path: ['terms', 'asKnownAt'] });
 export type Deal = z.infer<typeof DealSchema>;
-
-// ---- Entity registry loader ----
-export function loadEntities(path = 'config/entities.json'): Entity[] {
-  const raw: unknown = JSON.parse(readFileSync(path, 'utf8'));
-  const entities = z.array(EntitySchema).parse(raw);
-  const seen = new Set<string>();
-  for (const e of entities) {
-    if (seen.has(e.id)) throw new Error(`duplicate entity id: ${e.id}`);
-    seen.add(e.id);
-  }
-  return entities;
-}

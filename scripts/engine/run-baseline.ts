@@ -4,11 +4,13 @@
  *
  *   npm run engine:baseline
  */
-import { asOfView, loadBuild } from '../../src/engine/asof';
+import { asOfView } from '../../src/engine/asof';
+import { loadBuild } from '../../src/engine/node-io';
 import { latestBuildDate, rollingBacktest } from '../../src/engine/backtest';
 import { ALL_ORIGINS, fitRows, holdoutRows, objective } from '../../src/engine/calibrate';
 import { makeGrid } from '../../src/engine/grid';
-import { loadParams, param } from '../../src/engine/params';
+import { param } from '../../src/engine/params';
+import { loadParams } from '../../src/engine/node-io';
 import type { BaselineComparisons, EngineBaseline } from '../../src/engine/types';
 import { runOnePath } from '../../src/engine/run';
 import { writeJson } from './json';

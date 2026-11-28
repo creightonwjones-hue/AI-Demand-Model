@@ -4,9 +4,9 @@
  *
  *   npm run engine:calibrate
  */
-import { loadBuild } from '../../src/engine/asof';
+import { loadBuild } from '../../src/engine/node-io';
 import { calibrate } from '../../src/engine/calibrate';
-import { loadParams } from '../../src/engine/params';
+import { loadParams } from '../../src/engine/node-io';
 import { writeJson } from './json';
 
 const PATH = 'config/engine-params.json';

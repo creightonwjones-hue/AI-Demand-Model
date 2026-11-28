@@ -1,7 +1,5 @@
 // The engine's ONLY gateway to data/build/*.json. A view at date D exposes only what was publicly known on D:
 // facts and series points with asKnownAt <= D, deals with announced <= D, and status entries with asKnownAt <= D.
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { z } from 'zod';
 import {
   DealSchema, EntitySchema, FinancialFactSchema, SeriesSchema,
@@ -22,22 +20,23 @@ export interface AsOfData {
   deals: readonly DealView[];
 }
 
-function readValidated<T>(dir: string, file: string, schema: z.ZodType<T>): T {
-  const path = join(dir, file);
-  let raw: unknown;
-  try { raw = JSON.parse(readFileSync(path, 'utf8')); }
-  catch (e) { throw new Error(`${file}: cannot read/parse ${path}: ${(e as Error).message}`); }
+function validated<T>(file: string, raw: unknown, schema: z.ZodType<T>): T {
   const r = schema.safeParse(raw);
   if (!r.success) throw new Error(`${file}: schema validation failed: ${r.error.message}`);
   return r.data;
 }
 
-export function loadBuild(dir = 'data/build'): BuildData {
+/** Validate the four build files (already parsed JSON) into BuildData. Reading them is node-io's job. */
+export type BuildFile = 'entities' | 'financials' | 'series' | 'deals';
+export const BUILD_FILES: readonly BuildFile[] = ['entities', 'financials', 'series', 'deals'];
+
+/** Parse the four build files in order; `read` returns a file's parsed JSON, so a reader can fail per file. */
+export function parseBuild(read: (file: BuildFile) => unknown): BuildData {
   return {
-    entities: readValidated(dir, 'entities.json', z.array(EntitySchema)),
-    facts: readValidated(dir, 'financials.json', z.array(FinancialFactSchema)),
-    series: readValidated(dir, 'series.json', z.array(SeriesSchema)),
-    deals: readValidated(dir, 'deals.json', z.array(DealSchema)),
+    entities: validated('entities.json', read('entities'), z.array(EntitySchema)),
+    facts: validated('financials.json', read('financials'), z.array(FinancialFactSchema)),
+    series: validated('series.json', read('series'), z.array(SeriesSchema)),
+    deals: validated('deals.json', read('deals'), z.array(DealSchema)),
   };
 }
 

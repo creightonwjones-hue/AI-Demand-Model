@@ -1,12 +1,11 @@
 // Condition catalogue: each outside input the user drags (phase 3) starts from real history known at the as-of date,
 // continues on a default path to the end of the grid, and carries a forecast range whose source is shown on hover.
 // Specs live in config/conditions.json; every tunable number is in config/engine-params.json.
-import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 import type { QuarterKey, SeriesPoint } from '../data/schema';
 import type { AsOfData } from './asof';
 import { makeGrid } from './grid';
-import { loadParams, param } from './params';
+import { param } from './params';
 import type { ConditionId, ConditionPath, Conditions, EngineParams, Grid } from './types';
 
 const ID_SET: Record<ConditionId, true> = {
@@ -89,9 +88,8 @@ const SpecsSchema = z.object(
   Object.fromEntries(CONDITION_IDS.map(id => [id, ConditionSpecSchema])) as Record<ConditionId, typeof ConditionSpecSchema>,
 ).strict();
 
-/** Load and validate config/conditions.json (one entry per ConditionId, no extras). */
-export function loadConditionSpecs(path = 'config/conditions.json'): ConditionSpecs {
-  const raw: unknown = JSON.parse(readFileSync(path, 'utf8'));
+/** Validate config/conditions.json (already parsed JSON; one entry per ConditionId, no extras). */
+export function parseConditionSpecs(raw: unknown, path = 'config/conditions.json'): ConditionSpecs {
   const r = SpecsSchema.safeParse(raw);
   if (!r.success) {
     throw new Error(`Invalid condition specs in ${path}: ${r.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; ')}`);
@@ -450,7 +448,10 @@ export function withUserPath(
   return { ...c, [id]: { ...path, values: nv, origin: no } };
 }
 
-let cachedSpecs: ConditionSpecs | undefined;
-let cachedParams: EngineParams | undefined;
-const defaultSpecs = () => (cachedSpecs ??= loadConditionSpecs());
-const defaultParams = () => (cachedParams ??= loadParams());
+// Defaults for buildConditions without opts. node-io registers file-backed loaders; the browser always passes opts.
+let defaults: { specs: () => ConditionSpecs; params: () => EngineParams } | undefined;
+export function registerConditionDefaults(specs: () => ConditionSpecs, params: () => EngineParams): void {
+  defaults = { specs, params };
+}
+const defaultSpecs = (): ConditionSpecs => { if (!defaults) throw new Error('condition specs not loaded'); return defaults.specs(); };
+const defaultParams = (): EngineParams => { if (!defaults) throw new Error('condition specs not loaded'); return defaults.params(); };

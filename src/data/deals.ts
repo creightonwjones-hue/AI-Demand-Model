@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { z } from 'zod';
-import { DealSchema, loadEntities, type Deal, type Entity } from './schema';
+import { DealSchema, type Deal, type Entity } from './schema';
+import { loadEntities } from './load-entities';
 
 /**
  * Loads the deal database, validates every record against DealSchema, checks that every

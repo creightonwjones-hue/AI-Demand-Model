@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { asOfView, loadBuild } from '../../src/engine/asof'
+import { asOfView } from '../../src/engine/asof'
+import { loadBuild } from '../../src/engine/node-io'
 import { buildConditions } from '../../src/engine/conditions'
 import { makeGrid } from '../../src/engine/grid'
 import { initState } from '../../src/engine/init'
 import { supplyCapacity } from '../../src/engine/layers/chips'
 import { aspAt, capacityFactorAt, SUPPLY_ANCHOR } from '../../src/engine/supply-path'
-import { loadParams, param } from '../../src/engine/params'
+import { param } from '../../src/engine/params'
+import { loadParams } from '../../src/engine/node-io'
 import { runOnePath } from '../../src/engine/run'
 
 const params = loadParams()

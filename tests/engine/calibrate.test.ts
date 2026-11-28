@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { loadBuild } from '../../src/engine/asof'
+import { loadBuild } from '../../src/engine/node-io'
 import { calibrate } from '../../src/engine/calibrate'
-import { loadParams, param } from '../../src/engine/params'
+import { param } from '../../src/engine/params'
+import { loadParams } from '../../src/engine/node-io'
 
 describe('calibrate', () => {
   const build = loadBuild()

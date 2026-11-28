@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { loadEntities } from '../../src/data/schema';
+import { loadEntities } from '../../src/data/load-entities';
 import { fetchWithPolicy } from './http';
 
 const OUT_DIR = 'data/raw/sec';

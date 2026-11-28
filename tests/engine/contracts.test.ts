@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { asOfView, loadBuild, type DealView } from '../../src/engine/asof'
-import { loanPositions, parseFixedAnnualRate, parseTermQuarters, scheduleObligations, type Obligation } from '../../src/engine/contracts'
+import { asOfView, type DealView } from '../../src/engine/asof'
+import { loadBuild } from '../../src/engine/node-io'
+import { loanPositions as loanPositionsP, parseFixedAnnualRate, parseTermQuarters, scheduleObligations as scheduleP, type Obligation } from '../../src/engine/contracts'
+import type { EngineParams, Grid } from '../../src/engine/types'
 import { makeGrid } from '../../src/engine/grid'
-import { loadParams, param } from '../../src/engine/params'
+import { param } from '../../src/engine/params'
+import { loadParams } from '../../src/engine/node-io'
 import type { Deal, DealStatus } from '../../src/data/schema'
 
 type Over = Partial<Deal['values']> & Partial<Pick<Deal, 'start' | 'end' | 'announced' | 'payers' | 'payees' | 'types'>>
@@ -227,3 +230,7 @@ describe('term and rate parsing', () => {
     expect(parseFixedAnnualRate(undefined)).toBeUndefined()
   })
 })
+
+// params became required in contracts.ts (browser-safe engine); these keep the tests' default of the committed file.
+function scheduleObligations(d: readonly DealView[], g: Grid, p: EngineParams = loadParams()) { return scheduleP(d, g, p) }
+function loanPositions(d: readonly DealView[], p: EngineParams = loadParams()) { return loanPositionsP(d, p) }

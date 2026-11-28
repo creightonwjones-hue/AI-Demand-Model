@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { aspAt } from '../../src/engine/supply-path'
-import { asOfView, loadBuild } from '../../src/engine/asof'
+import { asOfView } from '../../src/engine/asof'
+import { loadBuild } from '../../src/engine/node-io'
 import { buildConditions, withUserPath } from '../../src/engine/conditions'
 import { makeGrid } from '../../src/engine/grid'
 import { initState, type EngineState } from '../../src/engine/init'
@@ -8,7 +9,8 @@ import { stepClouds, CLOUDS, CASH_FUNDED, type CloudsOut } from '../../src/engin
 const CASH_FUNDED_IDS: readonly string[] = CASH_FUNDED
 import { stepChips, supplyCapacity } from '../../src/engine/layers/chips'
 import type { DemandOut } from '../../src/engine/layers/demand'
-import { loadParams, param } from '../../src/engine/params'
+import { param } from '../../src/engine/params'
+import { loadParams } from '../../src/engine/node-io'
 import type { ConditionId, Conditions } from '../../src/engine/types'
 
 const ASOF = '2026-11-26'

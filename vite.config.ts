@@ -2,6 +2,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, type Plugin } from 'vite';
 import { prepare } from './src/explorer/prepare';
+import { makeBundle } from './src/engine/browser-input';
+import { loadBuild, loadConditionSpecs, loadParams } from './src/engine/node-io';
 
 const VIRTUAL_ID = 'virtual:explorer-data';
 const RESOLVED_ID = '\0' + VIRTUAL_ID;
@@ -35,9 +37,27 @@ function explorerData(): Plugin {
   };
 }
 
+const ENGINE_ID = 'virtual:engine-input';
+const ENGINE_RESOLVED = '\0' + ENGINE_ID;
+
+/** Serves `virtual:engine-input`: the trimmed build, params, condition specs and baseline comparisons for the worker. */
+function engineInput(): Plugin {
+  return {
+    name: 'engine-input',
+    resolveId: id => (id === ENGINE_ID ? ENGINE_RESOLVED : undefined),
+    load(id) {
+      if (id !== ENGINE_RESOLVED) return undefined;
+      const baseline = JSON.parse(readFileSync('data/build/engine-baseline.json', 'utf8'));
+      const bundle = makeBundle(loadBuild(), loadParams(), loadConditionSpecs(), baseline.comparisons);
+      return `export default JSON.parse(${JSON.stringify(JSON.stringify(bundle))});`;
+    },
+  };
+}
+
 export default defineConfig({
   // Relative base so the built site works under a GitHub Pages project path (https://<user>.github.io/<repo>/).
   base: './',
-  plugins: [explorerData()],
+  plugins: [explorerData(), engineInput()],
+  worker: { format: 'es', plugins: () => [engineInput()] },
   build: { outDir: 'dist', emptyOutDir: true },
 });

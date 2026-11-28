@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { loadBuild } from '../../src/engine/asof'
+import { loadBuild } from '../../src/engine/node-io'
 import { makeGrid } from '../../src/engine/grid'
-import { loadParams } from '../../src/engine/params'
+import { loadParams } from '../../src/engine/node-io'
 import { runOnePath, type EngineInput } from '../../src/engine/run'
 
 const build = loadBuild()

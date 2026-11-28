@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 import type { EngineParams } from './types';
 
@@ -22,9 +21,8 @@ const ParamsSchema = z.record(z.string(), ParamValueSchema).superRefine((params,
   }
 });
 
-/** Load and validate the engine parameter file. */
-export function loadParams(path = 'config/engine-params.json'): EngineParams {
-  const raw: unknown = JSON.parse(readFileSync(path, 'utf8'));
+/** Validate the engine parameter file (already parsed JSON). Reading it is node-io's job. */
+export function parseParams(raw: unknown, path = 'config/engine-params.json'): EngineParams {
   const parsed = ParamsSchema.safeParse(raw);
   if (!parsed.success) {
     throw new Error(`Invalid engine params in ${path}: ${parsed.error.issues.map((i) => i.message || i.path.join('.')).join('; ')}`);
