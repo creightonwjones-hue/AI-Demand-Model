@@ -1,0 +1,57 @@
+{
+  "description": "Hard limits for dragging each condition (the engine is not asked to run outside them). 'allowed' snaps to fixed values. 'setting' conditions are one number for all quarters, not a time path.",
+  "conditions": {
+    "aiSpend": {
+      "min": 0,
+      "max": 5000000000000.0
+    },
+    "tokenPrice": {
+      "min": 0.01,
+      "max": 20
+    },
+    "priceElasticity": {
+      "min": 0.05,
+      "max": 5,
+      "setting": true
+    },
+    "creditSpread": {
+      "min": 0,
+      "max": 30
+    },
+    "riskFree": {
+      "min": 0,
+      "max": 20
+    },
+    "gpuResale": {
+      "min": 0,
+      "max": 1
+    },
+    "gpuRental": {
+      "min": 0,
+      "max": 30
+    },
+    "powerGw": {
+      "min": 0,
+      "max": 2000
+    },
+    "exportRegime": {
+      "allowed": [
+        0,
+        0.5,
+        1
+      ]
+    },
+    "equitySentiment": {
+      "min": 5,
+      "max": 90
+    },
+    "physicalAiGrowth": {
+      "min": 0,
+      "max": 20
+    },
+    "labourSubstitution": {
+      "min": 0,
+      "max": 100
+    }
+  }
+}

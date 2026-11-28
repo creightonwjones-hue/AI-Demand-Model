@@ -11,6 +11,10 @@ import { dealPanelHtml, dealStructure, relatedDeals } from './deal-view';
 import { asOfView, type DealView } from '../engine/asof';
 import type { Scene, SceneEdge } from './scene';
 import { escapeHtml as esc } from '../explorer/format';
+import boundsJson from '../../config/condition-bounds.json';
+import { conditionCounts, mountConditions } from './conditions/panel';
+import type { ConditionBounds } from './conditions/chart';
+import type { ConditionId } from '../engine/types';
 import type { RunReply } from './run-client';
 import { createRunClient } from './run-client';
 import { decodeState, encodeState, type AppState } from './url-state';
@@ -54,7 +58,7 @@ app.insertAdjacentHTML('beforeend', `
   <div class="fl tl"><span class="logo" aria-hidden="true"></span><div><b>AI capital flows</b> <span class="sep">·</span>
     <span class="setup-name"></span></div><a href="./data.html">Data</a></div>
   <div class="foot-note">Early version: simple rules, not yet validated</div>
-  <button class="fl cond" type="button" disabled title="Drag-the-line conditions arrive with the conditions panel"><span class="dot2"></span>Conditions <b>0</b><span class="car">▾</span></button>
+  <button class="fl cond" type="button" aria-expanded="false"><span class="dot2"></span>Conditions <b class="n">0</b><i class="outside" hidden></i><span class="car">▾</span></button>
   <div class="fl seg" role="group" aria-label="View"><button class="on" type="button" aria-pressed="true">One path</button>
     <button type="button" disabled title="Range of outcomes arrives in phase 6">Range of outcomes</button></div>
   <div class="fl zoom"><button type="button" class="zin" aria-label="Zoom in">+</button><span class="pct">100%</span>
@@ -67,6 +71,14 @@ app.querySelector<HTMLButtonElement>('.zin')!.onclick = () => canvas.zoomBy(1.25
 app.querySelector<HTMLButtonElement>('.zout')!.onclick = () => canvas.zoomBy(0.8);
 app.querySelector<HTMLButtonElement>('.fit')!.onclick = () => canvas.fitAll();
 const timeline = mountTimeline(app, q => { setState({ quarter: q }); render(); });
+const bounds = (boundsJson as { conditions: ConditionBounds }).conditions;
+const condBtn = app.querySelector<HTMLButtonElement>('.cond')!;
+const panel = mountConditions(app, {
+  onChange(o) { setState({ overrides: o }); void rerun(); },
+  onName(name) { setState({ name: name.trim() || undefined }); app.querySelector<HTMLElement>('.setup-name')!.textContent = state.name ?? 'Baseline'; },
+  onClose() { panel.toggle(false); condBtn.setAttribute('aria-expanded', 'false'); },
+});
+condBtn.onclick = () => { panel.toggle(); condBtn.setAttribute('aria-expanded', String(!panel.el.hidden)); render(); };
 
 // Deals as known at the build date (statusAsOf, hidden terms), for the deal zoom.
 const dealViews: readonly DealView[] = asOfView({ entities: meta.entities, facts: [], series: [], deals: meta.deals }, meta.asOf).deals;
@@ -153,6 +165,14 @@ function render(): void {
     if (edge) openZoom(edge, state.focus.dealId);
   }
   timeline.update(timelineTicks(latest.run.grid, latest.run.start, latest.run.events), state.quarter);
+  const counts = conditionCounts(latest.conditions, state.overrides, latest.run.grid);
+  condBtn.querySelector('.n')!.textContent = String(counts.changed);
+  const out = condBtn.querySelector<HTMLElement>('.outside')!;
+  out.hidden = !counts.outside;
+  out.textContent = `${counts.outside} outside forecasts`;
+  condBtn.classList.toggle('has-outside', counts.outside > 0);
+  panel.render({ conditions: latest.conditions, overrides: state.overrides, name: state.name, grid: latest.run.grid, asOf: meta.asOf,
+    names: meta.conditionNames as Partial<Record<ConditionId, string>>, bounds });
   app.querySelector('.loading')?.remove();
   app.dataset.ready = 'true';
   app.dataset.nvidiaRevenue = String(nv?.revenue ?? 0);

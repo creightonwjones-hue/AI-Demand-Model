@@ -34,6 +34,8 @@ export function makeBundle(full: BuildData, params: EngineParams, specs: Conditi
 }
 
 /** The small part of the bundle the page itself needs (the worker gets the rest): served by `virtual:engine-meta`. */
-export type EngineMeta = Pick<EngineInputBundle, 'asOf' | 'start' | 'comparisons'> & Pick<BuildData, 'entities' | 'deals'>;
+export type EngineMeta = Pick<EngineInputBundle, 'asOf' | 'start' | 'comparisons'> & Pick<BuildData, 'entities' | 'deals'>
+  & { conditionNames: Partial<Record<string, string>> };
 export const metaOf = (b: EngineInputBundle): EngineMeta =>
-  ({ asOf: b.asOf, start: b.start, comparisons: b.comparisons, entities: b.build.entities, deals: b.build.deals });
+  ({ asOf: b.asOf, start: b.start, comparisons: b.comparisons, entities: b.build.entities, deals: b.build.deals,
+    conditionNames: Object.fromEntries(Object.entries(b.specs).map(([id, s]) => [id, s.name])) });
