@@ -1,0 +1,16 @@
+:root {
+  --ink: #101318; --ink-2: #4b5563; --muted: #6b7280; --faint: #9aa2ad; --line: #dde1e6; --line-soft: #eef0f3;
+  --panel: #f7f8fa; --bg: #ffffff;
+  --money: #c9683a; --labs: #6b5bb8; --financing: #2f8590; --cloud: #b2557d; --chips: #3d8a57; --supply: #4a72ad;
+  --warn: #8a5a00; --warn-bg: #fdf3dc; --warn-line: #ecd29a; --warn-dot: #d4900f; --bad: #c03a3a;
+  --sans: 'Mona Sans', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 400 14px/1.45 var(--sans); font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; overflow: hidden; }
+#app { position: fixed; inset: 0; }
+.note-bar { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 20; background: var(--warn-bg);
+  border: 1px solid var(--warn-line); color: var(--warn); border-radius: 8px; padding: 7px 12px; font-size: 13px; display: flex; gap: 10px; }
+.note-bar button { border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); }
+:focus-visible { outline: 2px solid #3b6fd4; outline-offset: 2px; }

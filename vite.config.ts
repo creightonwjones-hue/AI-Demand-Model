@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, type Plugin } from 'vite';
 import { prepare } from './src/explorer/prepare';
-import { makeBundle } from './src/engine/browser-input';
+import { makeBundle, metaOf } from './src/engine/browser-input';
 import { loadBuild, loadConditionSpecs, loadParams } from './src/engine/node-io';
 
 const VIRTUAL_ID = 'virtual:explorer-data';
@@ -38,18 +38,22 @@ function explorerData(): Plugin {
 }
 
 const ENGINE_ID = 'virtual:engine-input';
-const ENGINE_RESOLVED = '\0' + ENGINE_ID;
+const META_ID = 'virtual:engine-meta';
 
-/** Serves `virtual:engine-input`: the trimmed build, params, condition specs and baseline comparisons for the worker. */
+/**
+ * Serves `virtual:engine-input` (worker: trimmed build, params, condition specs, baseline comparisons) and
+ * `virtual:engine-meta` (page: asOf, start, comparisons, entities, deals), so the large data ships only once.
+ */
 function engineInput(): Plugin {
+  const bundle = () => makeBundle(loadBuild(), loadParams(), loadConditionSpecs(),
+    JSON.parse(readFileSync('data/build/engine-baseline.json', 'utf8')).comparisons);
   return {
     name: 'engine-input',
-    resolveId: id => (id === ENGINE_ID ? ENGINE_RESOLVED : undefined),
+    resolveId: id => (id === ENGINE_ID || id === META_ID ? '\0' + id : undefined),
     load(id) {
-      if (id !== ENGINE_RESOLVED) return undefined;
-      const baseline = JSON.parse(readFileSync('data/build/engine-baseline.json', 'utf8'));
-      const bundle = makeBundle(loadBuild(), loadParams(), loadConditionSpecs(), baseline.comparisons);
-      return `export default JSON.parse(${JSON.stringify(JSON.stringify(bundle))});`;
+      if (id === '\0' + ENGINE_ID) return `export default JSON.parse(${JSON.stringify(JSON.stringify(bundle()))});`;
+      if (id === '\0' + META_ID) return `export default JSON.parse(${JSON.stringify(JSON.stringify(metaOf(bundle())))});`;
+      return undefined;
     },
   };
 }
@@ -59,5 +63,5 @@ export default defineConfig({
   base: './',
   plugins: [explorerData(), engineInput()],
   worker: { format: 'es', plugins: () => [engineInput()] },
-  build: { outDir: 'dist', emptyOutDir: true },
+  build: { outDir: 'dist', emptyOutDir: true, rollupOptions: { input: { index: 'index.html', data: 'data.html' } } },
 });

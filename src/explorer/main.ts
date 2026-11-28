@@ -115,7 +115,7 @@ function header(): string {
         <span>${badge('unverified')} not yet confirmed</span>
       </div>
     </div>
-    <nav class="toc"><a href="#companies">Companies</a><a href="#deals">Deals</a><a href="#series">Series</a><a href="#coverage">Coverage</a>${data.engine ? '<a href="#engine">Engine check</a>' : ''}</nav>
+    <nav class="toc"><a href="./">Canvas</a><a href="#companies">Companies</a><a href="#deals">Deals</a><a href="#series">Series</a><a href="#coverage">Coverage</a>${data.engine ? '<a href="#engine">Engine check</a>' : ''}</nav>
   </header>`;
 }
 

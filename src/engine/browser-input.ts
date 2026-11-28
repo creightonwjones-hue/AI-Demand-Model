@@ -32,3 +32,8 @@ export function makeBundle(full: BuildData, params: EngineParams, specs: Conditi
   const start = grid.quarters.find((q, i) => !view.fact('nvidia', 'revenue', q) && grid.quarters.slice(0, i).some(p => view.fact('nvidia', 'revenue', p)))!;
   return { build: trimBuild(full), params, specs, asOf, start, comparisons };
 }
+
+/** The small part of the bundle the page itself needs (the worker gets the rest): served by `virtual:engine-meta`. */
+export type EngineMeta = Pick<EngineInputBundle, 'asOf' | 'start' | 'comparisons'> & Pick<BuildData, 'entities' | 'deals'>;
+export const metaOf = (b: EngineInputBundle): EngineMeta =>
+  ({ asOf: b.asOf, start: b.start, comparisons: b.comparisons, entities: b.build.entities, deals: b.build.deals });
