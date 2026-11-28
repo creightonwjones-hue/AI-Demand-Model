@@ -14,7 +14,7 @@ export function runRequest(req: RunRequest): RunReply {
   let conditions: Conditions = base;
   for (const [id, values] of Object.entries(req.overrides)) conditions = withUserPath(conditions, id as ConditionId, values!, grid);
   const run = runOnePath({ build: bundle.build, params: bundle.params, asOf: bundle.asOf, start: bundle.start, conditions });
-  return { id: req.id, run, conditions };
+  return { id: req.id, run, conditions, base };
 }
 
 // The grid carries a function (idx), which cannot cross to the page; the page rebuilds it (run-client.ts).

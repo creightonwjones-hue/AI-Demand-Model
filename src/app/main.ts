@@ -171,7 +171,8 @@ function render(): void {
   out.hidden = !counts.outside;
   out.textContent = `${counts.outside} outside forecasts`;
   condBtn.classList.toggle('has-outside', counts.outside > 0);
-  panel.render({ conditions: latest.conditions, overrides: state.overrides, name: state.name, grid: latest.run.grid, asOf: meta.asOf,
+  const result = `NVIDIA FY${card.fy} revenue ${formatAmount(card.fyModel)}${gap ? ` (${gap.replace(' · ', '')} vs consensus)` : ''}`;
+  panel.render({ conditions: latest.conditions, base: latest.base, result, overrides: state.overrides, name: state.name, grid: latest.run.grid, asOf: meta.asOf,
     names: meta.conditionNames as Partial<Record<ConditionId, string>>, bounds });
   app.querySelector('.loading')?.remove();
   app.dataset.ready = 'true';

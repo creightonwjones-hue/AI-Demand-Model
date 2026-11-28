@@ -4,7 +4,7 @@ import type { Conditions, RunResult } from '../engine/types';
 import type { Overrides } from './url-state';
 
 export interface RunRequest { id: number; overrides: Overrides }
-export interface RunReply { id: number; run: RunResult; conditions: Conditions }
+export interface RunReply { id: number; run: RunResult; conditions: Conditions; /** Data defaults, before the user's paths. */ base?: Conditions }
 
 export function createRunClient(post: (req: RunRequest) => void) {
   let next = 0;

@@ -10,7 +10,9 @@ import { chartModel, clampValue, dragPath, outsideForecasts, quarterOf, type Con
 const W = 268, H = 84;
 
 export interface PanelInput {
-  conditions: Conditions; overrides: Overrides; name?: string; grid: Grid; asOf: string;
+  conditions: Conditions; base?: Conditions; overrides: Overrides; name?: string; grid: Grid; asOf: string;
+  /** One line on the result, e.g. "NVIDIA FY2028 revenue $507B (−30% vs consensus)". */
+  result?: string;
   names: Partial<Record<ConditionId, string>>; bounds: ConditionBounds;
 }
 export interface PanelCallbacks { onChange(o: Overrides): void; onName(name: string): void; onClose(): void }
@@ -49,14 +51,17 @@ function chartCard(id: ConditionId, p: PanelInput): string {
   const anyOut = m.handles.some(h => h.outside);
   const line = (pts: [number, number][]) => pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`).join('');
   const last = path.values[path.values.length - 1];
-  return `<div class="cc${anyOut ? ' has-out' : ''}" data-id="${id}">
-    <div class="cc-h"><b>${esc(name)}</b><span class="cc-v">${fmt(last, path.unit)} in 2030</span>${moved ? '<button type="button" class="cc-reset">Reset</button>' : ''}</div>
-    <svg class="cc-svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(name)}: drag the handles to change the path">
+  const base = p.base?.[id];
+  const was = moved && base ? ` <span class="cc-was">(was ${fmt(base.values[base.values.length - 1], path.unit)})</span>` : '';
+  const orig = moved && base ? `<path class="cc-orig" d="${line(m.handles.map(h => [h.x, m.valueToY(base.values[p.grid.idx(h.quarter)])] as [number, number]))}"/>` : '';
+  return `<div class="cc${anyOut ? ' has-out' : ''}${moved ? ' moved' : ''}" data-id="${id}">
+    <div class="cc-h"><b>${esc(name)}</b>${anyOut ? '<span class="cc-pill">Outside forecasts</span>' : `<span class="cc-v">${fmt(last, path.unit)} in 2030${was}</span>`}</div>
+    <svg class="cc-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(name)}: drag the dots to change the path">
       <path class="cc-band" d="${m.band}"><title>Forecast range: ${esc(path.rangeSource)}</title></path>
-      <path class="cc-hist" d="${line(m.history)}"/><path class="cc-path" d="${line(m.path)}"/>
-      ${m.handles.map((h, k) => `<circle class="cc-hd${h.outside ? ' out' : ''}" data-q="${h.quarter}" cx="${h.x.toFixed(1)}" cy="${h.y.toFixed(1)}" r="${k % 2 ? 2.6 : 3.6}" tabindex="${k % 4 ? -1 : 0}"><title>${h.quarter.replace(/(\d{4})Q(\d)/, 'Q$2 $1')}: ${fmt(path.values[p.grid.idx(h.quarter)], path.unit)}</title></circle>`).join('')}
+      <path class="cc-hist" d="${line(m.history)}"/>${orig}<path class="cc-path" d="${line(m.path)}"/>
+      ${m.handles.map((h, k) => `<circle class="cc-hd${h.outside ? ' out' : ''}" data-q="${h.quarter}" cx="${h.x.toFixed(1)}" cy="${h.y.toFixed(1)}" r="${k % 2 ? 2 : 3.6}" tabindex="${k % 4 ? -1 : 0}"><title>${h.quarter.replace(/(\d{4})Q(\d)/, 'Q$2 $1')}: ${fmt(path.values[p.grid.idx(h.quarter)], path.unit)}</title></circle>`).join('')}
     </svg>
-    ${anyOut ? '<div class="cc-out">Outside forecasts</div>' : ''}</div>`;
+    ${moved ? `<div class="cc-foot">${anyOut ? `<span>${fmt(last, path.unit)} in 2030${was}</span>` : '<span></span>'}<button type="button" class="cc-reset">Reset</button></div>` : ''}</div>`;
 }
 
 export function mountConditions(host: HTMLElement, cb: PanelCallbacks) {
@@ -137,11 +142,12 @@ export function mountConditions(host: HTMLElement, cb: PanelCallbacks) {
       if (el.hidden) return;
       const focused = (document.activeElement as HTMLElement | null)?.closest?.('.cpanel') ? document.activeElement : null;
       const keepName = focused?.classList.contains('cp-name');
-      el.innerHTML = `<div class="cp-head"><b>Conditions</b><span class="cp-sub">Drag a line to change what happens; the model re-runs when you let go.</span>
+      el.innerHTML = `<div class="cp-head"><b>Conditions</b><span class="cp-sub">Drag the dots on any line to change what happens. The model re-runs when you let go.</span>
         <button type="button" class="cp-close" aria-label="Close conditions">×</button></div>
         <div class="cp-bar"><label>Name this setup <input class="cp-name" maxlength="80" placeholder="e.g. Credit squeeze" value="${esc(p.name ?? '')}"></label>
         <button type="button" class="cp-reset-all"${Object.keys(p.overrides).length ? '' : ' disabled'}>Reset all</button></div>
-        <div class="cp-grid">${CONDITION_IDS.map(id => chartCard(id, p)).join('')}</div>`;
+        <div class="cp-grid">${CONDITION_IDS.map(id => chartCard(id, p)).join('')}</div>
+        <div class="cp-foot">${Object.keys(p.overrides).length} edited${p.result ? ` · ${esc(p.result)}` : ''}</div>`;
       const nameInput = el.querySelector<HTMLInputElement>('.cp-name')!;
       nameInput.addEventListener('input', () => cb.onName(nameInput.value));
       if (keepName) { nameInput.focus(); nameInput.setSelectionRange(nameInput.value.length, nameInput.value.length); }
