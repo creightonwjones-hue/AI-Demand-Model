@@ -237,7 +237,7 @@
     {
       "id": "construction-and-power",
       "label": "Builders & power",
-      "layer": "supply",
+      "layer": "financing",
       "members": [
         "construction-and-power"
       ]

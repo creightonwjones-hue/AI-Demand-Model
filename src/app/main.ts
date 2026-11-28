@@ -1,5 +1,8 @@
 import './style.css';
 import meta from 'virtual:engine-meta';
+import layoutJson from '../../config/canvas-layout.json';
+import { mountCanvas } from './canvas/canvas';
+import { buildScene, type CanvasLayout } from './scene';
 import type { RunReply } from './run-client';
 import { createRunClient } from './run-client';
 import { decodeState, encodeState, type AppState } from './url-state';
@@ -36,9 +39,31 @@ export async function rerun(): Promise<RunReply> {
   return latest;
 }
 
+const layout = layoutJson as unknown as CanvasLayout;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+app.insertAdjacentHTML('beforeend', `
+  <div class="fl tl"><span class="logo" aria-hidden="true"></span><div><b>AI capital flows</b> <span class="sep">·</span>
+    <span class="setup-name"></span></div><span class="early-tag">Early version: simple rules, not yet validated</span>
+    <a href="./data.html">Data</a></div>
+  <button class="fl cond" type="button" disabled title="Drag-the-line conditions arrive with the conditions panel"><span class="dot2"></span>Conditions <b>0</b><span class="car">▾</span></button>
+  <div class="fl seg" role="group" aria-label="View"><button class="on" type="button" aria-pressed="true">One path</button>
+    <button type="button" disabled title="Range of outcomes arrives in phase 6">Range of outcomes</button></div>
+  <div class="fl zoom"><button type="button" class="zin" aria-label="Zoom in">+</button><span class="pct">100%</span>
+    <button type="button" class="zout" aria-label="Zoom out">−</button><button type="button" class="fit">Fit</button></div>
+  <div class="loading">Running the model…</div>`);
+const pct = app.querySelector<HTMLElement>('.zoom .pct')!;
+const canvas = mountCanvas(app, k => { pct.textContent = `${Math.round(k * 100)}%`; });
+app.querySelector<HTMLButtonElement>('.zin')!.onclick = () => canvas.zoomBy(1.25);
+app.querySelector<HTMLButtonElement>('.zout')!.onclick = () => canvas.zoomBy(0.8);
+app.querySelector<HTMLButtonElement>('.fit')!.onclick = () => canvas.fitAll();
+
 function render(): void {
-  if (!latest) { app.innerHTML = '<div class="loading">Running the model…</div>'; return; }
+  app.querySelector<HTMLElement>('.setup-name')!.textContent = state.name ?? 'Baseline';
+  if (!latest) return;
   const nv = latest.run.nvidia.find(n => n.quarter === state.quarter);
+  const scene = buildScene(latest.run, meta.entities, state.quarter, layout);
+  canvas.draw(scene, { motion: !reducedMotion.matches });
   app.querySelector('.loading')?.remove();
   app.dataset.ready = 'true';
   app.dataset.nvidiaRevenue = String(nv?.revenue ?? 0);

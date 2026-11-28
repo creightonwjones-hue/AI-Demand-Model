@@ -40,14 +40,15 @@ export type EntityLite = Pick<Entity, 'id' | 'name' | 'layer'>;
 
 const WIDTH = 1440;
 const LEFT = 150; // row labels sit left of this
-const ROW_GAP = 150;
+const ROW_GAP = 165;
 const TOP = 70;
 const CARD_H = 42, BIG_W = 230, BIG_H = 58, GROUP_H = 78, GAP = 28, PILL_GAP = 8, GROUP_PAD = 14;
 const SHOWN_EVENTS = new Set<EngineEvent['kind']>(['default', 'minsky-change', 'supply-bound']);
 const RANK: Record<Status, number> = { ok: 0, stressed: 1, default: 2 };
 
-const cardWidth = (label: string) => Math.max(110, Math.round(22 + 7.4 * label.length));
-const pillWidth = (name: string) => Math.round(16 + 6.6 * name.length);
+// Mona Sans 600 at 13px averages ~7.7px per character.
+const cardWidth = (label: string) => Math.max(110, Math.round(30 + 7.7 * label.length));
+const pillWidth = (name: string) => Math.max(70, Math.round(24 + 7.7 * name.length));
 
 /** Health of one entity in a quarter: defaulted → default; Ponzi (operating cash below interest) → stressed. */
 function memberStatus(run: RunResult, id: string, qi: number): Status {
@@ -116,14 +117,39 @@ export function buildScene(run: RunResult, entities: readonly EntityLite[], quar
   const visible = blocks.filter(b => !b.group || b.members.length || layout.alwaysShown.includes(b.id));
 
   const rows = layout.rows.map((layer, i) => ({ layer, label: layout.rowLabels[layer] ?? layer, y: TOP + i * ROW_GAP }));
-  let width = WIDTH;
-  for (const r of rows) {
-    const inRow = visible.filter(b => b.layer === r.layer);
-    const total = inRow.reduce((t, b) => t + b.w, 0) + GAP * Math.max(0, inRow.length - 1);
-    let x = LEFT + Math.max(0, (WIDTH - LEFT - 40 - total) / 2);
-    for (const b of inRow) { b.x = x; b.y = r.y - b.h / 2; x += b.w + GAP; }
-    width = Math.max(width, x + 40);
+  const links = kept.filter(a => visible.some(b => b.id === a.from) && visible.some(b => b.id === a.to));
+  const place = () => {
+    let width = WIDTH;
+    for (const r of rows) {
+      const inRow = visible.filter(b => b.layer === r.layer);
+      const total = inRow.reduce((t, b) => t + b.w, 0);
+      // Spread across the full width; never closer than GAP.
+      const gap = Math.max(GAP, Math.min(90, (WIDTH - LEFT - 40 - total) / Math.max(1, inRow.length - 1)));
+      const span = total + gap * Math.max(0, inRow.length - 1);
+      let x = LEFT + Math.max(0, (WIDTH - LEFT - 40 - span) / 2);
+      for (const b of inRow) { b.x = x; b.y = r.y - b.h / 2; x += b.w + gap; }
+      width = Math.max(width, x + 40);
+    }
+    return width;
+  };
+  // Order each row by the average position of the blocks it trades with (two sweeps), so lines cross less.
+  place();
+  for (let sweep = 0; sweep < 3; sweep++) {
+    for (const r of rows) {
+      const centre = (id: string) => { const b = visible.find(x => x.id === id)!; return b.x + b.w / 2; };
+      const bary = new Map<string, number>();
+      for (const b of visible.filter(x => x.layer === r.layer)) {
+        const ws = links.filter(a => a.from === b.id || a.to === b.id).map(a => ({ c: centre(a.from === b.id ? a.to : a.from), w: Math.sqrt(a.usd) }));
+        const tw = ws.reduce((t, x) => t + x.w, 0);
+        bary.set(b.id, tw ? ws.reduce((t, x) => t + x.c * x.w, 0) / tw : b.x + b.w / 2);
+      }
+      const inRow = visible.filter(x => x.layer === r.layer).sort((a, b) => bary.get(a.id)! - bary.get(b.id)!);
+      const others = visible.filter(x => x.layer !== r.layer);
+      visible.splice(0, visible.length, ...others, ...inRow);
+    }
+    place();
   }
+  const width = place();
 
   const status = (b: string) => visible.find(x => x.id === b);
   const edges: SceneEdge[] = kept.filter(a => status(a.from) && status(a.to)).map(a => {
